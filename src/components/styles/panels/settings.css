@@ -1,0 +1,94 @@
+.settings-panel p{
+    text-align: center;
+}
+.settings-panel .vkuiGroup__inner{
+    box-shadow: none;
+}
+.add-address-btn{
+    background: none;
+    border: 1px solid #2A5885;
+    color: #2A5885;
+    border-radius: 4px;
+    display: flex;
+    height: 36px;
+    cursor: not-allowed;
+    align-items: center;
+    justify-content: center;
+    margin: 0 15px 10px;
+    opacity: 0.3;
+}
+.manage-address-text{
+    opacity: 0.3;
+    position: relative;
+    cursor: not-allowed;
+}
+.coming-soon{
+    top: 90px;
+    width: 100%;
+    position: absolute;
+    text-align: center;
+    text-transform: uppercase;
+    cursor: not-allowed;
+}
+.coming-soon h2{
+    color: #6B93C0;
+    font-weight: 500;
+    font-size: 30px;
+}
+.add-address-btn p {
+    color: #2A5885 !important;
+    margin: auto 0!important;
+}
+.procent-btn{
+    background: #EBF4FF;
+    border-radius: 25px;
+    color: #2787F5;
+    font-size: 18px;
+    width: 22%;
+    height: 40px;
+    margin-right: 10px;
+    border: none;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.settings-panel h4{
+    color: #28436E;
+    font-weight: 500;
+    font-size: 18px;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+.procent-row, .procent-row-2{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+.procent-row-2{
+    justify-content:flex-start !important;
+}
+.procent-row-2 .procent-btn{
+    margin-right: 20px;
+}
+.settings-panel .vkuiDiv--android{
+    padding-right: 0;
+}
+.settings-panel p{
+    color: #000;
+    text-align: left;
+    line-height: 22px;
+    margin: 0 0 10px 0;
+    font-size: 15px;
+}
+
+.save-btn{
+    background: #792EC0;
+    width: 98%;
+}
+
+
+
+
+

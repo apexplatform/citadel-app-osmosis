@@ -1,0 +1,35 @@
+.select-row{
+    display: flex;
+    align-items: center;
+    background: #F7F8FA;
+    border: 1px solid #D3D9DE;
+    border-radius: 6px;
+    padding-left: 10px;
+    height: 40px;
+    cursor: pointer;
+}
+.select-value{
+    font-weight: 400;
+}
+
+.select-dropdawn-icon{
+    position: absolute;
+    right: 20px;
+}
+.select-dropdawn{
+    position: absolute;
+    width: 100%;
+    border-radius: 0 0 10px 10px;
+    z-index: 120;
+    box-shadow:0 0 2px 2px rgba(0, 0, 0, 0.1);
+}
+.custom-select-option:last-child{
+    border-radius: 0 0 10px 10px;
+}
+.custom-select-option:hover{
+    background: #F5F5F5 !important;
+}
+
+.select-container{
+    position: relative;
+}

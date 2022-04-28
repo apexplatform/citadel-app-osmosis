@@ -1,0 +1,76 @@
+.unbonding-period{
+    background: #EEF2FC;
+    border-radius: 8px;
+    padding: 10px;
+    margin-top: 10px;
+    text-align: left;
+    width: 28%;
+    display: flex;
+}
+.unbonding-circle{
+    width: 20px;
+    height: 17px;
+    margin-right: 5px !important;
+    border: 1px solid #C5D0DB;
+    border-radius: 50%;
+    padding-top: 3px;
+}
+.unbonding-circle-inner{
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: white;
+    margin: auto;
+    display: none;
+}
+.vkuiSubhead--w-regular{
+    font-weight: 300;
+}
+.unbonding-period p{
+    font-weight: 500;
+    font-size: 13px;
+    margin: 0;
+}
+
+.unbonding-grey-text{
+    color: #818C99;
+    font-weight: 300;
+    font-size: 14px;
+}
+
+.unbonding-purple-text{
+    display: inline;
+    color: #792EC0;
+    font-weight: 500;
+    font-size: 14px;
+    margin: 0;
+}
+
+.unbonding-period:hover, #active-period{
+    background: #792EC0;
+    cursor: pointer;
+    color: #fff !important;
+}
+
+
+.unbonding-period:hover .unbonding-purple-text, #active-period .unbonding-purple-text {
+    color: #fff !important;
+}
+
+.unbonding-period:hover .unbonding-grey-text, #active-period .unbonding-grey-text  {
+    color: #CCD3FF !important;
+}
+
+.unbonding-period:hover .unbonding-circle, #active-period .unbonding-circle{
+    border: 1px solid #fff !important;
+}
+
+.unbonding-period:hover .unbonding-circle-inner, #active-period .unbonding-circle-inner{
+    display: block;
+}
+
+
+.unbonding-period img{
+    width: 12px;
+    margin-left: 4px;
+}

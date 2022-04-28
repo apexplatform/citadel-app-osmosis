@@ -1,0 +1,71 @@
+{
+  "name": "osmosis-swap",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "homepage": "./",
+  "scripts": {
+    "start": "cross-env PORT=10888 HTTPS=true react-scripts start",
+    "build": "react-scripts build",
+    "predeploy": "npm run build",
+    "deploy": "vk-miniapps-deploy"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "react-error-overlay": "^6.0.9",
+    "react-hot-loader": "^4.13.0",
+    "react-scripts": "^4.0.3"
+  },
+  "dependencies": {
+    "@keplr-wallet/crypto": "0.9.10",
+    "@keplr-wallet/stores": "0.9.12-rc.0",
+    "@keplr-wallet/types": "0.9.12-rc.0",
+    "@keplr-wallet/unit": "0.9.12-rc.0",
+    "@sentry/react": "^6.15.0",
+    "@sentry/tracing": "^6.15.0",
+    "@vkontakte/icons": "^1.117.0",
+    "@vkontakte/vk-bridge": "^2.4.6",
+    "@vkontakte/vk-miniapps-deploy": "0.0.25",
+    "@vkontakte/vkjs": "^0.22.1",
+    "@vkontakte/vkui": "^4.12.3",
+    "axios": "^0.21.4",
+    "babel-eslint": "^10.1.0",
+    "bignumber.js": "^9.0.1",
+    "buffer": "^6.0.3",
+    "chalk": "^4.1.2",
+    "dayjs": "^1.10.7",
+    "eruda": "^2.4.1",
+    "eruda-code": "^2.0.0",
+    "eruda-dom": "^2.0.0",
+    "lodash-es": "^4.17.21",
+    "mobx": "^6.3.10",
+    "mobx-utils": "^6.0.4",
+    "moment": "^2.29.1",
+    "prop-types": "^15.7.2",
+    "querystring": "^0.2.1",
+    "react": "^17.0.2",
+    "react-countdown": "^2.3.2",
+    "react-dom": "^17.0.2",
+    "react-infinite-scroll-component": "^6.1.0",
+    "react-redux": "^7.2.4",
+    "redux": "^4.1.1",
+    "redux-thunk": "^2.3.0",
+    "socket.io-client": "^4.4.1",
+    "typescript": "^4.6.2"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

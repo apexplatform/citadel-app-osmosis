@@ -1,0 +1,31 @@
+.address-error-container{
+    display: flex;
+    align-items: center;
+}
+
+.address-input input{
+    width: 100%;
+    background: #F7F8FA;
+    border: 1px solid #D3D9DE;
+    border-radius: 8px;
+    font-size: 15px;
+    padding-left: 10px;
+    height: 40px;
+    outline-color: #792EC0;
+}
+
+.address-error-container span{
+    font-size: 14px;
+    line-height: 17px;
+    color: #E64646;
+    font-weight: 400;
+}
+.address-error-container{
+    margin: 5px;
+}
+.address-error-container img{
+    margin-right: 5px;
+}
+.address-input{
+    padding-right: 14px;
+}

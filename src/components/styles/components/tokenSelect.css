@@ -1,0 +1,27 @@
+.token-img{
+    width: 30px;
+    margin-right: 10px;
+}
+.token-row{
+    display: flex;
+    align-items: center;
+}
+.token-row img{
+    width: 28px;
+    height: 28px;
+    margin-right: 5px;
+}
+.token-container{
+    padding-left: 10px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+}
+
+.right-arrow{
+    position: absolute;
+    right: 0;
+    left: 160px;
+}

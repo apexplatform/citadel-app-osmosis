@@ -1,0 +1,26 @@
+.address-block{
+    border-radius: 4px 4px 0 0;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+.address-block-card{
+    position: fixed;
+    bottom: 80px;
+    width: 100%;
+    z-index: 10;
+    background: #EBF4FF;
+}
+
+.address-block-amount{
+    color: #2787F5;
+    margin: 0;
+    margin-right: 5px;
+    font-weight: 400;
+}
+
+.address-text{
+    color: #2787F5;
+}
+

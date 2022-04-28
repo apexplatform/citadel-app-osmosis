@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap');
+body, * {
+    font-family: Roboto;
+    font-weight: 300;
+}
+.vkuiSearch *{
+    background: none !important;
+}
+
+.vkuiSearch {
+    border-bottom: 1px solid #E7E8EC;
+    margin-bottom: 15px;
+}
+
+.vkuiGroup__inner{
+    padding-top: 0 !important;
+}
+
+.center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.error-text{
+    margin: 0 20px 15px;
+}
+
+.vkuiModalPage__in-wrap{
+    height: auto !important;
+    bottom: 60% !important;
+}
+
+.vkuiModalPage__in{
+    border-radius: 12px;
+}
+
+.vkuiGroup--card>.vkuiGroup__inner{
+    box-shadow: none;
+}
+
+body::-webkit-scrollbar, *::-webkit-scrollbar {
+    display: none;
+}

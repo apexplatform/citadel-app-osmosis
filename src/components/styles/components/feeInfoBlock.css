@@ -1,0 +1,43 @@
+.fee-info-block{
+    background: #F2F7FC;
+    border-radius: 8px;
+    padding: 5px 15px;
+    margin: 15px;
+}
+
+.fee-row{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 16px;
+    margin: 10px 0;
+}
+.fee-row span{
+    color: #6F7985;
+}
+.fee-text{
+    color: #28436E !important;
+}
+
+.route-row{
+    display: flex;
+    align-items: center;
+}
+.route-row span{
+    display: inline-flex;
+    line-height: 24px;
+}
+.separator{
+    border: 1px dashed #A1ACB8;
+    border-top: none;
+}
+
+.fee-text-bold{
+    font-weight: 500;
+    color: #000 !important;
+}
+
+.fee-amount-bold{
+    font-weight: 500;
+    color: #792EC0 !important;
+}

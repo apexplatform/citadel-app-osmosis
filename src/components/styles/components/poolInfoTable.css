@@ -1,0 +1,79 @@
+.pool-info-table{
+    background: #F2F7FC;
+    border-radius: 8px;
+    padding: 10px;
+    margin-top: 15px;
+}
+
+.pool-info-row{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    text-align: center;
+}
+
+.pool-info-row .pool-info-column {
+    margin: 0;
+    line-height: 25px;
+    width: 25%;
+    font-size: 14px;
+}
+.pool-info-column-last {
+    margin: 0;
+    line-height: 25px;
+    width: 35%;
+    font-size: 14px;
+    text-align: right;
+}
+
+.separator{
+    border: 1px dashed #A1ACB8;
+    border-top: none;
+    margin: 10px 0;
+}
+
+.pool-table-header,.pool-table-header-last{
+    font-weight: 500;
+    color: #28436E;
+    width: 25%;
+    margin: 5px 0;
+    line-height: 20px;
+    font-size: 14px;
+    text-align: center;
+}
+.pool-table-header-last{
+    width: 35%;
+    text-align: right;
+}
+
+.pool-info-row p span{
+    color: #71AAEB;
+    font-weight: 400;
+    font-size: 15px;
+}
+
+.purple-text{
+    color: #792EC0 !important;
+}
+
+.grey-text{
+    color: #818C99;
+}
+
+.unbondings-table{
+    margin-bottom: 90px;
+}
+
+.unbond-btn{
+    background: #CCD3FF;
+    border-radius: 4px;
+    color: #5965B3;
+    border: none;
+    cursor: pointer;
+    width: 80%;
+    padding: 5px;
+}
+
+.unbondings-table .pool-info-row{
+    height: 30px;
+}

@@ -1,0 +1,42 @@
+{
+    "TABBAR": {
+        "BACKGROUND_COLOR": "#3C356D",
+        "DEFAULT_ITEM_COLOR": "#979EFE",
+        "ACTIVE_ITEM_COLOR": "#FFFFFF",
+        "HOVER_ITEM_COLOR": "#FFFFFF",
+        "DISABLE_ITEM_COLOR": "#f5f5f5",
+        "TABBAR_ITEMS": [
+            {
+                "TITLE": "Swap",
+                "ICON": "swap",
+                "ROUTES": "swap"
+            },
+            {
+                "TITLE": "Pools",
+                "ICON": "pool",
+                "ROUTES": "pools"
+            },
+            {
+                "TITLE": "Create pool",
+                "ICON": "addpool",
+                "ROUTES": "create_pool"
+            },
+            {
+                "TITLE": "Assets",
+                "ICON": "assets",
+                "ROUTES": "assets"
+            },
+            {
+                "TITLE": "Guide",
+                "ICON": "guide",
+                "ROUTES": "guide"
+            }
+        ]
+    },
+    "HEADER": {
+        "TITLE": "App header",
+        "BACK_TITLE": "Back",
+        "BACKGROUND_COLOR": "#FFF"
+    },
+    "DEFAULT_ADDRESS_BLOCK": true
+}

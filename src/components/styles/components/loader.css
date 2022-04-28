@@ -1,0 +1,10 @@
+#loader{
+    margin-bottom: -5px !important;
+    margin-right: 10px;
+    display: inline-block;
+}
+
+#centered-loader{
+    margin: 27% auto auto 47%;
+    position: absolute;
+}

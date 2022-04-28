@@ -1,0 +1,37 @@
+.node-img{
+    width: 30px;
+    margin-right: 10px;
+}
+.node-row{
+    display: flex;
+    align-items: center;
+}
+.node-row img{
+    width: 28px;
+    height: 28px;
+    margin-right: 5px;
+}
+.node-container{
+    padding-left: 10px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    background: #F7F8FA;
+    border: 1px solid #D3D9DE;
+    border-radius: 6px;
+    margin-top: -10px;
+    margin-bottom: -5px;
+}
+
+.node-right-arrow{
+    position: absolute;
+    right: 5px;
+}
+
+.node-item-img{
+    margin-right: 10px;
+    width: 40px;
+    height: 40px;
+}
