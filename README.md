@@ -7,6 +7,7 @@ import {getAllPools} from '/swapRouter/poolLists'
 const { swapPools } = await getAllPools()
 ```
 This function sends a request to these APIs:
+
 1.https://api-osmosis.imperator.co/pools/v2/all?low_liquidity=true
 
 2.https://lcd-osmosis.keplr.app/osmosis/gamm/v1beta1/pools?pagination.limit=750
