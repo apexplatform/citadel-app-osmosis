@@ -197,7 +197,7 @@ export const loadStakeNodes = () => (dispatch) => {
   } catch {}
 };
 
-export const loadTokenWithBalances = () => async (dispatch) => {
+export const loadTokenWithBalances = (count=3) => async (dispatch) => {
   try {
     const wallet = getWalletConstructor();
     const res = await wallet.getTokenBalance();
@@ -253,7 +253,9 @@ export const loadTokenWithBalances = () => async (dispatch) => {
         payload: tokenList,
       });
     } else {
-      dispatch(loadTokenWithBalances());
+       if(count>0){
+       dispatch(loadTokenWithBalances(count-1));
+      }
     }
   } catch (err) {
     dispatch(checkErrors(err));
