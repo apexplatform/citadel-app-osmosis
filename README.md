@@ -14,9 +14,9 @@ Enabled actions:
 - [x] Superfluid staking
 - [x] Create new pool
 - [x] External API for other Citadel apps for a swap
-- [ ] Update UI kit (remove VK elements)
-- [ ] External insentivesied pools
-- [ ] Frontier tokens
+- [x] Update UI kit (remove VK elements)
+- [x] External insentivesied pools
+- [x] Frontier tokens
 
 [//]: #
 
