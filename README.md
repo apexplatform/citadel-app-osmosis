@@ -1,3 +1,5 @@
+![osmosis](https://github.com/BaratMaira/OsmosisLogo/blob/main/OsmosisLogo.png?raw=true)
+
 ## Osmosis Citadel.one app
    
    Citadel.one started its journey as a validator and easy-to-use staking wallet; now the main focus is to provide an ecosystem-like platform that empowers various crypto use-cases. With this in mind, we’ve integrated Osmosis among the first show-cases in Citadel.one App Store along with Uniswap and PancakeSwap . We’ve carefully packed all the functionality of Osmosis, including Superfluid, and implemented it inside the web version of our platform - mobile integration is also in the pipeline. Additionally, users will be able to take advantage of Osmosis functionality "implicitly" as a part of an aggregated swap, or receive tokens with the purpose to use it within another application immediately thereafter.
