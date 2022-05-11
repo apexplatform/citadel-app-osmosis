@@ -22,9 +22,9 @@
 }
 
 .deposit-card img{
-    width: 107%;
-    margin-left: -15px;
+    width: 100%;
     margin-bottom: -20px;
+    text-align: center;
 }
 
 .deposit-container{

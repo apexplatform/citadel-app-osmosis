@@ -19,7 +19,7 @@ const AddressItem = (props) => {
     <Card className={active + " address-card"} onClick={() => selectAddress()}>
       <div className="address-item">
         <div className="address-icon center">
-          <Icon icon={item?.network} width={24} height={24} />
+          <Icon icon={item?.network} width={24} fill={currentWallet.address === item.address ? '#792EC0' : '#fff'} height={24} />
         </div>
         <div className="address-content">
           <div className="address-row">

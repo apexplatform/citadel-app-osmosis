@@ -130,13 +130,6 @@ export const getWalletConstructor = (address) => {
   }
 };
 
-export const getSecretTokenBalance = () => (dispatch)=> {
-  try {
-    const wallet = getWalletConstructor();
-    wallet.sendCustomMessage('view-scrt-balance', { address: "secret175quhehkwr9q5c76fdyfnd00ven7m7dthkds7e", tokenContract: "secret1793ctg56epnzjlv7t7mug2tv3s2zylhqssyjwe" })
-  } catch {
-  }
-};
 
 export const prepareTransfer = () => (dispatch) => {
   const wallet = getWalletConstructor();
@@ -158,12 +151,6 @@ export const prepareTransfer = () => (dispatch) => {
     });
 };
 
-
-
-export const addAddress = () => (dispatch) => {
-  const wallet = getWalletConstructor();
-  const result = wallet.sendCustomMessage('add-address', 'Add new address');
-};
 
 export const loadNetworks = () => (dispatch) => {
   try {
@@ -213,7 +200,7 @@ export const loadTokenWithBalances = (count=3) => async (dispatch) => {
         decimals: "6",
         denom: "uosmo",
         name: "Osmosis",
-        logoURI: "https://app.osmosis.zone/public/assets/tokens/osmosis.svg",
+        logoURI: "img/tokens/osmosis.svg",
         balance: currentWallet?.balance?.mainBalance || 0,
       };
       tokenList.push(osmosis);

@@ -9,7 +9,6 @@ import text from "../../text.json";
 import BigNumber from "bignumber.js";
 import InputNumber from "../uikit/InputNumber";
 import { setActivePanel } from "../../store/actions/panelActions";
-import { addAddress } from '../../store/actions/walletActions'
 const Settings = (props) => {
   const { slippageTolerance } = props.swapReducer;
   const [inputId, setInputId] = useState("default-input");
@@ -81,7 +80,7 @@ const Settings = (props) => {
         <h4>{text.SETTING_TITLE}</h4>
         <p>{text.SETTING_DESCRIPTION} </p>
       </Div>
-      <Div className="add-address-btn" onClick={() => props.addAddress()}>
+      <Div className="add-address-btn">
         <img src={fileRoutes.ADD_ICON} alt="add" />
         <p>{text.ADD_ADDRESS}</p>
       </Div>
@@ -129,6 +128,5 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   setActivePanel,
-  setSlippageTolerance,
-  addAddress
+  setSlippageTolerance
 })(Settings);

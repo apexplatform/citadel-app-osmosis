@@ -36,7 +36,7 @@ const Assets = (props) => {
   let poolAssets = pools?.map((item) => {
     return {
       name: "Pool #" + item.id,
-      logoURI: "https://app.osmosis.zone/public/assets/tokens/osmosis.svg",
+      logoURI: "img/tokens/osmosis.svg",
       usdBalance: item.myLiquidity.replace("$", "").replace(",", ""),
       code: "GAMM/" + item.id,
       symbol:
@@ -59,7 +59,7 @@ const Assets = (props) => {
     poolAssets = pools?.map((item) => {
       return {
         name: "Pool #" + item.id,
-        logoURI: "https://app.osmosis.zone/public/assets/tokens/osmosis.svg",
+        logoURI: "img/tokens/osmosis.svg",
         usdBalance: item.myLiquidity.replace("$", "").replace(",", ""),
         code: "GAMM/" + item.id,
         symbol:

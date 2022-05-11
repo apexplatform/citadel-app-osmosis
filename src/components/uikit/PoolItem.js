@@ -11,7 +11,7 @@ const PoolItem = (props) => {
         <div className="pool-row">
           <div className="pool-img">
             <img
-              src="https://app.osmosis.zone/public/assets/tokens/osmosis.svg"
+              src="img/tokens/osmosis.svg"
               alt="coin"
             />
           </div>
