@@ -34,6 +34,7 @@ const Settings = (props) => {
   };
   const setSlippageProcent = (val) => {
     val = val.replace(/[^0-9\.]/g, "");
+    if(val.split(".").length - 1 !== 1 && val[val.length-1] === '.') return
     if (
       +currentProcent == 0 &&
       val.length == 2 &&

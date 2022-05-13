@@ -37,7 +37,7 @@ const Transactions = (props) => {
             hasMore={hasmoreTransactions}
             loader={<Loader id="centered-loader" />}
           >
-            {transactions.map((item, i) => (
+            {transactions?.map((item, i) => (
               <Card
                 className="transactions-card"
                 size="l"

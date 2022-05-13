@@ -31,7 +31,7 @@ export const loadTransactions =
       const transactions = await wallet.getTransactions(limit, offset);
       dispatch({
         type: SET_TRANSACTIONS_LIST,
-        payload: transactions?.data?.list,
+        payload: transactions?.data?.list || [],
       });
       if (transactions?.data?.list.length < 10) {
         dispatch({

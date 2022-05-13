@@ -12,6 +12,7 @@ const PoolAmountInput = (props) => {
   const { pool } = props.poolReducer;
   const checkAmount = (val) => {
     val = val.replace(/[^0-9\.]/g, "");
+    if(val.split(".").length - 1 !== 1 && val[val.length-1] === '.') return
     if (+amount == 0 && val.length == 2 && val[1] != "." && val[1] == "0") {
       props.setAmount(val[0]);
       updateAmount(val[0]);

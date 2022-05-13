@@ -24,6 +24,7 @@ const AmountInput = (props) => {
   const feeProcent = coin == fromToken?.code ? 0.01 : 0;
   const checkAmount = (val) => {
     val = val.replace(/[^0-9\.]/g, "");
+    if(val.split(".").length - 1 !== 1 && val[val.length-1] === '.') return
     if (
       +props.amount == 0 &&
       val.length == 2 &&
