@@ -52,7 +52,9 @@ const AddLiquidity = (props) => {
   });
   const updateAmount = (index, amount, isSingle = false, isMax = false) => {
     amount = amount.toString().replace(",", "");
-    props.setAmount(amount);
+    if(amount !== 'max') {
+      props.setAmount(amount);
+    }
     let temp = amounts;
     let price = 0;
     let poolInfo = pool.poolInfo;

@@ -844,8 +844,8 @@ export const getMaxBalance = (index, pool, prettyBalanceList, amounts) => {
     new Dec(currentBalance)
   );
   if (amounts[index].denom == "uosmo") {
-    balanceInfo = balanceInfo.toDec().sub(new Dec(OSMO_MEDIUM_TX_FEE));
-    balanceInfo = new CoinPretty({}, balanceInfo);
+    balanceInfo = new Dec(currentBalance).sub(new Dec('12500'));
+    balanceInfo = new CoinPretty(pool.poolCoinInfo[index], balanceInfo);
   }
   balanceInfo._options.hideDenom = true;
   return balanceInfo.trim(true).shrink(true).maxDecimals(6).toString();
