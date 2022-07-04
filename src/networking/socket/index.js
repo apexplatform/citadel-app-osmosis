@@ -4,7 +4,7 @@ import store from "../../store/store";
 import { updatePoolList } from '../../store/actions/poolActions';
 const { auth_token } = store.getState().userReducer;
 const socket = io(
-	'https://api-websockets-apps.apps.citadel.okd.3ahtim54r.ru/apps',
+	process.env.REACT_APP_SOCKET_URL,
 	{
 		transports: ['websocket'],
 		upgrade: false,
