@@ -3,10 +3,22 @@ import "../styles/components/feeInfoBlock.css";
 import BigNumber from "bignumber.js";
 import { Icon20ChevronRightOutline } from "@vkontakte/icons";
 const FeeInfoBlock = (props) => {
-  const { fromToken, toToken } = props.walletReducer;
+  const { fromToken, toToken, tokenList } = props.walletReducer;
   const { slippage, poolInfo, swapFee } = props.swapReducer;
   const fromCode = props.isExactIn ? fromToken?.code : toToken?.code;
   const toCode = !props.isExactIn ? fromToken?.code : toToken?.code;
+  const getSymbol = (token) => {
+    if(token.symbol !== "") {
+      return token.symbol
+    } else {
+      let item = tokenList.find(elem => elem.fullDenom == token.denom)
+      if(item){
+        return item.code
+      }else{
+        return '-'
+      }
+    }
+  }
   return (
     <div className="fee-info-block">
       <div className="fee-row">
@@ -36,10 +48,10 @@ const FeeInfoBlock = (props) => {
         <span>
           <span className="route-row">{poolInfo ? poolInfo?.map((item,i) =>(
             i==0 ?
-              <span key={i}>{ item?.from?.symbol }
-              <Icon20ChevronRightOutline fill="#C5D0DB" width={25} height={25} />{ item?.to?.symbol }</span>
+              <span key={i}>{ getSymbol(item?.from) }
+              <Icon20ChevronRightOutline fill="#C5D0DB" width={25} height={25} />{ getSymbol(item?.to) }</span>
             :
-              <span key={i}><Icon20ChevronRightOutline fill="#C5D0DB" width={25} height={25} />{ item?.to?.symbol } </span>
+              <span key={i}><Icon20ChevronRightOutline fill="#C5D0DB" width={25} height={25} />{ getSymbol(item?.to) } </span>
             )) : '-'}</span>
         </span>
       </div>

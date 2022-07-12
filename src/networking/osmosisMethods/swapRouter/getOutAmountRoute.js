@@ -3,15 +3,14 @@ import RouteFinder from './RouteFinder';
 import { OutRoute } from './Route';
 import { swapPools } from './poolLists'
 import { Dec } from "@keplr-wallet/unit";
-export const getOutAmountRoute = async(symbolIn, symbolOut, amount) => {
-    const denomIn = getDenomByCode(symbolIn);
-    const denomOut = getDenomByCode(symbolOut);
+export const getOutAmountRoute = async(fromToken, toToken, amount) => {
+    const denomIn = fromToken.fullDenom || getDenomByCode(fromToken.code);
+    const denomOut = toToken.fullDenom || getDenomByCode(toToken.code);
     if (denomIn == "" || denomOut == ""){
         return { error: "There is no asset for your symbol!" };
     }
-
     const MAX_HOPS = 2
-    const bigpools = swapPools?.filter(pool => pool.totalWeight.gt(new Dec(10000)));
+    const bigpools = swapPools?.filter(pool => pool.totalWeight.gt(new Dec(1000)));
     const rf = new RouteFinder();
     let bestRoute = new OutRoute(amount);
 	for (let i = 1; i <= MAX_HOPS; i++) {

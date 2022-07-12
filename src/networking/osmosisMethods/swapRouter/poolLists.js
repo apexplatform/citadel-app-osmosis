@@ -17,10 +17,10 @@ export const getTokenDecimal = (symbol,denom) => {
     return 6
   }
   let osmosisToken = tokens?.osmosis;
-    if (osmosisToken && symbol) {
+    if (osmosisToken) {
       let keys = Object.keys(osmosisToken?.tokens);
       keys.forEach(net => {
-        if(osmosisToken.tokens[net].code == symbol){
+        if((osmosisToken.tokens[net].code == symbol) || (osmosisToken.tokens[net]?.fullDenom == denom)){
           decimal = +osmosisToken?.tokens[net].decimals;
         }
       })
@@ -66,9 +66,9 @@ const generatePoolList = (pools,poolList) => {
     });
     return newPools;
   }
-    catch(e){
-      return swapPools
-    }
+  catch(e){
+    return swapPools
+  }
 };
   
 

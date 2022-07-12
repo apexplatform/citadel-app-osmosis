@@ -124,9 +124,9 @@ export const updateSwapInfo = (amount = 0, isOut = true) => async (dispatch) => 
       const { fromToken, toToken } = store.getState().walletReducer;
       if (+amount > 0) {
         if(isOut){
-          res = await getOutAmountRoute(fromToken.code,toToken.code,amount)
+          res = await getOutAmountRoute(fromToken,toToken,amount)
         }else{
-          res = await getInAmountRoute(fromToken.code,toToken.code,amount)
+          res = await getInAmountRoute(fromToken,toToken,amount)
         }
       
       }
