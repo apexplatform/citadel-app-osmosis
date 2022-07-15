@@ -5,6 +5,21 @@ export const logos = {
   osmosis_cosmos: {
     logoURI: "img/tokens/cosmos.svg",
   },
+  "osmosis_axelar-weth": {
+    logoURI: "img/tokens/weth.webp",
+  },
+  "osmosis_axelar-wbtc": {
+    logoURI: "img/tokens/wbtc.webp",
+  },
+  "osmosis_axelar-dai": {
+    logoURI: "img/tokens/dai.svg",
+  },
+  "osmosis_axelar-usdc": {
+    logoURI: "img/tokens/usdc.svg",
+  },
+  osmosis_mantle: {
+    logoURI: "img/tokens/mntl.webp",
+  },
   osmosis_cryptoorg: {
     logoURI: "img/tokens/cro.png",
   },
