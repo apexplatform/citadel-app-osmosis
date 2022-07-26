@@ -1,59 +1,78 @@
-import BigNumber from "bignumber.js";
-import { Dec, IntPretty } from "@keplr-wallet/unit";
+import BigNumber from 'bignumber.js';
 
 const cutNumber = (number, digits = 0) =>
-  Math.floor(
-    BigNumber(number)
-      .multipliedBy(10 ** digits)
-      .toNumber()
-  ) /
-  10 ** digits;
+    Math.floor(
+        BigNumber(number)
+        .multipliedBy(10 ** digits)
+        .toNumber()
+    ) /
+    10 ** digits;
 
-const formatValue = (value) => value.toString().trim().replaceAll(",", "");
+const formatValue = (value) => value.toString().trim().replaceAll(',', '');
 
 const classesAbb = {
-  0: "",
-  3: "K",
-  6: "M",
-  9: "B",
-  12: "T",
-  15: "q",
-  18: "Q",
-};
-export const prettyNumber = (value) => {
-  if (!value) return 0;
-  //for string with range (iost APY "4.8-36.13" etc)
-  if (Number.isNaN(+value)) return value;
-  value = formatValue(value);
-  const abbDecimals = 2;
-  const maxDecimals = 5;
-  let prefix = +value < 0 ? "-" : "";
-  const absoluteValue = Math.abs(value);
-  const intPart = Math.floor(absoluteValue);
-  const valueRank = intPart === 0 ? 0 : intPart.toString().length;
-  //|value| > 1
-  if (valueRank > 0) {
-    const classes = Object.keys(classesAbb).sort((a, b) => b - a);
-    const valueClass = classes.find((i) => valueRank > i);
-    return `${prefix}${cutNumber(
-      absoluteValue / 10 ** valueClass,
-      abbDecimals
-    )}${classesAbb[valueClass]}`;
-  }
-  //|value| < 1
-  if (absoluteValue && cutNumber(absoluteValue, maxDecimals) === 0) {
-    return "~0";
-  }
-  return `${prefix}${cutNumber(absoluteValue, maxDecimals)}`;
+    0: '',
+    3: 'K',
+    6: 'M',
+    9: 'B',
+    12: 'T',
+    15: 'q',
+    18: 'Q',
 };
 
-export const formatNumber = (amount) => {
-  const decval = +amount !== 0 ? new Dec(amount.toString()) : amount;
-  const intval =
-    +decval !== 0
-      ? new IntPretty(decval).trim(true).maxDecimals(3).toString()
-      : decval;
-  return intval.toString().replaceAll(",", "");
+export const prettyNumber = (value) => {
+    if (!value) {
+        return 0;
+    }
+
+    // for string with range (iost APY "4.8-36.13" etc)
+    if (Number.isNaN(+value)) {
+        return value;
+    }
+
+    const formatedValue = formatValue(value);
+    const abbDecimals = 6;
+    const maxDecimals = 6;
+    const prefix = +formatedValue < 0 ? '-' : '';
+    const absoluteValue = Math.abs(formatedValue);
+    const intPart = Math.floor(absoluteValue);
+    const valueRank = intPart === 0 ? 0 : intPart.toString().length;
+
+    // |value| > 1
+    if (valueRank > 0) {
+        const classes = Object.keys(classesAbb).sort((a, b) => b - a);
+        const valueClass = classes.find((i) => valueRank > i);
+
+        return `${prefix}${cutNumber(
+            absoluteValue / 10 ** valueClass,
+            abbDecimals
+        )}${classesAbb[valueClass]}`;
+    }
+
+    // |value| < 1
+    if (absoluteValue && cutNumber(absoluteValue, maxDecimals) === 0) {
+        return '~0';
+    }
+
+    return `${prefix}${cutNumber(absoluteValue, maxDecimals)}`;
+};
+
+export const prettyNumberTooltip = (value) => {
+    if (!value) {
+        return '0';
+    }
+
+    // for string with range (iost APY "4.8-36.13" etc)
+    if (Number.isNaN(+value)) {
+        return value;
+    }
+
+    const formatedValue = formatValue(value);
+    const maxDecimals = 8;
+
+    return cutNumber(formatedValue, maxDecimals).toLocaleString('en', {
+        maximumFractionDigits: maxDecimals,
+    });
 };
 
 export function numberWithCommas(x, decimals) {

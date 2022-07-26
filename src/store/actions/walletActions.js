@@ -200,6 +200,7 @@ export const loadTokenWithBalances = (count=3) => async (dispatch) => {
         decimals: "6",
         denom: "uosmo",
         name: "Osmosis",
+        fullDenom: "uosmo",
         logoURI: "img/tokens/osmosis.svg",
         balance: currentWallet?.balance?.mainBalance || 0,
       };

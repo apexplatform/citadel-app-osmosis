@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Div } from "@vkontakte/vkui";
 import { connect } from "react-redux";
 import { setSelectedPool } from "../../store/actions/poolActions";

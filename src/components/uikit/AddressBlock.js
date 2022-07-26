@@ -3,7 +3,7 @@ import { Card } from "@vkontakte/vkui";
 import "../styles/components/addressBlock.css";
 import ROUTES from "../../routes";
 import { connect } from "react-redux";
-import { numberWithCommas } from "../helpers/numberFormatter";
+import { prettyNumber } from "../helpers/numberFormatter";
 import { setActivePage } from "../../store/actions/panelActions";
 import { fotmatAddress } from "../helpers/addressFormatter.js";
 import Icon from "./Icon";
@@ -28,7 +28,7 @@ const AddressBlock = (props) => {
             </div>
             <div className="address-row">
               <p className="address-block-amount">
-                {numberWithCommas(currentWallet?.balance?.mainBalance)}
+                {prettyNumber(currentWallet?.balance?.mainBalance)}
               </p>
               <span className="address-network">{currentWallet?.code}</span>
             </div>

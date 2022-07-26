@@ -8,7 +8,7 @@ import {
 } from "../../store/actions/walletActions";
 import { setActivePage } from "../../store/actions/panelActions";
 import ROUTES from "../../routes";
-import { numberWithCommas } from "../helpers/numberFormatter";
+import { prettyNumber } from "../helpers/numberFormatter";
 
 const TokenItem = (props) => {
   const { currentToken, currentWallet } = props.walletReducer;
@@ -40,7 +40,7 @@ const TokenItem = (props) => {
         </div>
         {props.withAmount && (
           <div className="token-amount-block">
-            <p className="token-symbol">{numberWithCommas(balance || 0)}</p>
+            <p className="token-symbol">{prettyNumber(balance || 0)}</p>
             <span>{props.item.code}</span>
           </div>
         )}

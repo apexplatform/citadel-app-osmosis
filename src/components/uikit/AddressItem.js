@@ -5,7 +5,7 @@ import ROUTES from "../../routes";
 import { setCurrentWallet } from "../../store/actions/walletActions";
 import { setActivePage } from "../../store/actions/panelActions";
 import "../styles/components/addressItem.css";
-import { numberWithCommas } from "../helpers/numberFormatter";
+import { prettyNumber } from "../helpers/numberFormatter";
 import Icon from "./Icon";
 const AddressItem = (props) => {
   const { currentWallet } = props.walletReducer;
@@ -28,7 +28,7 @@ const AddressItem = (props) => {
           </div>
           <div className="address-row">
             <p className="address-name address-amount">
-              {numberWithCommas(item.balance?.mainBalance)}
+              {prettyNumber(item.balance?.mainBalance)}
             </p>
             <span className="address-network">{item.network}</span>
           </div>

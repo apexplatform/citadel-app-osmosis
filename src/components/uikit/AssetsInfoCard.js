@@ -3,7 +3,7 @@ import { setSelectedPool } from "../../store/actions/poolActions";
 import { setActivePage } from "../../store/actions/panelActions";
 import { connect } from "react-redux";
 import ROUTES from "../../routes";
-import { numberWithCommas } from "../helpers/numberFormatter";
+import { prettyNumber } from "../helpers/numberFormatter";
 const AssetsInfoCard = (props) => {
   const item = props.item;
   let usdBalance = 0;
@@ -31,7 +31,7 @@ const AssetsInfoCard = (props) => {
       <div className="pool-third-column-2">
         <div>
           <div className="error-text-div">
-            <h2>{numberWithCommas(item.balance)} </h2>
+            <h2>{prettyNumber(item.balance)} </h2>
             <span> {item.code}</span>
           </div>
           <p>
