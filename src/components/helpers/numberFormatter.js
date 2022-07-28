@@ -10,16 +10,6 @@ const cutNumber = (number, digits = 0) =>
 
 const formatValue = (value) => value.toString().trim().replaceAll(',', '');
 
-const classesAbb = {
-    0: '',
-    3: 'K',
-    6: 'M',
-    9: 'B',
-    12: 'T',
-    15: 'q',
-    18: 'Q',
-};
-
 export const prettyNumber = (value) => {
     if (!value) {
         return 0;
@@ -31,24 +21,10 @@ export const prettyNumber = (value) => {
     }
 
     const formatedValue = formatValue(value);
-    const abbDecimals = 6;
     const maxDecimals = 6;
     const prefix = +formatedValue < 0 ? '-' : '';
     const absoluteValue = Math.abs(formatedValue);
-    const intPart = Math.floor(absoluteValue);
-    const valueRank = intPart === 0 ? 0 : intPart.toString().length;
-
-    // |value| > 1
-    if (valueRank > 0) {
-        const classes = Object.keys(classesAbb).sort((a, b) => b - a);
-        const valueClass = classes.find((i) => valueRank > i);
-
-        return `${prefix}${cutNumber(
-            absoluteValue / 10 ** valueClass,
-            abbDecimals
-        )}${classesAbb[valueClass]}`;
-    }
-
+   
     // |value| < 1
     if (absoluteValue && cutNumber(absoluteValue, maxDecimals) === 0) {
         return '~0';
