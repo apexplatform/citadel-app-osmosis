@@ -4,8 +4,8 @@ import { OutRoute } from './Route';
 import { swapPools } from './poolLists'
 import { Dec } from "@keplr-wallet/unit";
 export const getOutAmountRoute = async(fromToken, toToken, amount) => {
-    const denomIn = fromToken.fullDenom || getDenomByCode(fromToken.code);
-    const denomOut = toToken.fullDenom || getDenomByCode(toToken.code);
+    const denomIn = getDenomByCode(fromToken.code) || fromToken.fullDenom
+    const denomOut = getDenomByCode(toToken.code) || toToken.fullDenom 
     console.log(denomIn,denomOut)
     if (denomIn == "" || denomOut == ""){
         return { error: "There is no asset for your symbol!" };

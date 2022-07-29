@@ -5,8 +5,8 @@ import { Dec } from "@keplr-wallet/unit";
 import { InRoute } from './Route';
 
 export const getInAmountRoute = async(fromToken, toToken, amount) => {
-    const denomIn = fromToken.fullDenom || getDenomByCode(fromToken.code);
-    const denomOut = toToken.fullDenom || getDenomByCode(toToken.code);
+    const denomIn = getDenomByCode(fromToken.code) || fromToken.fullDenom 
+    const denomOut = getDenomByCode(toToken.code) ||  toToken.fullDenom 
     if (denomIn == "" || denomOut == ""){
         return { error: "There is no asset for your symbol!" };
     }
