@@ -24,7 +24,7 @@ import { checkErrors } from "./errorsActions";
 import { ValidationError } from "../../networking/models/Errors";
 import axios from "axios";
 import ROUTES from "../../routes";
-import { setSwapDisable } from "./swapActions";
+import { setSwapDisable, loadSwapPools } from "./swapActions";
 import { WalletList } from "../../networking/models/WalletList";
 import { setLoader, setPreviosPanel, setActivePage } from "./panelActions";
 import { loadTransactions } from "./transactionsActions";
@@ -154,11 +154,13 @@ export const prepareTransfer = () => (dispatch) => {
 
 export const loadNetworks = () => (dispatch) => {
   try {
-    axios.get(process.env.REACT_APP_BACKEND_URL_2 + "/api/networks.json").then((res) =>
+    axios.get(process.env.REACT_APP_BACKEND_URL_2 + "/api/networks.json").then((res) =>{
       dispatch({
         type: SET_NETWORKS,
         payload: res.data,
       })
+      dispatch(loadSwapPools());
+    }
     );
     axios
       .get(

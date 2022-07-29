@@ -6,7 +6,6 @@ import { Dec } from "@keplr-wallet/unit";
 export const getOutAmountRoute = async(fromToken, toToken, amount) => {
     const denomIn = getDenomByCode(fromToken.code) || fromToken.fullDenom
     const denomOut = getDenomByCode(toToken.code) || toToken.fullDenom 
-    console.log(denomIn,denomOut)
     if (denomIn == "" || denomOut == ""){
         return { error: "There is no asset for your symbol!" };
     }
