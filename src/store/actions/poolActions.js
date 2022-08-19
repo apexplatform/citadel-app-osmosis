@@ -163,7 +163,7 @@ const updatePoolList = async() => {
         }
         return item;
       });
-      store.dispatch(setSelectedPool(poolUpdated));
+      setSelectedPool(poolUpdated);
       store.dispatch({
         type: types.SET_INCENTIVIZED_POOLS,
         payload: incentivizedPools_,

@@ -58,11 +58,11 @@ export const sortPoolList = (list) => {
   let sortedList = list.sort(function (a, b) {
     let myLiquidity1 = a.myLiquidity
       .toString()
-      .replace("$", "")
+      .replace("$", "").replace('<', '')
       .replace(",", "");
     let myLiquidity2 = b.myLiquidity
       .toString()
-      .replace("$", "")
+      .replace("$", "").replace('<', '')
       .replace(",", "");
     if (+myLiquidity1 === +myLiquidity2) {
       return +a.id < +b.id ? -1 : +a.id > +b.id ? 1 : 0;
@@ -77,11 +77,11 @@ export const sortAllPoolList = (list) => {
   let sortedList = list.sort(function (a, b) {
     let myLiquidity1 = a.myLiquidity
       .toString()
-      .replace("$", "")
+      .replace("$", "").replace('<', '')
       .replace(",", "");
     let myLiquidity2 = b.myLiquidity
       .toString()
-      .replace("$", "")
+      .replace("$", "").replace('<', '')
       .replace(",", "");
     if (+myLiquidity1 === +myLiquidity2) {
       return +a.poolInfo[0]?.liquidity < +b.poolInfo[0]?.liquidity
@@ -103,11 +103,11 @@ export const getMyPoolList = (list) => {
   let sortedList = myList?.sort(function (a, b) {
     let myLiquidity1 = a.myLiquidity
       .toString()
-      .replace("$", "")
+      .replace("$", "").replace('<', '')
       .replace(",", "");
     let myLiquidity2 = b.myLiquidity
       .toString()
-      .replace("$", "")
+      .replace("$", "").replace('<', '')
       .replace(",", "");
     if (+myLiquidity1 === +myLiquidity2) {
       return +a.poolInfo[0]?.liquidity < +b.poolInfo[0]?.liquidity
