@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { walletActions, poolActions } from '../../store/actions';
 import { useNavigate } from 'react-router-dom';
 import { prettyNumber } from '../helpers/numberFormatter';
+import ROUTES from '../../routes';
 const SelectAddressPanel = () => {
     const config = new Config()
     const { wallets, activeWallet, usdPrice } = useSelector((state) => state.wallet)
@@ -14,7 +15,7 @@ const SelectAddressPanel = () => {
     const previousPanel = useSelector(state => state.panels.previousPanel)
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const back = () => navigate(previousPanel)
+    const back = () => navigate((previousPanel === ROUTES.MANAGE_BOND || previousPanel === ROUTES.BOND) ? ROUTES.POOL_DETAILS : previousPanel)
     const searchWallet = (wallet) => {
         let arr = wallets.filter(
           (item) =>

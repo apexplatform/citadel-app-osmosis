@@ -78,8 +78,8 @@ const ManageBondPanel = () => {
             days14: <p className='table-amount-bold'>-</p>,
         }
     ];
-    if(pool.unlockingDatas.length){
-        unbondings.forEach(elem => {
+    if(pool?.unlockingDatas?.length){
+        unbondings?.forEach(elem => {
             pool.unlockingDatas.forEach(item => {
                 Object.keys(elem).forEach(key => {
                     if(key.includes(item.duration.asDays())){
