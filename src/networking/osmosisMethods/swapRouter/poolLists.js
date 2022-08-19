@@ -1,26 +1,26 @@
 import axios from "axios";
 import PoolInfo from './PoolInfo';
-import store from "../../../store/store";
+import { store } from "../../../store/store";
 import { Assets, TokenInfo } from './TokenInfo'
+import { Dec } from "@keplr-wallet/unit";
 export let poolListResponse = null
 export let poolListWithPagination = null
 export let swapPools = null
-import { Dec } from "@keplr-wallet/unit";
 
 export const getTokenDecimal = (symbol,denom) => {
-  const { tokens } = store.getState().walletReducer;
+  const { networks } = store.getState().wallet;
   let decimal = null
   if(denom.includes('gamm')){
     return 18
   }
-  if(symbol == 'OSMO'){
+  if(symbol === 'OSMO'){
     return 6
   }
-  let osmosisToken = tokens?.osmosis;
+  let osmosisToken = networks?.osmosis;
     if (osmosisToken) {
       let keys = Object.keys(osmosisToken?.tokens);
       keys.forEach(net => {
-        if((osmosisToken.tokens[net].code == symbol) || (osmosisToken.tokens[net]?.fullDenom == denom)){
+        if((osmosisToken.tokens[net].code === symbol) || (osmosisToken.tokens[net]?.fullDenom === denom)){
           decimal = +osmosisToken?.tokens[net].decimals;
         }
       })
@@ -49,16 +49,16 @@ export const getAllPools = async () => {
 const generatePoolList = (pools,poolList) => {
   try{
     let newPools = [];
-    pools.map((pool) => {
+    pools.forEach((pool) => {
       if(poolList[pool.id]){
         let listOfAssets = []
-        poolList[pool.id]?.map((asset,i) => {
+        poolList[pool.id]?.forEach((asset,i) => {
           let decimal = getTokenDecimal(asset.symbol,asset.denom)
           if(decimal){
             listOfAssets.push(new Assets(new TokenInfo(asset.denom,asset.symbol,asset.price,decimal), new Dec(pool.poolAssets[i].weight).quo(new Dec(pool.totalWeight)), new Dec(pool.poolAssets[i].token.amount).quo(new Dec(Math.pow(10, decimal)))));
           }  
         })
-        if(listOfAssets.length == poolList[pool.id].length){
+        if(listOfAssets.length === poolList[pool.id].length){
           const poolInfo = new PoolInfo({ ...pool, totalWeight: poolList[pool.id][0]?.liquidity,listOfAssets});
           newPools.push(poolInfo);
         }   
@@ -77,10 +77,10 @@ export const getDenomByCode = (code) => {
     let keys = Object.keys(poolListResponse?.data);
     let denom = "";
     for (let i = 0; i < keys.length; i++) {
-      if (poolListResponse?.data[keys[i]][0].symbol == code) {
+      if (poolListResponse?.data[keys[i]][0].symbol === code) {
         denom = poolListResponse?.data[keys[i]][0].denom;
         break;
-      } else if (poolListResponse?.data[keys[i]][1].symbol == code) {
+      } else if (poolListResponse?.data[keys[i]][1].symbol === code) {
         denom = poolListResponse?.data[keys[i]][1].denom;
         break;
       }

@@ -1,5 +1,5 @@
 import {round} from '../utils/math'
-import { Dec, Int } from "@keplr-wallet/unit";
+import { Dec } from "@keplr-wallet/unit";
 const zeroDec = new Dec(0);
 const oneDec = new Dec(1);
 export class OutRoute {
@@ -23,7 +23,7 @@ export class OutRoute {
         this.poolRoute.forEach((pr,i) => {
             outAmount = pr.estimateOutAmount(outAmount)
             pr.amountOut=outAmount
-            if(i==0){
+            if(i===0){
                 slippage = slippage.add(pr.getSlippage(this.amount,outAmount));
             }else{
                 slippage = slippage.add(pr.getSlippage(this.poolRoute[i-1].amountOut,outAmount));
@@ -71,7 +71,7 @@ export class InRoute {
         this.poolRoute.forEach((pr,i) => {
             inAmount = pr.estimateInAmount(inAmount)
             pr.inAmount=inAmount
-            if(i==0){
+            if(i===0){
                 slippage = slippage.add(pr.getSlippage(inAmount,this.amount));
             }else{
                 slippage = slippage.add(pr.getSlippage(inAmount,this.poolRoute[i-1].inAmount));

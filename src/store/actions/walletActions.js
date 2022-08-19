@@ -1,346 +1,281 @@
-import {
-  SET_USD_PRICES,
-  SET_PREPARE_TRANSFER_RESPONSE,
-  SET_TOKEN_BALANCES,
-  SET_INCENTIVIZED_POOLS,
-  SET_ALL_POOLS,
-  SET_TOKEN_LIST,
-  SET_WALLETS,
-  SET_AMOUNT,
-  SET_FROM_TOKEN,
-  SET_TO_TOKEN,
-  SET_FROM_AMOUNT,
-  SET_TO_AMOUNT,
-  SET_TO_ADDRESS,
-  SET_CURRENT_WALLET,
-  SET_TOKEN,
-  SET_NETWORKS,
-  SET_STAKE_NODES,
-  SET_SUPERFLUID_DELEGATIONS
-} from "./types";
-import models from "../../networking/models";
-import store from "../store";
-import { checkErrors } from "./errorsActions";
-import { ValidationError } from "../../networking/models/Errors";
-import axios from "axios";
-import ROUTES from "../../routes";
-import { setSwapDisable, loadSwapPools } from "./swapActions";
-import { WalletList } from "../../networking/models/WalletList";
-import { setLoader, setPreviosPanel, setActivePage } from "./panelActions";
-import { loadTransactions } from "./transactionsActions";
-import { loadPoolList, setSelectedTokens, setSelectedPool } from "./poolActions";
+import { types } from './types';
+import { WalletList } from '../../networking/models/WalletList';
+import { ValidationError } from '../../networking/models/Errors';
+import { errorActions, usersActions } from './index';
+import { getRequest } from '../../networking/requests/getRequest';
+import { store } from '../store';
+import models from '../../networking/models';
+import Wallet from '../../networking/models/Wallet';
+import { utils } from '@citadeldao/apps-sdk';
 import { logos } from "../../networking/osmosisMethods/osmosis-logo";
-export const setCurrentWallet = (wallet) => (dispatch) => {
-  dispatch({
-    type: SET_CURRENT_WALLET,
-    payload: wallet,
-  });
-  const { pool } = store.getState().poolReducer;
-  dispatch(loadTokenWithBalances());
-  dispatch(setLoader(false));
-  dispatch(loadTransactions(10, 0));
-  dispatch(setSelectedPool(pool));
-  dispatch(setActivePage(ROUTES.POOL_DETAILS));
-  dispatch({
-    type: SET_INCENTIVIZED_POOLS,
-    payload: null,
-  });
-  dispatch({
-    type: SET_ALL_POOLS,
-    payload: null,
-  });
-  dispatch({
-    type: SET_TOKEN_BALANCES,
-    payload: null,
-  });
-  dispatch({
-    type: SET_SUPERFLUID_DELEGATIONS,
-    payload: null,
-  });
-  dispatch(loadPoolList());
-  dispatch(setSelectedTokens(null));
-  dispatch(setLoader(true));
-};
+import axios from 'axios'
+const getWalletConstructor = (address) => {
+    try {
+        const { activeWallet } = store.getState().wallet;
+        const currentWallet = address || activeWallet;
+        const WalletConstructor = models[currentWallet.network.toUpperCase()];
 
-export const setToAddress = (address) => (dispatch) => {
-  dispatch({
-    type: SET_TO_ADDRESS,
-    payload: address,
-  });
-};
+        if (WalletConstructor) {
+            return new WalletConstructor(currentWallet);
+        }
 
-export const setAmount = (amount) => (dispatch) => {
-  dispatch(setSwapDisable(false));
-  dispatch({
-    type: SET_AMOUNT,
-    payload: amount,
-  });
-};
-
-export const setSelectedToken = (token) => (dispatch) => {
-  dispatch(setSwapDisable(false));
-  dispatch(setPreviosPanel(ROUTES.HOME));
-  if (token === "from") dispatch(loadTokenWithBalances());
-  dispatch({
-    type: SET_TOKEN,
-    payload: token,
-  });
-};
-
-export const setFromToken = (token) => (dispatch) => {
-  dispatch({
-    type: SET_FROM_TOKEN,
-    payload: token,
-  });
-};
-
-export const setToToken = (token) => (dispatch) => {
-  dispatch({
-    type: SET_TO_TOKEN,
-    payload: token,
-  });
-};
-
-export const setFromAmount = (amount) => (dispatch) => {
-  dispatch({
-    type: SET_FROM_AMOUNT,
-    payload: amount,
-  });
-};
-
-export const setToAmount = (amount) => (dispatch) => {
-  dispatch({
-    type: SET_TO_AMOUNT,
-    payload: amount,
-  });
-};
-export const getCurrentWallet = () => {
-  const { currentWallet } = store.getState().walletReducer;
-  return currentWallet;
-};
-
-export const getWalletConstructor = (address) => {
-  try {
-    const currentWallet = address || getCurrentWallet();
-    const WalletConstructor = models[currentWallet.network.toUpperCase()];
-    const wallet = new WalletConstructor(currentWallet);
-    return wallet;
-  } catch {
-    new Error("Wallet doesn't exists ");
-  }
-};
-
-
-export const prepareTransfer = () => (dispatch) => {
-  const wallet = getWalletConstructor();
-  const transaction = wallet.generateBaseTransaction();
-  wallet
-    .prepareTransfer(transaction)
-    .then((ok, data) => {
-      if (ok) {
-        return dispatch({
-          type: SET_PREPARE_TRANSFER_RESPONSE,
-          payload: data,
-        });
-      } else {
-        dispatch(checkErrors(data));
-      }
-    })
-    .catch((err) => {
-      dispatch(checkErrors(err));
-    });
-};
-
-
-export const loadNetworks = () => (dispatch) => {
-  try {
-    axios.get(process.env.REACT_APP_BACKEND_URL_2 + "/api/networks.json").then((res) =>{
-      dispatch({
-        type: SET_NETWORKS,
-        payload: res.data,
-      })
-      dispatch(loadSwapPools());
+        return new Wallet(currentWallet);
+    } catch {
+        new Error('Wallet doesn\'t exists ');
     }
-    );
-    axios
-      .get(
-        "https://api.coingecko.com/api/v3/simple/price?ids=stargaze&vs_currencies=usd"
-      )
-      .then((res) =>
-        dispatch({
-          type: SET_USD_PRICES,
-          payload: res.data,
-        })
-      );
-  } catch(e) {}
 };
 
-export const loadStakeNodes = () => (dispatch) => {
-  try {
-    axios.get(process.env.REACT_APP_BACKEND_URL_2 + "/api/staking-node?version=1.0.4").then((res) => {
-      dispatch({
-        type: SET_STAKE_NODES,
-        payload: res.data.data?.osmosis,
-      })
-    });
-  } catch {}
-};
 
-export const loadTokenWithBalances = (count=3) => async (dispatch) => {
-  try {
-    const wallet = getWalletConstructor();
-    const res = await wallet.getTokenBalance();
-    const keys = res.data ? Object.keys(res.data) : [];
-    const { currentWallet, tokens, fromToken, toToken } = store.getState().walletReducer;
-    let osmosisToken = tokens?.osmosis;
-    if (osmosisToken) {
-      let keys2 = Object.keys(osmosisToken?.tokens);
-      let tokenList = [];
-      let osmosis = {
-        net: "osmosis",
-        code: "OSMO",
-        decimals: "6",
-        denom: "uosmo",
-        name: "Osmosis",
-        fullDenom: "uosmo",
-        logoURI: "img/tokens/osmosis.svg",
-        balance: currentWallet?.balance?.mainBalance || 0,
-      };
-      tokenList.push(osmosis);
-      keys2.map((elem) => {
-        osmosisToken.tokens[elem].balance = 0;
-        osmosisToken.tokens[elem].name = osmosisToken.tokens[elem].name.replace(
-          "IBC ",
-          ""
-        );
-        osmosisToken.tokens[elem].logoURI =
-          logos[elem]?.logoURI || "img/icons/unsupported.svg";
-        tokenList.push(osmosisToken.tokens[elem]);
-      });
-      keys?.map((net) => {
-        tokenList.map((token, i) => {
-          if (token.net == net) {
-            tokenList[i].balance = res.data[net].amount;
-            tokenList[i].USD = res.data[net].price?.USD;
-          }
-          if (fromToken?.code == tokenList[i].code) {
-            fromToken.balance = tokenList[i].balance;
-          } else if (toToken?.code == tokenList[i].code) {
-            toToken.balance = tokenList[i].balance;
-          }
-        });
-      });
-      dispatch({
-        type: SET_FROM_TOKEN,
-        payload: !fromToken ? tokenList[0] : fromToken,
-      });
-      dispatch({
-        type: SET_TO_TOKEN,
-        payload: !toToken ? tokenList.find(token => token.code == 'ATOM') : toToken,
-      });
-      dispatch({
-        type: SET_TOKEN_LIST,
-        payload: tokenList,
-      });
-    } else {
-       if(count>0){
-       dispatch(loadTokenWithBalances(count-1));
-      }
-    }
-  } catch (err) {
-    dispatch(checkErrors(err));
-  }
-};
-export const loadWalletWithBalances = (action) => (dispatch) => {
-  try {
+const loadWalletWithBalances = () => async (dispatch) => {
     const walletList = new WalletList();
-    const wallets = walletList.loadWalletsWithBalances(action);
-    if (wallets instanceof ValidationError) {
-      dispatch(checkErrors(wallets));
-      return;
-    }
-    if (wallets.length) {
-      dispatch({
-        type: SET_CURRENT_WALLET,
-        payload: wallets[0],
-      });
-      dispatch({
-        type: SET_WALLETS,
-        payload: wallets,
-      });
-    }
-    dispatch(setLoader(true));
-  } catch {}
+    walletList.loadWalletsWithBalances().then(wallets => {
+        if (wallets instanceof ValidationError) {
+            dispatch(errorActions.checkErrors(wallets));
+            stopSplashLoader();
+            return;
+        }
+        dispatch({
+            type: types.SET_WALLETS,
+            payload: wallets,
+        });
+        axios.get(process.env.REACT_APP_MAIN_SERVER_URL + '/currency/osmosis').then(res => {
+            store.dispatch({
+                type: types.SET_USD_PRICE,
+                payload: res?.data?.data?.USD
+            })
+        })
+        usersActions.loadUserConfig().then(user_configs => {
+            let flag = false;
+            wallets?.forEach((item) => {
+                if(item.address === user_configs?.lastWalletInfo?.address){  
+                    flag = true
+                    setTimeout(()=>{
+                        dispatch(setActiveWallet(item,false))
+                    },1000) 
+                }
+                if (!flag) {
+                    dispatch(setActiveWallet(wallets[0]));
+                }
+            })
+        }).catch(() => {
+            dispatch(setActiveWallet(wallets[0]));
+            setTimeout(() => {
+                stopSplashLoader();
+            }, 1000);
+        });
+    });
 };
 
-export const updateCurrentTokens = () => async (dispatch) => {
-  try {
-    const wallet = getWalletConstructor();
-    const res = await wallet.getTokenBalance();
-    const { fromToken, toToken, currentWallet } =
-      store.getState().walletReducer;
-    const keys = res.data ? Object.keys(res.data) : [];
-    if (keys.includes(fromToken.net)) {
-      if (res.data[fromToken.net].amount == fromToken.balance) {
-        return true;
-      } else {
-        fromToken.balance = res.data[fromToken.net]?.amount;
+const loadNetworks = () => async(dispatch) => {
+    try{
+        const rm = new utils.RequestManager()
+        const networks = await rm.send(getRequest('wallet').getNetworks())
         dispatch({
-          type: SET_FROM_TOKEN,
-          payload: fromToken,
-        });
-      }
-    }
-    if (keys.includes(toToken.net)) {
-      if (res.data[toToken.net].amount == toToken.balance) {
-        return true;
-      } else {
-        toToken.balance = res.data[toToken.net]?.amount;
+            type: types.SET_NETWORKS,
+            payload: networks
+        })
+    } catch {}
+}
+
+
+const loadStakeNodes = () => async(dispatch) => {
+    try{
+        const rm = new utils.RequestManager()
+        const res = await rm.send(getRequest('wallet').getStakeNodes())
         dispatch({
-          type: SET_TO_TOKEN,
-          payload: toToken,
-        });
-      }
+            type: types.SET_STAKE_NODES,
+            payload: res.data?.osmosis,
+        })
+    } catch {}
+}
+
+
+const preparePermissionTransfer = async (address, status, minAmount) => {
+    const wallet = getWalletConstructor(address);
+    let d = new Date();
+    let year = d.getFullYear();
+    let month = d.getMonth();
+    let day = d.getDate();
+    let expiryDate = new Date(year + 2, month, day);
+    let data = {
+        status, expiryDate: expiryDate.toISOString(),
+    };
+    if (+minAmount > 0) {
+        data.minAmount = +minAmount;
     }
-    if (fromToken.code == currentWallet.code) {
-      let response = await wallet.getWalletBalance();
-      if (response.ok) {
-        if (response.data.mainBalance == fromToken.balance) {
-          return true;
+    const transaction = await wallet.setPermissionRestake(data);
+    wallet.prepareTransfer(transaction.data).then((res) => {
+        if (res.ok) {
+            return store.dispatch({
+                type: types.SET_PREPARE_TRANSFER_RESPONSE,
+                payload: { transaction: transaction.data, wallet },
+            });
         } else {
-          fromToken.balance = response.data;
-          dispatch({
-            type: SET_FROM_TOKEN,
-            payload: fromToken,
-          });
-          currentWallet.balance = response.data;
-          dispatch({
-            type: SET_CURRENT_WALLET,
-            payload: currentWallet,
-          });
+            store.dispatch(errorActions.checkErrors(res.data));
         }
-      }
-    }
-    if (toToken.code == currentWallet.code) {
-      let response = await wallet.getWalletBalance();
-      if (response.ok) {
-        if (response.data.mainBalance == toToken.balance) {
-          return true;
-        } else {
-          toToken.balance = response.data;
-          dispatch({
-            type: SET_TO_TOKEN,
-            payload: toToken,
-          });
-          currentWallet.balance = response.data;
-          dispatch({
-            type: SET_CURRENT_WALLET,
-            payload: currentWallet,
-          });
-        }
-      }
-    }
-    return false;
-  } catch {}
+    }).catch((err) => {
+        store.dispatch(errorActions.checkErrors(err));
+    });
 };
 
+const stopSplashLoader = () => {
+    setTimeout(() => {
+        document.getElementById('root').style.display = 'block';
+        document.getElementById('splash').style.display = 'none';
+    }, 3000);
+};
+
+const setActiveWallet = (wallet, save = true) => async(dispatch) => {
+    dispatch({
+        type: types.SET_ACTIVE_WALLET,
+        payload: wallet,
+    });
+    dispatch({
+        type: types.SET_TOKENS,
+        payload: []
+    })
+    dispatch({
+        type: types.SET_ALL_POOLS,
+        payload: [],
+      });
+    dispatch({
+        type: types.SET_SELECTED_TOKENS,
+        payload: [],
+    });
+    if(save){
+        const config = {
+            lastWalletInfo: {
+                address: wallet.address,
+                network: wallet.network
+            }
+        }
+        usersActions.setUserConfig(config)
+    }
+    await loadTokenBalances(wallet)
+}
+
+
+const loadTokenBalances = async(address) => {
+    const wallet = getWalletConstructor(address)
+    const { networks } = store.getState().wallet
+    const { tokenIn, tokenOut } = store.getState().swap;
+    if(wallet && networks){
+        const balances = await wallet.getAllTokenBalance()
+        let tokenList = []
+        let osmosisToken = networks?.osmosis;
+        if (osmosisToken) {
+            let keys2 = Object.keys(osmosisToken?.tokens);
+            let osmosis = {
+                network: "osmosis",
+                code: "OSMO",
+                decimals: "6",
+                denom: "uosmo",
+                name: "Osmosis",
+                fullDenom: "uosmo",
+                logoURI: "img/tokens/osmosis.svg",
+                balance: address?.balance?.mainBalance || 0,
+            };
+            const keys = balances.data ? Object.keys(balances.data) : [];
+            tokenList.push(osmosis);
+            keys2.forEach((elem) => {
+                if(elem !== 'osmosis_terra-krt'){
+                    osmosisToken.tokens[elem].balance = 0;
+                    osmosisToken.tokens[elem].name = osmosisToken.tokens[elem].name.replace(
+                    "IBC ",
+                    ""
+                    );
+                    osmosisToken.tokens[elem].logoURI = logos[elem]?.logoURI || "img/tokens/unsupported.svg";
+                    osmosisToken.tokens[elem].network = 'osmosis'
+                    tokenList.push(osmosisToken.tokens[elem]);
+                }
+            });
+            keys?.forEach((net) => {
+                tokenList.forEach((token, i) => {
+                if (token.net === net) {
+                    tokenList[i].balance = balances.data[net].amount;
+                    tokenList[i].USD = balances.data[net].price?.USD;
+                }
+                if (tokenIn?.code === tokenList[i].code) {
+                    tokenIn.balance = tokenList[i].balance;
+                } else if (tokenOut?.code === tokenList[i].code) {
+                    tokenOut.balance = tokenList[i].balance;
+                }
+                });
+            });
+        }
+        store.dispatch({
+            type: types.SET_TOKENS,
+            payload: tokenList
+        })
+        store.dispatch({
+            type: types.SET_TOKEN_IN,
+            payload: !tokenIn ? tokenList[0] : tokenIn,
+          });
+        store.dispatch({
+            type: types.SET_TOKEN_OUT,
+            payload: !tokenOut ? tokenList.find(token => token.code === 'ATOM') : tokenOut,
+          });
+    }
+
+    setTimeout(()=>{
+        stopSplashLoader()
+    },1000) 
+}
+
+const updateWalletList = async(wallet) => {
+    let { wallets, activeWallet, networks } = store.getState().wallet
+    let metaMaskWallet = wallets && wallets.find(elem => elem.from === 'metamask')
+    if(metaMaskWallet){
+        let updateActiveWallet = false
+        if(metaMaskWallet.network === wallet.net && wallet.address){
+            if(metaMaskWallet.address === activeWallet.address){
+                updateActiveWallet = true
+            }
+            metaMaskWallet.address = wallet.address
+            const walletInstance = getWalletConstructor(metaMaskWallet)
+            const response = await walletInstance.getWalletBalance()
+            metaMaskWallet.balance = response.data.mainBalance
+            if(updateActiveWallet){
+                store.dispatch(setActiveWallet(metaMaskWallet))
+            }
+        }else{
+            wallets = wallets.filter(elem => elem.from !== 'metamask')
+            if(wallets.length === 0){
+                store.dispatch(setActiveWallet(null))
+                store.dispatch(errorActions.checkErrors(new ValidationError())) 
+            }
+        }
+    }else{
+        const walletList = new WalletList()
+        wallet.network = wallet.net
+        wallet.name = networks[wallet?.net]?.name
+        wallet.code = networks[wallet?.net]?.code
+        wallet.decimals = networks[wallet?.net]?.decimals
+        wallet.from = 'metamask'
+        wallet.getTxUrl = walletList.getTxUrl(wallet?.net)
+        const walletInstance = getWalletConstructor(wallet)
+        const response = await walletInstance.getWalletBalance()
+        wallet.balance = response.data.mainBalance
+        wallets = wallets.concat([wallet])
+        if(!activeWallet){
+            store.dispatch(setActiveWallet(wallet))
+        }
+        store.dispatch(errorActions.clearErrors())
+    }
+    store.dispatch({
+        type: types.SET_WALLETS,
+        payload: wallets
+    })
+}
+
+export const walletActions = {
+    getWalletConstructor,
+    loadWalletWithBalances,
+    loadNetworks,
+    preparePermissionTransfer,
+    stopSplashLoader,
+    setActiveWallet,
+    loadTokenBalances,
+    updateWalletList,
+    loadStakeNodes
+};

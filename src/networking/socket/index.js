@@ -1,103 +1,117 @@
 import io from 'socket.io-client'
-import { SET_WALLETS, SET_SIGNED_MESSAGE, SET_TO_TOKEN, SET_FROM_TOKEN, SET_TOKEN_LIST } from '../../store/actions/types';
-import store from "../../store/store";
-import { updatePoolList } from '../../store/actions/poolActions';
-const { auth_token } = store.getState().userReducer;
-const socket = io(
-	process.env.REACT_APP_SOCKET_URL,
-	{
-		transports: ['websocket'],
-		upgrade: false,
-		query: {
-			token: auth_token
-		},
-		reconnection: true
-	}
-);
+import { store } from "../../store/store";
+import { types } from '../../store/actions/types';
+import { poolActions } from '../../store/actions';
 
-socket.on('connect',()=>{
-	console.log('connected')
-})
+export class SocketManager {
+    // contains a socket connection
+    static socket;
+    static async connect() {
+        const { auth_token } = store.getState().user;
+        try {
+            this.socket = io(process.env.REACT_APP_SOCKET_URL, {
+                transports: ['websocket'],
+                upgrade: false,
+                query: {
+                    token: auth_token
+                },
+                reconnection: true
+            });
+            this.startListeners();
+        } catch (err) {
+            console.error(`Error on initSocketConnection: `, err);
+        }
+    }
 
-socket.on('message-from-front',(data)=>{
-	console.log('message-from-front in app', data)
-	if(data?.type == 'transaction' && data?.message == 'SUCCESS'){
-		const { transactionResponse } = store.getState().walletReducer
-		if(transactionResponse && transactionResponse.meta_info){
-			if(!transactionResponse.meta_info[0]?.title.includes('Swap')){
-				let interval = null;
-				let tryAgain = true;
-				let count = 0;
-				if (tryAgain) {
-				  interval = setInterval(async () => {
-					count++;
-					tryAgain = await store.dispatch(updatePoolList());
-					if (!tryAgain || count > 3) {
-					  clearInterval(interval);
+    static async disconnect() {
+        await this.socket.disconnect();
+        this.socket = null;
+    }
+
+    static async reconnect() {
+        await this.disconnect();
+        await this.connect();
+    }
+
+	static startListeners() {
+        try {
+			this.socket.on('connect',()=>{
+				console.log('socket is connected')
+			})
+			
+			this.socket.on('message-from-front',async(data)=>{
+				console.log('message-from-front in app', data)
+			})
+			this.socket.on('address-balance-updated-app',async(data)=>{
+				console.log('address-balance-updated-app', data)
+				const { wallets, tokens } = store.getState().wallet
+				const { tokenIn, tokenOut } = store.getState().swap
+				if(data.address && data.balance && data.net){
+					wallets.forEach(item => {
+						if(item.address === data.address && item.network === data.net){
+							item.balance = data.balance?.mainBalance
+						}
+					})
+					store.dispatch({
+						type: types.SET_WALLETS,
+						payload: wallets,
+					});
+				}	
+				tokens.forEach(item => {
+					if(item.address === data.address && item.net === data.net){
+						item.balance = data.balance?.mainBalance
 					}
-				  }, 15000);
+				})
+				if(tokenIn.net === data.net){
+					tokenIn.balance = data.balance?.mainBalance
+					store.dispatch({
+						type: types.SET_TOKEN_IN,
+						payload: tokenIn,
+					  });
 				}
-				if (!tryAgain || count > 3) {
-				  clearInterval(interval);
+				if(tokenOut.net === data.net){
+					tokenOut.balance = data.balance?.mainBalance
+					store.dispatch({
+						type: types.SET_TOKEN_OUT,
+						payload: tokenOut
+					});
 				}
-			}
-		}
+				store.dispatch({
+					type: types.SET_TOKENS,
+					payload: tokens,
+				});
+			})
+			this.socket.on('mempool-add-tx-app', (data) => {
+				console.log('mempool-add-tx-app', data)
+			})
+			
+			this.socket.on('mempool-remove-tx-app',async (data) => {
+				console.log('mempool-remove-tx-app', data)
+				const { transactionResponse } = store.getState().wallet
+				console.log(transactionResponse,'--transactionResponse')
+				if(transactionResponse && transactionResponse.meta_info){
+					if(!transactionResponse.meta_info[0]?.title.includes('Swap')){
+						let interval = null;
+						let tryAgain = true;
+						let count = 0;
+						if (tryAgain) {
+						interval = setInterval(async () => {
+							count++;
+							tryAgain = await poolActions.updatePoolList();
+							console.log(tryAgain,count,'---updater')
+							if (!tryAgain || count > 3) {
+								clearInterval(interval);
+							}
+						}, 15000);
+						}
+						if (!tryAgain || count > 3) {
+							clearInterval(interval);
+						}
+					}
+				}
+			})
+		}catch (err) {
+            console.error(`Error starting listeners: `, err);
+        }
 	}
-	if(data?.type == 'message'){
-		store.dispatch({
-			type: SET_SIGNED_MESSAGE,
-			payload: data?.message,
-		  });
-	}
-})
-
-
-socket.on('address-balance-updated-app',(data)=>{
-	console.log('address-balance-updated-app', data)
-	const {wallets,tokenList,fromToken, toToken} = store.getState().walletReducer
-	if(data.address && data.balance && data.net){
-		wallets.map(item => {
-			if(item.address == data.address && item.network == data.net){
-				item.balance = data.balance
-			}
-		})
-		store.dispatch({
-			type: SET_WALLETS,
-			payload: wallets,
-		  });
-		tokenList.map(item => {
-			if(item.address == data.address && item.net == data.net){
-				item.balance = data.balance?.mainBalance
-			}
-		})
-		if(fromToken.net==data.net){
-			fromToken.balance = data.balance?.mainBalance
-			store.dispatch({
-				type: SET_FROM_TOKEN,
-				payload: fromToken,
-			  });
-		}
-		if(toToken.net==data.net){
-			toToken.balance = data.balance?.mainBalance
-			store.dispatch({
-				type: SET_TO_TOKEN,
-				payload: toToken
-			});
-		}
-		store.dispatch({
-		type: SET_TOKEN_LIST,
-		payload: tokenList,
-		});
-	}
-})
-
-
-socket.on('mempool-add-tx-app',(data)=>{
-	console.log('mempool-add-tx-app', data)
-})
-
-socket.on('mempool-remove-tx-app',(data)=>{
-	console.log('mempool-remove-tx-app', data)
-})
-
-export default socket
+}

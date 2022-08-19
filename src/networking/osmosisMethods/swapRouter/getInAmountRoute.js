@@ -7,7 +7,7 @@ import { InRoute } from './Route';
 export const getInAmountRoute = async(fromToken, toToken, amount) => {
     const denomIn = getDenomByCode(fromToken.code) || fromToken.fullDenom 
     const denomOut = getDenomByCode(toToken.code) ||  toToken.fullDenom 
-    if (denomIn == "" || denomOut == ""){
+    if (denomIn === "" || denomOut === ""){
         return { error: "There is no asset for your symbol!" };
     }
 
@@ -24,7 +24,7 @@ export const getInAmountRoute = async(fromToken, toToken, amount) => {
         }  
     }
 
-    if (bestRoute?.estimateInAmount().toString() != '0')
+    if (bestRoute?.estimateInAmount().toString() !== '0')
     {
         const result = {...bestRoute,
             estimateInAmount: bestRoute.estimateInAmount(),

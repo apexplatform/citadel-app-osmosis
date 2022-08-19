@@ -2,21 +2,19 @@ import store from '../../store/store.js';
 import  { getWalletConstructor } from '../../store/actions/walletActions'
 import { getOutAmountRoute } from './swapRouter/getOutAmountRoute.js'
 import { networks } from '../models/network.js'
-import { SET_SWAP_INFO } from '../../store/actions/types.js';
+import types from '../../store/actions/types';
 const qs = require("querystring");
 const params = window.location.search.slice(1);
 const paramsAsObject = qs.parse(params);
 
 export const getSwapInfoByUrl = async() => {
-    const { swapPools } = store.getState().swapReducer
+    const { swapPools } = store.getState().swap
     let keys = Object.keys(paramsAsObject)
     if(paramsAsObject.amountIn && paramsAsObject.tokenIn && paramsAsObject.tokenOut && keys.length == 3){
         if(swapPools){
-            console.log('--getSwapInfoByUrl--')
             const res = await getOutAmountRoute(paramsAsObject.tokenIn,paramsAsObject.tokenOut,paramsAsObject.amountIn)
-            console.log(res,'--best route')
             store.dispatch({
-                type: SET_SWAP_INFO,
+                type: types.SET_SWAP_INFO,
                 payload: res })
         }else{
             setTimeout(() => {
@@ -28,12 +26,10 @@ export const getSwapInfoByUrl = async() => {
 }
 
 export const buildSwapTx = async() => {
-    const { swapPools } = store.getState().swapReducer
+    const { swapPools } = store.getState().swap
     if(paramsAsObject.address && paramsAsObject.net && paramsAsObject.amountIn && paramsAsObject.tokenIn && paramsAsObject.tokenOut){   
         if(swapPools){
-            console.log('--buildSwapTx--')
             const res = await getOutAmountRoute(paramsAsObject.tokenIn,paramsAsObject.tokenOut,paramsAsObject.amountIn)
-            console.log(res,'--best route--')
             const walletInfo = {
                 address: paramsAsObject.address,
                 network: paramsAsObject.net,

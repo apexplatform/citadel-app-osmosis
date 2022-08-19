@@ -1,33 +1,15 @@
-import { getWalletConstructor } from "./walletActions";
-import { checkErrors } from "./errorsActions";
-import store from "../store";
-import {
-  SET_POOL_INFO,
-  SET_DISABLE_SWAP,
-  SET_SWAP_STATUS,
-  SET_FIELD,
-  SET_SWAP_RATE,
-  SET_TOKEN_IN,
-  SET_TOKEN_OUT,
-  SET_SLIPPAGE,
-  SET_RATE_AMOUT,
-  SET_SLIPPAGE_TOLERANCE,
-  SET_OUT_AMOUNT,
-  SET_SWAP_FEE,
-  SET_FROM_USD_PRICE,
-  SET_TO_USD_PRICE,
-  SET_POOLS_LIST,
-  SET_PREPARE_TRANSFER_RESPONSE
-} from "./types";
-import {getAllPools} from '../../networking/osmosisMethods/swapRouter/poolLists'
-import BigNumber from "bignumber.js";
+import { store } from "../store";
+import { types } from "./types";
+import { walletActions, errorActions } from "./index";
+import BigNumber from 'bignumber.js';
+import { getAllPools } from '../../networking/osmosisMethods/swapRouter/poolLists'
 import { getOutAmountRoute } from '../../networking/osmosisMethods/swapRouter/getOutAmountRoute.js'
 import { getInAmountRoute } from '../../networking/osmosisMethods/swapRouter/getInAmountRoute'
-export const loadSwapPools = () => async(dispatch) => {
+const loadSwapPools = () => async(dispatch) => {
   let { swapPools } = await getAllPools()
   console.log('--swapPools updated')
   dispatch({
-    type: SET_POOLS_LIST,
+    type: types.SET_POOLS_LIST,
     payload: swapPools,
   });
   setTimeout(() => {
@@ -35,255 +17,231 @@ export const loadSwapPools = () => async(dispatch) => {
   },60000)
 }
 
-export const setRateAmount = (amount) => (dispatch) => {
+const setRateAmount = (amount) => (dispatch) => {
   dispatch({
-    type: SET_RATE_AMOUT,
+    type: types.SET_RATE_AMOUT,
     payload: amount,
   });
 };
-export const setSwapDisable = (status) => (dispatch) => {
+const setSwapDisable = (status) => (dispatch) => {
   dispatch({
-    type: SET_DISABLE_SWAP,
+    type: types.SET_DISABLE_SWAP,
     payload: status,
   });
 };
-export const setSwapStatus = (status) => (dispatch) => {
+const setSwapStatus = (status) => (dispatch) => {
   dispatch({
-    type: SET_SWAP_STATUS,
+    type: types.SET_SWAP_STATUS,
     payload: status,
   });
 };
-
-export const setSlippageTolerance = (procent) => (dispatch) => {
+  
+const setSlippageTolerance = (procent) => (dispatch) => {
   dispatch({
-    type: SET_SLIPPAGE_TOLERANCE,
+    type: types.SET_SLIPPAGE_TOLERANCE,
     payload: procent,
   });
+  const { amount } = store.getState().swap
+  dispatch(checkSwapStatus(amount))
 };
 
-export const prepareSwapTransfer =
-  (isExact, formattedAmounts) => (dispatch) => {
-    dispatch(setSwapDisable(true));
-    const wallet = getWalletConstructor();
-    const { fromToken, toToken } = store.getState().walletReducer;
-    const { slippageTolerance, poolInfo } =
-      store.getState().swapReducer;
+const setIndependentField = (field) => (dispatch) => {
+  dispatch({
+    type: types.SET_FIELD,
+    payload: field,
+  });
+};
+
+const setAmount = (amount, isExactIn=true) => (dispatch) => {
+  dispatch({
+    type: types.SET_AMOUNT,
+    payload: amount,
+  });
+  dispatch({
+    type: types.SET_EXACT_IN,
+    payload: isExactIn,
+  });
+};
+
+const setTokenIn = (token) => (dispatch) => {
+  clearSwapInfo()
+  dispatch({
+    type: types.SET_TOKEN_IN,
+    payload: token,
+  });
+  const { amount,isExactIn } = store.getState().swap
+  dispatch(getSwapInfo(amount, isExactIn))
+};
+
+const setTokenOut = (token) => (dispatch) => {
+  clearSwapInfo()
+  dispatch({
+    type: types.SET_TOKEN_OUT,
+    payload: token,
+  });
+  const { amount,isExactIn } = store.getState().swap
+  dispatch(getSwapInfo(amount, isExactIn))
+};
+
+const setSelectedToken = (token) => (dispatch) => {
+  dispatch({
+    type: types.SET_SELECTED_TOKEN,
+    payload: token,
+  });
+};
+
+const getSwapInfo = (amount = 0, isOut = true) => async(dispatch) => {
+  try {
+    let res = {error: true};
+    const { tokenIn, tokenOut } = store.getState().swap;
+    if (+amount > 0) {
+      if(isOut){
+        res = await getOutAmountRoute(tokenIn,tokenOut,amount)
+      }else{
+        res = await getInAmountRoute(tokenIn,tokenOut,amount)
+      }
+    }
+    if (!res.error) {
+      dispatch({
+        type: types.SET_OUT_AMOUNT,
+        payload: res.estimateOutAmount || res.estimateInAmount,
+      });
+      dispatch({
+        type: types.SET_SWAP_ROUTE,
+        payload: res.poolRoute,
+      });
+      dispatch({
+        type: types.SET_SWAP_RATE,
+        payload: res.estimateRate,
+      });
+      dispatch({
+        type: types.SET_SLIPPAGE,
+        payload: res.estimateSlippage,
+      });
+      dispatch({
+        type: types.SET_SWAP_FEE,
+        payload: res.swapFee,
+      });
+      dispatch({
+        type: types.SET_FROM_USD_PRICE,
+        payload: res.poolRoute && res.poolRoute[0]?.from?.usdPrice,
+      });
+      dispatch({
+        type: types.SET_TO_USD_PRICE,
+        payload: res.poolRoute && res.poolRoute[res.poolRoute?.length - 1]?.to?.usdPrice,
+      });
+    }
+    if(res.error || +amount === 0){
+      clearSwapInfo()
+    }
+    dispatch(checkSwapStatus(amount, isOut));
+  } catch (err) {
+    console.log(err)
+    dispatch(checkSwapStatus(amount, isOut));
+  }
+}
+
+const clearSwapInfo = () => {
+  store.dispatch({
+    type: types.SET_OUT_AMOUNT,
+    payload: 0,
+  });
+  store.dispatch({
+    type: types.SET_SWAP_ROUTE,
+    payload: null,
+  });
+  store.dispatch({
+    type: types.SET_SWAP_RATE,
+    payload: null,
+  });
+  store.dispatch({
+    type: types.SET_SLIPPAGE,
+    payload: null,
+  });
+  store.dispatch({
+    type: types.SET_SWAP_FEE,
+    payload: null,
+  });
+  store.dispatch({
+    type: types.SET_FROM_USD_PRICE,
+    payload: null,
+  });
+  store.dispatch({
+    type: types.SET_TO_USD_PRICE,
+    payload: null,
+  });
+}
+
+const getSwapTransaction = (formattedAmounts) => {
+    store.dispatch(setSwapDisable(true));
+    const { tokenIn, tokenOut, slippageTolerance, isExactIn, routes } = store.getState().swap;
+    const { activeWallet } = store.getState().wallet;
+    const wallet = walletActions.getWalletConstructor(activeWallet);
     const transaction = wallet.generateSwapTransaction(
-      isExact,
-      fromToken,
+      isExactIn,
+      tokenIn,
       formattedAmounts["INPUT"],
-      toToken,
+      tokenOut,
       formattedAmounts["OUTPUT"],
       slippageTolerance,
-      poolInfo,
+      routes,
     );
     wallet
       .prepareTransfer(transaction)
       .then(res => {
         if (res.ok) {
-          dispatch({
-            type: SET_PREPARE_TRANSFER_RESPONSE,
+          store.dispatch({
+            type: types.SET_PREPARE_TRANSFER_RESPONSE,
             payload: res.data,
           });
         } else {
-          dispatch(checkErrors(res.data));
+          store.dispatch(errorActions.checkErrors(res.data));
         }
       })
       .catch((err) => {
-        dispatch(checkErrors(err));
+        store.dispatch(errorActions.checkErrors(err));
       });
     setTimeout(() => {
-      dispatch(setSwapDisable(false));
+      store.dispatch(setSwapDisable(false));
     }, 5000);
   };
 
-export const swapTokens = (fromTokenAmount) => (dispatch) => {
-  const tokenIn = store.getState().swapReducer.tokenIn;
-  const tokenOut = store.getState().swapReducer.tokenOut;
-  dispatch({
-    type: SET_TOKEN_IN,
-    payload: tokenOut,
-  });
-  dispatch({
-    type: SET_TOKEN_OUT,
-    payload: tokenIn,
-  });
-  dispatch(calculateSpotPriceWithoutSwapFee(false));
-  dispatch(calculateSlippage(fromTokenAmount));
-};
-export const setIndependentField = (field) => (dispatch) => {
-  dispatch({
-    type: SET_FIELD,
-    payload: field,
-  });
-};
 
-export const updateSwapInfo = (amount = 0, isOut = true) => async (dispatch) => {
-    try {
-      let res = {error: true};
-      const { fromToken, toToken } = store.getState().walletReducer;
-      if (+amount > 0) {
-        if(isOut){
-          res = await getOutAmountRoute(fromToken,toToken,amount)
-        }else{
-          res = await getInAmountRoute(fromToken,toToken,amount)
-        }
-      
-      }
-      if (!res.error) {
-        dispatch({
-          type: SET_OUT_AMOUNT,
-          payload: res.estimateOutAmount || res.estimateInAmount,
-        });
-        dispatch({
-          type: SET_POOL_INFO,
-          payload: res.poolRoute,
-        });
-        dispatch({
-          type: SET_SWAP_RATE,
-          payload: res.estimateRate,
-        });
-        dispatch({
-          type: SET_SLIPPAGE,
-          payload: res.estimateSlippage,
-        });
-        dispatch({
-          type: SET_SWAP_FEE,
-          payload: res.swapFee,
-        });
-        dispatch({
-          type: SET_FROM_USD_PRICE,
-          payload: res.poolRoute[0]?.from?.usdPrice,
-        });
-        dispatch({
-          type: SET_TO_USD_PRICE,
-          payload: res.poolRoute[res.poolRoute?.length - 1]?.to?.usdPrice,
-        });
-        if (res.poolRoute.length) {
-          if (res.poolRoute[0].from.denom === fromToken?.denom) {
-            dispatch({
-              type: SET_TOKEN_IN,
-              payload: res.poolRoute[0]?.from,
-            });
-          } else {
-            dispatch({
-              type: SET_TOKEN_OUT,
-              payload: res.poolRoute[0]?.to,
-            });
-          }
-        }
-      }
-      if(res.error || +amount == 0){
-        dispatch({
-          type: SET_OUT_AMOUNT,
-          payload: 0,
-        });
-        dispatch({
-          type: SET_POOL_INFO,
-          payload: null,
-        });
-        dispatch({
-          type: SET_SWAP_RATE,
-          payload: null,
-        });
-        dispatch({
-          type: SET_SLIPPAGE,
-          payload: null,
-        });
-        dispatch({
-          type: SET_SWAP_FEE,
-          payload: null,
-        });
-        dispatch({
-          type: SET_FROM_USD_PRICE,
-          payload: null,
-        });
-        dispatch({
-          type: SET_TO_USD_PRICE,
-          payload: null,
-        });
-      }
-      dispatch(checkSwapStatus(amount, isOut));
-    } catch (err) {
-      dispatch(checkSwapStatus(amount, isOut));
-      dispatch(checkErrors(err));
-    }
-  };
-
-export const clearRouteInfo = () => (dispatch) => {
-  dispatch({
-    type: SET_OUT_AMOUNT,
-    payload: 0,
-  });
-  dispatch({
-    type: SET_POOL_INFO,
-    payload: null,
-  });
-  dispatch({
-    type: SET_SWAP_RATE,
-    payload: null,
-  });
-  dispatch({
-    type: SET_SLIPPAGE,
-    payload: null,
-  });
-  dispatch({
-    type: SET_SWAP_FEE,
-    payload: null,
-  });
-  dispatch({
-    type: SET_FROM_USD_PRICE,
-    payload: null,
-  });
-  dispatch({
-    type: SET_TO_USD_PRICE,
-    payload: null,
-  });
-
-  dispatch({
-    type: SET_TOKEN_IN,
-    payload: null,
-  });
-  dispatch({
-    type: SET_TOKEN_OUT,
-    payload: null,
-  });
-};
-
-export const getFromBalance = () => (dispatch) => {
-  const { fromToken, currentWallet } = store.getState().walletReducer;
-  if (fromToken?.code === currentWallet?.code)
-    return currentWallet?.balance?.mainBalance;
-  if (fromToken?.balance) return fromToken?.balance;
-  return 0;
-};
-
-export const checkSwapStatus = (amount, name) => (dispatch) => {
-  const balance = dispatch(getFromBalance());
-  const { slippage, slippageTolerance, outAmout, rate } =
-    store.getState().swapReducer;
-  const { fromToken, currentWallet } = store.getState().walletReducer;
-  let feeProcent = currentWallet?.code == fromToken?.symbol ? 0.01 : 0;
-  if (!name) {
-    amount = outAmout;
-  }
-  if(!rate && amount > 0){
-    dispatch(setSwapStatus("unavailable"));
-    return
-  }
-  if (+amount > 0) {
-    if (+amount > +balance) {
-      dispatch(setSwapStatus("insufficientBalance"));
-    } else if (+amount <= BigNumber(balance).minus(feeProcent).toNumber()) {
-      if (slippage < +slippageTolerance) {
-        dispatch(setSwapStatus("swap"));
+const checkSwapStatus = (amount) => dispatch => {
+  const { tokenIn, slippage, slippageTolerance } = store.getState().swap
+  const { activeWallet } = store.getState().wallet
+  const balance = tokenIn?.balance
+  let feeProcent = activeWallet?.code === tokenIn?.code ? 0.1 : 0
+  if(+amount > 0) {
+    if(+amount > +balance){
+      dispatch(setSwapStatus('insufficientBalance'))
+    } else if(+amount <= BigNumber(+balance).minus(feeProcent).toNumber() && +activeWallet?.balance?.mainBalance > 0){
+      if(+BigNumber(slippage * 100).toFixed(3) > +slippageTolerance){
+        dispatch(setSwapStatus('swapAnyway'))
+      } else{
+        dispatch(setSwapStatus('swap'))
+      } 
       } else {
-        dispatch(setSwapStatus("swapAnyway"));
+        dispatch(setSwapStatus('feeError'))
       }
     } else {
-      dispatch(setSwapStatus("feeError"));
+      dispatch(setSwapStatus('enterAmount'))
     }
-  } else {
-    dispatch(setSwapStatus("enterAmount"));
-  }
+}
+
+
+export const swapActions = {
+  setRateAmount,
+  setSwapDisable,
+  setSwapStatus,
+  setSlippageTolerance,
+  setIndependentField,
+  setAmount,
+  setTokenIn,
+  setTokenOut,
+  setSelectedToken,
+  getSwapInfo,
+  getSwapTransaction,
+  checkSwapStatus,
+  loadSwapPools
 };

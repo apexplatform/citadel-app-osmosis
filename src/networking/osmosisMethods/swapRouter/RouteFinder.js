@@ -7,14 +7,14 @@ export default class RouteFinder {
       
         let maxNumResults = temp.maxNumResults ? temp.maxNumResults : 3
         let maxHops = temp.maxHops ? temp.maxHops : 3;
-        if (currentPairs == undefined) {
+        if (currentPairs === undefined) {
             currentPairs = [];
         }
-        if (originalInDenom == undefined) {
+        if (originalInDenom === undefined) {
             originalInDenom = denomIn;
         }
 
-        if (bestRoutes == undefined) {
+        if (bestRoutes === undefined) {
             bestRoutes = [];
         }
         if(!pairs?.length) return
@@ -23,7 +23,7 @@ export default class RouteFinder {
         for (var i = 0; i < pairs.length; i++) {
             var pair = pairs[i];
             let denoms = []
-            pair.assets.map(a => {
+            pair.assets.forEach(a => {
                denoms.push(a.token.denom)
             })
               
@@ -31,13 +31,13 @@ export default class RouteFinder {
                 continue
             }
             let tokenOut = pair.getOutputDenom(denomIn)
-            if(tokenOut == denomOut){
+            if(tokenOut === denomOut){
                 let bestRoute = new OutRoute(amount);
                 bestRoute.poolRoute = []
                 const routes = [].concat(currentPairs, [pair])
-                routes.map((elem,i) => {
+                routes.forEach((elem,i) => {
                     let elemIn = null
-                    if(i==0){
+                    if(i===0){
                         elemIn = originalInDenom
                     } else {
                         elemIn = bestRoute.poolRoute[i-1].to.denom
@@ -62,14 +62,14 @@ export default class RouteFinder {
         try{
             let maxNumResults = temp.maxNumResults ? temp.maxNumResults : 3
             let maxHops = temp.maxHops ? temp.maxHops : 3;
-            if (currentPairs == undefined) {
+            if (currentPairs === undefined) {
                 currentPairs = [];
             }
-            if (originalInDenom == undefined) {
+            if (originalInDenom === undefined) {
                 originalInDenom = denomIn;
             }
     
-            if (bestRoutes == undefined) {
+            if (bestRoutes === undefined) {
                 bestRoutes = [];
             }
     
@@ -79,20 +79,20 @@ export default class RouteFinder {
             for (var i = 0; i < pairs.length; i++) {
                 var pair = pairs[i];
                 let denoms = []
-                pair.assets.map(a => {
+                pair.assets.forEach(a => {
                    denoms.push(a.token.denom)
                 })
                 if(!denoms.includes(denomIn)){
                     continue
                 }
                 let tokenOut = pair.getOutputDenom(denomIn)
-                if(tokenOut == denomOut){
+                if(tokenOut === denomOut){
                     let bestRoute = new InRoute(amount);
                     bestRoute.poolRoute = []
                     const routes = [].concat(currentPairs, [pair])
-                    routes.map((elem,i) => {
+                    routes.forEach((elem,i) => {
                         let elemIn = null
-                        if(i==0){
+                        if(i===0){
                             elemIn = originalInDenom
                         } else {
                             elemIn = bestRoute.poolRoute[i-1].to.denom

@@ -9,8 +9,8 @@ export default class ExchangePool {
     }
     estimateOutAmount(amount)
     {
-        const pi = swapPools.find(p => p.id == this.id);
-        if (pi.id == 0){
+        const pi = swapPools.find(p => p.id === this.id);
+        if (pi.id === 0){
             return zeroInt;
         }  
         const ep = pi.getPoolPath(this.from.denom, this.to.denom);
@@ -22,8 +22,8 @@ export default class ExchangePool {
     }
 
     getOutRate(){
-        const pi = swapPools.find(p => p.id == this.id);
-        if (pi.id == 0){
+        const pi = swapPools.find(p => p.id === this.id);
+        if (pi.id === 0){
             return zeroInt;
         }  
         const ep = pi.getPoolPath(this.from.denom, this.to.denom);
@@ -35,8 +35,8 @@ export default class ExchangePool {
     }
 
     getOutRateWithoutFee(){
-        const pi = swapPools.find(p => p.id == this.id);
-        if (pi.id == 0){
+        const pi = swapPools.find(p => p.id === this.id);
+        if (pi.id === 0){
             return zeroInt;
         }  
         const ep = pi.getPoolPath(this.from.denom, this.to.denom);
@@ -49,8 +49,8 @@ export default class ExchangePool {
 
 
     getSlippage(amountIn, amountOut){
-        const pi = swapPools.find(p => p.id == this.id);
-        if (pi.id == 0){
+        const pi = swapPools.find(p => p.id === this.id);
+        if (pi.id === 0){
             return zeroInt;
         }  
         const ep = pi.getPoolPath(this.from.denom, this.to.denom);
@@ -62,8 +62,8 @@ export default class ExchangePool {
     }
 
     estimateInAmount(amount){
-        const pi = swapPools.find(p => p.id == this.id);
-        if (pi.id == 0){
+        const pi = swapPools.find(p => p.id === this.id);
+        if (pi.id === 0){
             return zeroInt;
         }  
         const ep = pi.getPoolPath(this.from.denom, this.to.denom);
@@ -75,8 +75,8 @@ export default class ExchangePool {
     }
 
     getSwapFee(){
-        const pi = swapPools.find(p => p.id == this.id);
-        if (pi.id == 0){
+        const pi = swapPools.find(p => p.id === this.id);
+        if (pi.id === 0){
             return zeroInt;
         }  
         return pi.swapFee;

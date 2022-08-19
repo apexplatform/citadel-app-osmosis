@@ -139,7 +139,7 @@ export const round = (num,decimal=6) => {
     let arr = num.toString().split('.')
     if(arr.length > 1){
       let drob = arr[1].substr(0,decimal)
-      if(decimal==0){
+      if(decimal===0){
         result = arr[0]
       }
       result = arr[0]+'.'+drob

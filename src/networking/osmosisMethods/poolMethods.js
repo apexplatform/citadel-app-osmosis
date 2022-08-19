@@ -3,8 +3,8 @@ import { CoinPretty, Coin, Dec, DecUtils, Int, IntPretty } from "@keplr-wallet/u
 import { PricePretty } from "@keplr-wallet/unit/build/price-pretty";
 import dayjs from "dayjs";
 import { calcPoolOutGivenSingleIn } from "./utils/math";
-import store from "../../store/store";
-import { fiatCurrency, mintCurrency, poolInfoList, OSMO_MEDIUM_TX_FEE } from './constans'
+import { store } from "../../store/store";
+import { fiatCurrency, mintCurrency, poolInfoList } from './constans'
 import { poolListResponse, poolListWithPagination } from './swapRouter/poolLists'
 let duration = require("dayjs/plugin/duration");
 dayjs.extend(duration);
@@ -25,21 +25,22 @@ let superfluidDelegations = null;
 let minimumRiskFactor = null;
 let allAssets = null
 let apr_staking = null
+
 export const getPoolTokenInfo = (code, symbol = "") => {
   let result = {
-    coinDenom: null,
+    coinDenom: symbol,
     coinMinimalDenom: null,
     coinDecimals: 6,
-    coinGeckoId: null,
+    coinGeckoId: code,
     coinImageUrl: "img/icons/unsupported.svg",
   };
-  poolInfoList.map((pool) => {
+  poolInfoList.forEach((pool) => {
     if (
-      pool.coinDenom.toLowerCase() == code.toLowerCase() ||
-      pool.coinGeckoId.toLowerCase() == code.toLowerCase()
+      pool.coinDenom.toLowerCase() === code.toLowerCase() ||
+      pool.coinGeckoId.toLowerCase() === code.toLowerCase()
     ) {
       result = pool;
-    } else if (pool.coinDenom.toLowerCase() == symbol.toLowerCase()) {
+    } else if (pool.coinDenom.toLowerCase() === symbol.toLowerCase()) {
       result = pool;
     }
   });
@@ -51,10 +52,10 @@ export const getDenomByCode = (code) => {
   let keys = Object.keys(poolListResponse?.data);
   let denom = "";
   for (let i = 0; i < keys.length; i++) {
-    if (poolListResponse?.data[keys[i]][0].symbol == code) {
+    if (poolListResponse?.data[keys[i]][0].symbol === code) {
       denom = poolListResponse?.data[keys[i]][0].denom;
       break;
-    } else if (poolListResponse?.data[keys[i]][1].symbol == code) {
+    } else if (poolListResponse?.data[keys[i]][1].symbol === code) {
       denom = poolListResponse?.data[keys[i]][1].denom;
       break;
     }
@@ -76,7 +77,7 @@ const getPoolFromPagination = (response, id) => {
   if (!response) {
     return undefined;
   }
-  const pool = response.find((pool) => +pool.id == +id);
+  const pool = response.find((pool) => +pool.id === +id);
   if (!pool) {
     return undefined;
   }
@@ -86,10 +87,12 @@ const getPoolFromPagination = (response, id) => {
 export const calculateOsmoEquivalent = async(coinPretty,id) => {
   const multiplier = await calculateOsmoEquivalentMultiplier(coinPretty.currency,id);
   const stakeCurrency = getPoolTokenInfo('osmo');
-  return new CoinPretty(
+  let amount = new CoinPretty(
     stakeCurrency,
     coinPretty.mul(multiplier).mul(DecUtils.getTenExponentN(stakeCurrency.coinDecimals))
   );
+  amount._options.hideDenom = true;
+  return amount?.maxDecimals(3).toString()
 }
 
 export const calculateOsmoEquivalentMultiplier = async(currency,id) => {
@@ -140,7 +143,7 @@ export const getPools = async (address) => {
     durations = await lockableDurations();
     incentivizedPoolIds = [];
     incentivizedPools = [];
-    incentivizedPoolsResponse.data?.incentivized_pools?.map((item) => {
+    incentivizedPoolsResponse.data?.incentivized_pools?.forEach((item) => {
       if (!incentivizedPoolIds.includes(item.pool_id)) {
         incentivizedPoolIds.push(item.pool_id);
       }
@@ -151,9 +154,9 @@ export const getPools = async (address) => {
         poolListWithPagination?.data?.pools,
         lockedCoins
       );
-      incentivizedPoolIds.map((id) => {
-        allPools?.map((pool) => {
-          if (id == pool.id) {
+      incentivizedPoolIds.forEach((id) => {
+        allPools?.forEach((pool) => {
+          if (id === pool.id) {
             pool.isIncentivized = true;
             incentivizedPools.push(pool);
           }
@@ -164,9 +167,10 @@ export const getPools = async (address) => {
     }
     
     return { status: true, data: { incentivizedPools: incentivizedPools, mintPrice, allPools, balancesResponse, superfluidDelegations: superfluidDelegations.data }};
-  } catch {
+  } catch(e) {
+    console.log(e)
     return { status: false, data: {}}
-    }
+  }
 };
 
 export const checkSuperfluidPool = (poolId) => {
@@ -224,16 +228,17 @@ export const estimatePoolAPROsmo = (poolId) => {
 
 const updatePoolInfo = (pool, poolList, lockedCoins) => {
   let poolUpdated = {};
-  let foundedPool = poolList.find((item) => item.id == pool.id);
+  let foundedPool = poolList.find((item) => item.id === pool.id);
   if (foundedPool) {
     const poolData = {
       ...foundedPool,
       poolInfo: poolListResponse.data?.[foundedPool.id],
     };
+   
     const poolCoinInfo = poolData.poolInfo.map((item) => {
       return getPoolTokenInfo(item.coingecko_id, item.symbol);
     });
-    const apy = incentivizedPoolIds.includes(foundedPool.id)
+    const apr = incentivizedPoolIds.includes(foundedPool.id)
       ? computeAPY(poolData, durations[durations.length - 1]).toString()
       : "";
     const poolTVL = new PricePretty(
@@ -245,18 +250,18 @@ const updatePoolInfo = (pool, poolList, lockedCoins) => {
       return v1.asMilliseconds() > v2.asMilliseconds() ? 1 : -1;
     });
     if (incentivizedPoolIds.includes(pool.id)) {
-      lockableDurations.map((lockableDuration, i) => {
-        let apy = computeAPY(poolData, lockableDuration).toString();
+      lockableDurations.forEach((lockableDuration, i) => {
+        let apr = computeAPY(poolData, lockableDuration).toString();
         let duration = lockableDuration.asDays();
         let lockup = getLockedCoinWithDuration(poolData, lockableDuration);
         lockup.amount._options.hideDenom = true;
-        lockDurations.push({ apy, duration, lockup, lockableDuration });
+        lockDurations.push({ apr, duration, lockup, lockableDuration });
       });
     }
     const isSuperfluidPool = checkSuperfluidPool(pool.id)
-    let superFluidAPY = new Dec(0)
+    let superFluidAPR = new Dec(0)
     if(isSuperfluidPool){
-      superFluidAPY = estimatePoolAPROsmo(pool.id)
+      superFluidAPR = estimatePoolAPROsmo(pool.id)
     }
     if (lockedCoins.includes(foundedPool.id)) {
       const shareRatio = getAllGammShareRatio(foundedPool.id);
@@ -269,7 +274,7 @@ const updatePoolInfo = (pool, poolList, lockedCoins) => {
       const actualLockedShareRatio = lockedShareRatio.increasePrecision(2);
       const availableLP = getAvailableLPTokens(poolData);
       let myAmounts = [];
-      foundedPool.poolAssets.map((item, i) => {
+      foundedPool.poolAssets.forEach((item, i) => {
         const dec = new CoinPretty(
           poolCoinInfo[i],
           new Dec(item?.token?.amount)
@@ -304,14 +309,14 @@ const updatePoolInfo = (pool, poolList, lockedCoins) => {
         poolTVL: poolTVL,
         availableLP,
         isSuperfluidPool,
-        superFluidAPY,
+        superFluidAPR,
         lockDurations,
         myLiquidity: poolTVL.mul(actualShareRatio).toString(),
         myAmounts,
         myLockedAmount: incentivizedPoolIds.includes(pool.id)
           ? poolTVL.mul(actualLockedShareRatio).toString()
           : undefined,
-        apy,
+        apr,
       };
     } else {
       poolUpdated = {
@@ -324,10 +329,10 @@ const updatePoolInfo = (pool, poolList, lockedCoins) => {
         lockDurations,
         isSuperfluidPool,
         availableLP: "$0",
-        superFluidAPY, 
+        superFluidAPR, 
         myLiquidity: 0,
         myLockedAmount: 0,
-        apy,
+        apr,
       };
     }
   }
@@ -337,12 +342,13 @@ const updatePoolInfo = (pool, poolList, lockedCoins) => {
 
 const generatePoolList = (pools, lockedCoins) => {
   let newPools = [];
-  pools?.map((pool) => {
+  pools?.forEach((pool) => {
+ 
     const poolData = { ...pool, poolInfo: poolListResponse.data?.[pool.id] };
     const poolCoinInfo = poolData.poolInfo.map((item) => {
       return getPoolTokenInfo(item.coingecko_id, item.symbol);
     });
-    const apy = incentivizedPoolIds.includes(pool.id)
+    const apr = incentivizedPoolIds.includes(pool.id)
       ? computeAPY(poolData, durations[durations.length - 1]).toString()
       : "";
     const poolTVL = new PricePretty(
@@ -354,18 +360,18 @@ const generatePoolList = (pools, lockedCoins) => {
       return v1.asMilliseconds() > v2.asMilliseconds() ? 1 : -1;
     });
     if (incentivizedPoolIds.includes(pool.id)) {
-      lockableDurations.map((lockableDuration, i) => {
-        let apy = computeAPY(poolData, lockableDuration).toString();
+      lockableDurations.forEach((lockableDuration) => {
+        let apr = computeAPY(poolData, lockableDuration).toString();
         let duration = lockableDuration.asDays();
         let lockup = getLockedCoinWithDuration(poolData, lockableDuration);
         lockup.amount._options.hideDenom = true;
-        lockDurations.push({ apy, duration, lockup, lockableDuration });
+        lockDurations.push({ apr, duration, lockup, lockableDuration });
       });
     }
     const isSuperfluidPool = checkSuperfluidPool(pool.id)
-    let superFluidAPY = new Dec(0)
+    let superFluidAPR = new Dec(0)
     if(isSuperfluidPool){
-      superFluidAPY = estimatePoolAPROsmo(pool.id)
+      superFluidAPR = estimatePoolAPROsmo(pool.id)
     }
     if (lockedCoins.includes(pool.id)) {
       const shareRatio = getAllGammShareRatio(pool.id);
@@ -378,7 +384,7 @@ const generatePoolList = (pools, lockedCoins) => {
       const actualLockedShareRatio = lockedShareRatio.increasePrecision(2);
       const availableLP = getAvailableLPTokens(poolData);
       let myAmounts = [];
-      pool.poolAssets.map((item, i) => {
+      pool.poolAssets?.forEach((item, i) => {
         const dec = new CoinPretty(
           poolCoinInfo[i],
           new Dec(item?.token?.amount)
@@ -413,7 +419,7 @@ const generatePoolList = (pools, lockedCoins) => {
         poolTVL: poolTVL,
         availableLP,
         lockDurations,
-        superFluidAPY,
+        superFluidAPR,
         actualShareRatio,
         isSuperfluidPool,
         myLiquidity: poolTVL.mul(actualShareRatio).toString(),
@@ -422,7 +428,7 @@ const generatePoolList = (pools, lockedCoins) => {
         myLockedAmount: incentivizedPoolIds.includes(pool.id)
           ? poolTVL.mul(actualLockedShareRatio).toString()
           : undefined,
-        apy,
+        apr,
       });
     } else {
       newPools.push({
@@ -433,12 +439,12 @@ const generatePoolList = (pools, lockedCoins) => {
         poolCoinInfo,
         poolTVL: poolTVL,
         lockDurations,
-        superFluidAPY,
+        superFluidAPR,
         availableLP: "$0",
         myLiquidity: 0,
         isSuperfluidPool,
         myLockedAmount: 0,
-        apy,
+        apr,
       });
     }
   });
@@ -500,7 +506,7 @@ const computeAPYForSpecificDuration = (pool, duration) => {
       if (mintDenom && epochIdentifier) {
         //получаем текущую эпоху
         const epoch = epochResponse?.data?.epochs.find(
-          (elem) => elem.identifier == epochIdentifier
+          (elem) => elem.identifier === epochIdentifier
         );
         if (mintCurrency && mintCurrency.coinGeckoId && epoch.duration) {
           //(кажется) это общая стоимость всех инсентивированных пулов
@@ -510,7 +516,7 @@ const computeAPYForSpecificDuration = (pool, duration) => {
           //стоимость инсентивированного пула
           const potWeight = getWeight(gaugeId);
           //цена осмосиса в пуле
-          mintPrice = pool.id == "1" ? getPrice(pool) : mintPrice;
+          mintPrice = pool.id === "1" ? getPrice(pool) : mintPrice;
 
           //вычисление общей стоимости залоченных в инсентивайзд пуле денег
           const poolTVL = new PricePretty(
@@ -702,10 +708,10 @@ export const getAvailableLPTokens = (pool) => {
 
 export const getLockedGammShare = (poolId) => {
   let locked = null;
-  lockedResponse.data?.coins?.map((pool) => {
+  lockedResponse.data?.coins?.forEach((pool) => {
     if (pool.denom.startsWith("gamm/pool/")) {
       let id = pool.denom.replace("gamm/pool/", "");
-      if (id == poolId) {
+      if (id === poolId) {
         locked = new CoinPretty(getGammInfo(poolId), new Dec(pool.amount));
       }
     }
@@ -719,10 +725,10 @@ export const getLockedGammShare = (poolId) => {
 
 export const getAvailableGammShare = (poolId) => {
   let available = null;
-  balancesResponse.data?.result?.map((pool) => {
+  balancesResponse.data?.result?.forEach((pool) => {
     if (pool.denom.startsWith("gamm/pool/")) {
       let id = pool.denom.replace("gamm/pool/", "");
-      if (id == poolId) {
+      if (id === poolId) {
         available = new CoinPretty(getGammInfo(poolId), new Dec(pool.amount));
       }
     }
@@ -779,9 +785,9 @@ const getLockedCoinWithDuration = (pool, duration) => {
 
 
 export function estimateJoinSwapExternAmountIn(tokenIn) {
-  const { pool } = store.getState().poolReducer;
+  const { pool } = store.getState().pool;
   const poolAsset = pool.poolAssets.find(
-    (item) => item.token.denom == tokenIn.denom
+    (item) => item.token.denom === tokenIn.denom
   );
   const shareOutAmount = calcPoolOutGivenSingleIn(
     new Dec(poolAsset.token.amount),
@@ -834,8 +840,8 @@ export function estimateExitPool(shareInAmount, pool) {
 
 export const getMaxBalance = (index, pool, prettyBalanceList, amounts) => {
   let currentBalance = 0;
-  prettyBalanceList.map((item) => {
-    if (item.denom == amounts[index].denom) {
+  prettyBalanceList.forEach((item) => {
+    if (item.denom === amounts[index].denom) {
       currentBalance = item.amount;
     }
   });
@@ -843,7 +849,7 @@ export const getMaxBalance = (index, pool, prettyBalanceList, amounts) => {
     pool.poolCoinInfo[index],
     new Dec(currentBalance)
   );
-  if (amounts[index].denom == "uosmo") {
+  if (amounts[index].denom === "uosmo") {
     balanceInfo = new Dec(currentBalance).sub(new Dec('12500'));
     balanceInfo = new CoinPretty(pool.poolCoinInfo[index], balanceInfo);
   }

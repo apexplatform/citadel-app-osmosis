@@ -1,103 +1,100 @@
-import {
-  SET_OPENED_POOL,
-  SET_PREPARE_TRANSFER_RESPONSE,
-  SET_TOKEN_BALANCES,
-  SET_LIQUIDITY_METHOD,
-  SET_INCENTIVIZED_POOLS,
-  SET_ALL_POOLS,
-  SET_SELECTED_TOKENS,
-  SET_OSMOSIS_PRICE,
-  SET_ACTIVE_MODAL,
-  SET_SELECTED_NODE,
-  SET_SUPERFLUID_DELEGATIONS,
-  SET_IS_SUPERFLIUD
-} from "./types";
-import { getWalletConstructor } from "./walletActions";
-import { checkErrors } from "./errorsActions";
-import {loadPoolData} from '../../networking/osmosisMethods/poolMethods'
-import store from "../store";
-export const setSelectedPool = (pool) => (dispatch) => {
-  dispatch({
-    type: SET_OPENED_POOL,
-    payload: pool,
-  });
-};
+import { types } from "./types";
+import { walletActions, errorActions } from "./";
+import { store } from "../store";
+import { loadPoolData } from '../../networking/osmosisMethods/poolMethods'
 
-export const getPoolData = () => (dispatch) => {
+const getPoolData = () => {
   try{
     loadPoolData()
   }catch{}
 }
 
-export const setIsSuperfluidLock = (pool) => (dispatch) => {
+const setAmount = (amount) => (dispatch) => {
   dispatch({
-    type: SET_IS_SUPERFLIUD,
+    type: types.SET_POOL_AMOUNT,
+    payload: amount,
+  });
+};
+
+const setSelectedPool = (pool) => {
+  store.dispatch({
+    type: types.SET_OPENED_POOL,
     payload: pool,
   });
 };
 
-export const setSelectedNode = (node) => (dispatch) => {
-  dispatch({
-    type: SET_SELECTED_NODE,
+const setIsSuperfluidLock = (pool) => {
+  store.dispatch({
+    type: types.SET_IS_SUPERFLIUD,
+    payload: pool,
+  });
+};
+
+const setSelectedNode = (node) => {
+  store.dispatch({
+    type: types.SET_SELECTED_NODE,
     payload: node,
   });
 };
 
-export const setSelectedTokens = (tokens) => (dispatch) => {
-  dispatch({
-    type: SET_SELECTED_TOKENS,
+const setSelectedTokens = (tokens) => {
+  store.dispatch({
+    type: types.SET_SELECTED_TOKENS,
     payload: tokens,
   });
 };
 
-export const setPoolMethod = (pool) => (dispatch) => {
-  dispatch({
-    type: SET_LIQUIDITY_METHOD,
+const setPoolMethod = (pool) => {
+  store.dispatch({
+    type: types.SET_LIQUIDITY_METHOD,
     payload: pool,
   });
 };
 
-export const loadPoolList = (count = 0) => async (dispatch) => {
+const loadPoolList = (count = 0) => async(dispatch) => {
   try {
-    const wallet = getWalletConstructor();
-    const { currentWallet } = store.getState().walletReducer;
+    const wallet = walletActions.getWalletConstructor();
+    const { pool } = store.getState().pool
     if (wallet) {
       const { status, data } = await wallet.getPools();
-        console.log(status,'--pool list status', data)
+        console.log(status,'--pool list status',count, data)
         if(status){
         const { incentivizedPools, mintPrice, allPools, balancesResponse, superfluidDelegations} = data
           dispatch({
-            type: SET_INCENTIVIZED_POOLS,
+            type: types.SET_INCENTIVIZED_POOLS,
             payload: incentivizedPools,
           });
           dispatch({
-            type: SET_OSMOSIS_PRICE,
+            type: types.SET_OSMOSIS_PRICE,
             payload: mintPrice,
           });
           dispatch({
-            type: SET_ALL_POOLS,
+            type: types.SET_ALL_POOLS,
             payload: allPools,
           });
+          if(pool && pool.id){
+            let updatedPool = allPools.find(elem => elem.id === pool.id)
+            if(updatedPool){
+              dispatch({
+                type: types.SET_OPENED_POOL,
+                payload: updatedPool,
+              });
+            }
+          }
           dispatch({
-            type: SET_TOKEN_BALANCES,
+            type: types.SET_TOKEN_BALANCES,
             payload: balancesResponse?.data?.result,
           });
           dispatch({
-            type: SET_SUPERFLUID_DELEGATIONS,
+            type: types.SET_SUPERFLUID_DELEGATIONS,
             payload: superfluidDelegations,
           });
         }else{
-          if(count<=3){
-            setTimeout(() => dispatch(loadPoolList(count++)) , 5000)
-          }  
+          // if(count<=3){
+          //   setTimeout(() => dispatch(loadPoolList(count++)) , 5000)
+          // }  
         }
      }
-    if (currentWallet) {
-      dispatch({
-        type: SET_ACTIVE_MODAL,
-        payload: null,
-      });
-    }
     return false;
   } catch(err) {
     const start = new Date();
@@ -109,79 +106,78 @@ export const loadPoolList = (count = 0) => async (dispatch) => {
     let startMinute = 0;
     let endTime = 17;
     let endMinute = 30;
-    end.setHours(
+    end.setHours(// eslint-disable-next-line
       eval(endTime + gmt.substring(0, 1) + parseInt(gmt.substring(1, 3)))
     );
-    end.setMinutes(
+    end.setMinutes(// eslint-disable-next-line
       eval(endMinute + gmt.substring(0, 1) + parseInt(gmt.substring(3)))
     );
-    start.setHours(
+    start.setHours(// eslint-disable-next-line
       eval(startTime + gmt.substring(0, 1) + parseInt(gmt.substring(1, 3)))
     );
-    start.setMinutes(
+    start.setMinutes(// eslint-disable-next-line
       eval(startMinute + gmt.substring(0, 1) + parseInt(gmt.substring(3)))
     );
     if (now.getTime() > start.getTime() && now.getTime() < end.getTime()) {
       dispatch({
-        type: SET_ACTIVE_MODAL,
+        type: types.SET_ACTIVE_MODAL,
         payload: "alarm",
       });
-      let interval = null;
-      let tryAgain = true;
-      if (tryAgain) {
-        interval = setInterval(async () => {
-          tryAgain = await dispatch(loadPoolList());
-          if (!tryAgain) {
-            clearInterval(interval);
-          }
-        }, 20000);
-      }
-      if (!tryAgain) {
-        clearInterval(interval);
-      }
+      // let interval = null;
+      // let tryAgain = true;
+      // if (tryAgain) {
+      //   interval = setInterval(async () => {
+      //     tryAgain = await dispatch(loadPoolList());
+      //     if (!tryAgain) {
+      //       clearInterval(interval);
+      //     }
+      //   }, 20000);
+      // }
+      // if (!tryAgain) {
+      //   clearInterval(interval);
+      // }
     }
     return true;
   }
 };
 
-export const updatePoolList = () => async (dispatch) => {
-  const wallet = getWalletConstructor();
+const updatePoolList = async() => {
+  const wallet = walletActions.getWalletConstructor();
   if (wallet) {
-    const { incentivizedPools, allPools, pool } = store.getState().poolReducer;
+    const { incentivizedPools, allPools, pool } = store.getState().pool;
     if(pool){
-      const { poolUpdated, mintPrice, balancesResponse } =
-      await wallet.getPoolUpdate(pool);
+      const { poolUpdated, mintPrice, balancesResponse } = await wallet.getPoolUpdate(pool);
     if (
-      poolUpdated.myLiquidity != pool.myLiquidity ||
-      poolUpdated.availableLP != pool.availableLP
+      poolUpdated.myLiquidity !== pool.myLiquidity ||
+      poolUpdated.availableLP !== pool.availableLP
     ) {
       let incentivizedPools_ = incentivizedPools.map((item) => {
-        if (item.id == poolUpdated.id) {
+        if (item.id === poolUpdated.id) {
           item = poolUpdated;
         }
         return item;
       });
       let allPools_ = allPools.map((item) => {
-        if (item.id == poolUpdated.id) {
+        if (item.id === poolUpdated.id) {
           item = poolUpdated;
         }
         return item;
       });
-      dispatch(setSelectedPool(poolUpdated));
-      dispatch({
-        type: SET_INCENTIVIZED_POOLS,
+      store.dispatch(setSelectedPool(poolUpdated));
+      store.dispatch({
+        type: types.SET_INCENTIVIZED_POOLS,
         payload: incentivizedPools_,
       });
-      dispatch({
-        type: SET_OSMOSIS_PRICE,
+      store.dispatch({
+        type: types.SET_OSMOSIS_PRICE,
         payload: mintPrice,
       });
-      dispatch({
-        type: SET_ALL_POOLS,
+      store.dispatch({
+        type: types.SET_ALL_POOLS,
         payload: allPools_,
       });
-      dispatch({
-        type: SET_TOKEN_BALANCES,
+      store.dispatch({
+        type: types.SET_TOKEN_BALANCES,
         payload: balancesResponse?.data?.result,
       });
       return false;
@@ -189,17 +185,169 @@ export const updatePoolList = () => async (dispatch) => {
       return true;
     }
     } else {
-      dispatch(loadPoolList())
+      store.dispatch(loadPoolList())
       return false
     }
   }
 };
 
-export const prepareJoinPoolTransaction =
-  (amounts, shareOutAmount, singleLp) => (dispatch) => {
-    const wallet = getWalletConstructor();
-    const { pool } = store.getState().poolReducer;
-    const { slippageTolerance } = store.getState().swapReducer;
+
+const prepareCreatePool = (swapFee) => {
+  const wallet = walletActions.getWalletConstructor();
+  if (wallet) {
+    const { selectedTokens } = store.getState().pool;
+    let transaction = wallet.generateCreatePoolTransaction(
+      selectedTokens,
+      swapFee
+    );
+    wallet
+      .prepareTransfer(transaction)
+      .then(res => {
+        if (res.ok) {
+          store.dispatch({
+            type: types.SET_PREPARE_TRANSFER_RESPONSE,
+            payload: res.data,
+          });
+        } else {
+          store.dispatch(errorActions.checkErrors(res));
+        }
+      })
+      .catch((err) => {
+        store.dispatch(errorActions.checkErrors(err));
+      });
+  }
+};
+
+const prepareExitPoolTransaction = (amounts, shareInAmount) =>  {
+    const wallet = walletActions.getWalletConstructor();
+    if (wallet) {
+      const { pool } = store.getState().pool;
+      const { slippageTolerance } = store.getState().swap;
+      let transaction = wallet.generateExitPoolTransaction(
+        pool,
+        amounts,
+        shareInAmount,
+        slippageTolerance
+      );
+      wallet
+        .prepareTransfer(transaction)
+        .then(res => {
+          if (res.ok) {
+            store.dispatch({
+              type: types.SET_PREPARE_TRANSFER_RESPONSE,
+              payload: res.data,
+            });
+          } else {
+            store.dispatch(errorActions.checkErrors(res));
+          }
+        })
+        .catch((err) => {
+          store.dispatch(errorActions.checkErrors(err));
+        });
+    }
+  };
+
+const prepareSuperfluidDelegate = (validator,lockData) => {
+  const wallet = walletActions.getWalletConstructor();
+  if (wallet) {
+    let transaction = wallet.generateSuperfluidDelegateTransaction(validator,lockData);
+    wallet
+      .prepareTransfer(transaction)
+      .then(res => {
+        if (res.ok) {
+          store.dispatch({
+            type: types.SET_PREPARE_TRANSFER_RESPONSE,
+            payload: res.data,
+          });
+        }else{
+          store.dispatch(errorActions.checkErrors(res));
+        }
+      })
+      .catch((err) => {
+        store.dispatch(errorActions.checkErrors(err));
+      });
+  }
+};
+
+const prepareLockAndDelegateTransaction = (shareInAmount, validator) => {
+    const wallet = walletActions.getWalletConstructor();
+    if (wallet) {
+      const { pool } = store.getState().pool;
+      let transaction = wallet.generateLockAndDelegateTransaction(
+        pool,
+        shareInAmount,
+        validator
+      );
+      wallet
+        .prepareTransfer(transaction)
+        .then(res => {
+          if (res.ok) {
+            store.dispatch({
+              type: types.SET_PREPARE_TRANSFER_RESPONSE,
+              payload: res.data,
+            });
+          } else {
+            store.dispatch(errorActions.checkErrors(res));
+          }
+        })
+        .catch((err) => {
+          store.dispatch(errorActions.checkErrors(err));
+        });
+    }
+  };
+const prepareLockTokensTransaction = (shareInAmount, duration) => {
+    const wallet = walletActions.getWalletConstructor();
+    if (wallet) {
+      const { pool } = store.getState().pool;
+      let transaction = wallet.generateLockTokensTransaction(
+        pool,
+        shareInAmount,
+        duration
+      );
+      wallet
+        .prepareTransfer(transaction)
+        .then(res => {
+          if (res.ok) {
+            store.dispatch({
+              type: types.SET_PREPARE_TRANSFER_RESPONSE,
+              payload: res.data,
+            });
+          } else {
+            store.dispatch(errorActions.checkErrors(res));
+          }
+        })
+        .catch((err) => {
+          store.dispatch(errorActions.checkErrors(err));
+        });
+    }
+  };
+
+const prepareBeginUnlockTokensTransaction = (duration,isSyntheticLock=false) => {
+  const wallet = walletActions.getWalletConstructor();
+  if (wallet) {
+    let transaction = wallet.generateBeginUnlockTokensTransaction(duration,isSyntheticLock);
+    wallet
+      .prepareTransfer(transaction)
+      .then(res => {
+        if (res.ok) {
+          store.dispatch({
+            type: types.SET_PREPARE_TRANSFER_RESPONSE,
+            payload: res.data,
+          });
+        } else {
+          store.dispatch(errorActions.checkErrors(res));
+        }
+      })
+      .catch((err) => {
+        store.dispatch(errorActions.checkErrors(err));
+      });
+  }
+};
+
+const prepareJoinPoolTransaction = (amounts, shareOutAmount, singleLp) => {
+    const wallet = walletActions.getWalletConstructor();
+    const { pool } = store.getState().pool;
+    const { slippageTolerance } = store.getState().swap;
     if (wallet) {
       let transaction = {};
       if (singleLp) {
@@ -221,191 +369,35 @@ export const prepareJoinPoolTransaction =
         .prepareTransfer(transaction)
         .then(res => {
           if (res.ok) {
-            dispatch({
-              type: SET_PREPARE_TRANSFER_RESPONSE,
+            store.dispatch({
+              type: types.SET_PREPARE_TRANSFER_RESPONSE,
               payload: res.data,
             });
           } else {
-            dispatch(checkErrors(res.data));
+            store.dispatch(errorActions.checkErrors(res));
           }
         })
         .catch((err) => {
-          dispatch(checkErrors(err));
+          store.dispatch(errorActions.checkErrors(err));
         });
     }
   };
 
-export const prepareExitPoolTransaction =
-  (amounts, shareInAmount) => (dispatch) => {
-    const wallet = getWalletConstructor();
-    if (wallet) {
-      const { pool } = store.getState().poolReducer;
-      const { slippageTolerance } = store.getState().swapReducer;
-      let transaction = wallet.generateExitPoolTransaction(
-        pool,
-        amounts,
-        shareInAmount,
-        slippageTolerance
-      );
-      wallet
-        .prepareTransfer(transaction)
-        .then(res => {
-          if (res.ok) {
-            dispatch({
-              type: SET_PREPARE_TRANSFER_RESPONSE,
-              payload: res.data,
-            });
-          } else {
-            dispatch(checkErrors(res.data));
-          }
-        })
-        .catch((err) => {
-          dispatch(checkErrors(err));
-        });
-    }
-  };
-
-export const prepareLockTokensTransaction =
-  (shareInAmount, duration) => (dispatch) => {
-    const wallet = getWalletConstructor();
-    if (wallet) {
-      const { pool } = store.getState().poolReducer;
-      let transaction = wallet.generateLockTokensTransaction(
-        pool,
-        shareInAmount,
-        duration
-      );
-      wallet
-        .prepareTransfer(transaction)
-        .then(res => {
-          if (res.ok) {
-            dispatch({
-              type: SET_PREPARE_TRANSFER_RESPONSE,
-              payload: res.data,
-            });
-          } else {
-            dispatch(checkErrors(res.data));
-          }
-        })
-        .catch((err) => {
-          dispatch(checkErrors(err));
-        });
-    }
-  };
-
-export const prepareLockAndDelegateTransaction =
-  (shareInAmount, validator) => (dispatch) => {
-    const wallet = getWalletConstructor();
-    if (wallet) {
-      const { pool } = store.getState().poolReducer;
-      let transaction = wallet.generateLockAndDelegateTransaction(
-        pool,
-        shareInAmount,
-        validator
-      );
-      wallet
-        .prepareTransfer(transaction)
-        .then(res => {
-          if (res.ok) {
-            dispatch({
-              type: SET_PREPARE_TRANSFER_RESPONSE,
-              payload: res.data,
-            });
-          } else {
-            dispatch(checkErrors(res.data));
-          }
-        })
-        .catch((err) => {
-          dispatch(checkErrors(err));
-        });
-    }
-  };
-
-export const prepareBeginUnlockTokensTransaction = (duration,isSyntheticLock=false) => (dispatch) => {
-  const wallet = getWalletConstructor();
-  if (wallet) {
-    let transaction = wallet.generateBeginUnlockTokensTransaction(duration,isSyntheticLock);
-    wallet
-      .prepareTransfer(transaction)
-      .then(res => {
-        if (res.ok) {
-          dispatch({
-            type: SET_PREPARE_TRANSFER_RESPONSE,
-            payload: res.data,
-          });
-        } else {
-          dispatch(checkErrors(res.data));
-        }
-      })
-      .catch((err) => {
-        dispatch(checkErrors(err));
-      });
-  }
-};
-
-export const prepareUnlockTokensTransaction = (lockIds) => (dispatch) => {
-  const wallet = getWalletConstructor();
-  if (wallet) {
-    let transaction = wallet.generateUnlockTokensTransaction(lockIds);
-    wallet
-      .prepareTransfer(transaction)
-      .then(res => {
-        if (res.ok) {
-          dispatch({
-            type: SET_PREPARE_TRANSFER_RESPONSE,
-            payload: res.data,
-          });
-        }
-      })
-      .catch((err) => {
-        dispatch(checkErrors(err));
-      });
-  }
-};
-
-export const prepareCreatePool = (swapFee) => (dispatch) => {
-  const wallet = getWalletConstructor();
-  if (wallet) {
-    const { selectedTokens } = store.getState().poolReducer;
-    let transaction = wallet.generateCreatePoolTransaction(
-      selectedTokens,
-      swapFee
-    );
-    wallet
-      .prepareTransfer(transaction)
-      .then(res => {
-        if (res.ok) {
-          dispatch({
-            type: SET_PREPARE_TRANSFER_RESPONSE,
-            payload: res.data,
-          });
-        }
-      })
-      .catch((err) => {
-        dispatch(checkErrors(err));
-      });
-  }
-};
-
-
-export const prepareSuperfluidDelegate = (validator,lockData) => (dispatch) => {
-  const wallet = getWalletConstructor();
-  if (wallet) {
-    let transaction = wallet.generateSuperfluidDelegateTransaction(validator,lockData);
-    wallet
-      .prepareTransfer(transaction)
-      .then(res => {
-        if (res.ok) {
-          dispatch({
-            type: SET_PREPARE_TRANSFER_RESPONSE,
-            payload: res.data,
-          });
-        }else{
-          dispatch(checkErrors(res.data));
-        }
-      })
-      .catch((err) => {
-        dispatch(checkErrors(err));
-      });
-  }
-};
+export const poolActions = {
+  setSelectedPool,
+  prepareSuperfluidDelegate,
+  setIsSuperfluidLock,
+  setSelectedNode,
+  setSelectedTokens,
+  setPoolMethod,
+  getPoolData,
+  loadPoolList,
+  prepareCreatePool,
+  setAmount,
+  prepareExitPoolTransaction,
+  prepareLockAndDelegateTransaction,
+  prepareLockTokensTransaction,
+  prepareBeginUnlockTokensTransaction,
+  prepareJoinPoolTransaction,
+  updatePoolList
+}

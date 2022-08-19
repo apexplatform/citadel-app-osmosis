@@ -1,47 +1,44 @@
-.transaction-type-text{
-    font-weight: 700;
+.transactions-details-block span{
+    font-weight: 400;
     font-size: 16px;
-    line-height: 20px;
-    font-weight: 500;
+    line-height: 19px;
 }
 
-.transaction-details{
-    padding: 18px;
+.transactions-details-block .transaction-address{
+    color: #5639E0;
 }
-.transasction-details-row{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin: 0;
-    height: 40px;
+
+.transactions-details-block .transactions-amount{
+    font-weight: 700;
+    color: #5639E0;
 }
-.description-text{
-    color: #818C99;
+
+.transactions-details-block .transaction-ticker{
+    color: black;
+}
+
+.transactions-details-fee{
+    font-weight: 700 !important;
+    color: #0091A6;
 }
 
 .transactions-status{
-    font-size: 18px;
-    font-weight: 500;
-    color: #4BB34B;
-}
-.transactions-status-failed{
-    font-size: 18px;
-    font-weight: 500;
-    color: #E64646;
-}
-.transactions-details-fee{
-    font-size: 18px;
-    font-weight: 500;
+    color: #0F8932;
+    font-weight: 700 !important;
+} 
+
+.transactions-status-failed {
+    color:  #CC3030;
+    font-weight: 700 !important;
 }
 
-.transaction-details-header{
-    text-transform: capitalize;
-    text-align: center;
-    font-weight: 400;
+.transactions-details-block .row .custom-icon{
+    margin-left: 4px;
 }
 
-.transactions-block{
-    margin-bottom: 145px;
+.transaction-datetime{
+    font-weight: 600 !important;
+    color: #6B93C0;
 }
 
 .no-transactions-block{
@@ -49,37 +46,17 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin: auto;
+    margin: 17% auto auto;
 }
-.transasction-details-row span{
-    text-align: right;
-}
+
 .no-transactions-block h3{
-    font-weight: 500;
     margin-bottom: 0;
+    font-weight: 700;
 }
 
 .no-transactions-block p{
-    font-weight: 300;
     color: #28436E;
     text-align: center;
     width: 70%;
     font-size: 15px;
-}
-
-.no-transactions-block img{
-    margin: 13% auto 20px;
-}
-
-.transactions-grid{
-    margin:10px;
-    margin-bottom: 150px;
-}
-
-.transactions-card{
-    margin-bottom:10px;
-}
-
-.transaction-link{
-    margin-left: 5px;
 }

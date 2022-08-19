@@ -14,10 +14,22 @@ export const sortList = (list) => {
   return sortedList
 }
 
+export const getSymbol = (token,tokenList) => {
+  if(token.symbol !== "") {
+    return token.symbol
+  } else {
+    let item = tokenList.find(elem => elem.fullDenom === token.denom)
+    if(item){
+      return item.code
+    }else{
+      return '-'
+    }
+  }
+}
 
 export const sortPoolAssetsList = (list) => {
   let sortedList = list.sort(function (a, b) {
-    if (+a.usdBalance == +b.usdBalance) {
+    if (+a.usdBalance === +b.usdBalance) {
       return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
     } else {
       return +a.usdBalance < +b.usdBalance ? 1 : -1;
@@ -28,14 +40,14 @@ export const sortPoolAssetsList = (list) => {
 
 export const sortAssetsList = (list) => {
   let sortedList = list.sort(function (a, b) {
-    if (+a.usdBalance == +b.usdBalance) {
+    if (+a.usdBalance === +b.usdBalance) {
       return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
     } else {
       return +a.usdBalance < +b.usdBalance ? 1 : -1;
     }
   });
   let filteredList = sortedList.filter((item) => item.code !== "OSMO");
-  let osmoToken = sortedList.find((item) => item.code == "OSMO");
+  let osmoToken = sortedList.find((item) => item.code === "OSMO");
   if (osmoToken) {
     filteredList.unshift(osmoToken);
   }
@@ -52,7 +64,7 @@ export const sortPoolList = (list) => {
       .toString()
       .replace("$", "")
       .replace(",", "");
-    if (+myLiquidity1 == +myLiquidity2) {
+    if (+myLiquidity1 === +myLiquidity2) {
       return +a.id < +b.id ? -1 : +a.id > +b.id ? 1 : 0;
     } else {
       return +myLiquidity1 < +myLiquidity2 ? 1 : -1;
@@ -71,7 +83,7 @@ export const sortAllPoolList = (list) => {
       .toString()
       .replace("$", "")
       .replace(",", "");
-    if (+myLiquidity1 == +myLiquidity2) {
+    if (+myLiquidity1 === +myLiquidity2) {
       return +a.poolInfo[0]?.liquidity < +b.poolInfo[0]?.liquidity
         ? 1
         : +a.poolInfo[0]?.liquidity > +b.poolInfo[0]?.liquidity
@@ -97,7 +109,7 @@ export const getMyPoolList = (list) => {
       .toString()
       .replace("$", "")
       .replace(",", "");
-    if (+myLiquidity1 == +myLiquidity2) {
+    if (+myLiquidity1 === +myLiquidity2) {
       return +a.poolInfo[0]?.liquidity < +b.poolInfo[0]?.liquidity
         ? 1
         : +a.poolInfo[0]?.liquidity > +b.poolInfo[0]?.liquidity

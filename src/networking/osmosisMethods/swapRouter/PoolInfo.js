@@ -14,7 +14,7 @@ export default class PoolInfo{
         }
 
         getOutputDenom(denomIn){
-            const outAsset = this.assets.find(a => a.token.denom != denomIn);
+            const outAsset = this.assets.find(a => a.token.denom !== denomIn);
             return outAsset.token.denom
         }
 
@@ -50,7 +50,7 @@ export default class PoolInfo{
             let inId = -1;
             for (let i = 0; i < this.assets.length; i++)
             {
-                if (denomIn == this.assets[i].token.denom)
+                if (denomIn === this.assets[i].token.denom)
                 {
                     inId = i;
                     break;
@@ -59,14 +59,14 @@ export default class PoolInfo{
             let outId = -1;
             for (let i = 0; i < this.assets.length; i++)
             {
-                if (denomOut == this.assets[i].token.denom)
+                if (denomOut === this.assets[i].token.denom)
                 {
                     outId = i;
                     break;
                 }
             }
 
-            if (inId == -1 || outId == -1)
+            if (inId === -1 || outId === -1)
                 return new ExchangePath(null, null, false);
 
             return new ExchangePath(this.assets[inId], this.assets[outId], true);

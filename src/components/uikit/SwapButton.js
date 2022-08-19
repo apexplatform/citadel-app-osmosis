@@ -1,101 +1,20 @@
-import { Div, Group } from "@vkontakte/vkui";
-import "../styles/components/swapButton.css";
-import { Icon20ChevronRightOutline } from "@vkontakte/icons";
-import { prepareSwapTransfer } from "../../store/actions/swapActions";
-import { connect } from "react-redux";
-import Loader from "../uikit/Loader";
-import text from "../../text.json";
-import ROUTES from "../../routes";
-import {
-  setActivePanel,
-  setPreviosPanel,
-} from "../../store/actions/panelActions";
+import { BigButtons } from '@citadeldao/apps-ui-kit/dist/main';
+import { useSelector } from 'react-redux';
+import { swapActions } from '../../store/actions';
 const SwapButton = (props) => {
-  const { swapStatus, disableSwap } = props.swapReducer;
-  const { fromToken } = props.walletReducer;
-  return (
-    <Group>
-      {disableSwap ? (
-        <Div className="swap-btn" id="disabled-btn">
-          <span>{text.SWAP}</span>
-        </Div>
-      ) : (
-        <div>
-          {swapStatus == "swapAnyway" && (
-            <Div
-              className="swapAnyway-alarm"
-              onClick={() => {
-                props.setActivePanel(ROUTES.SETTINGS);
-                props.setPreviosPanel(ROUTES.SWAP);
-              }}
-            >
-              <span>
-                {text.SWAP_ANYWAY_ALARM}{" "}
-                <span className="bold-span">{text.SETTINGS}</span>
-              </span>
-              <Icon20ChevronRightOutline
-                fill="#E5457A"
-                width={26}
-                height={26}
-              />
-            </Div>
-          )}
-          {swapStatus == "swap" && (
-            <Div
-              className="swap-btn"
-              onClick={() =>
-                props.prepareSwapTransfer(
-                  props.isExactIn,
-                  props.formattedAmounts
-                )
-              }
-            >
-              <span>{text.SWAP}</span>
-            </Div>
-          )}
-          {swapStatus == "swapAnyway" && (
-            <Div className="swap-btn" id="disabled-btn">
-              <span>{text.SWAP}</span>
-            </Div>
-          )}
-          {swapStatus == "loading" && (
-            <Div className="swap-btn loading-btn" id="disabled-btn">
-              <Loader />
-              <span>{text.LOADING}</span>
-            </Div>
-          )}
-          {swapStatus == "feeError" && (
-            <Div className="swap-btn" id="disabled-btn">
-              <span>{text.FEE_ERROR_TEXT}</span>
-            </Div>
-          )}
-          {swapStatus == "unavailable" && (
-            <Div className="swap-btn" id="disabled-btn">
-              <span>There is no swap pair</span>
-            </Div>
-          )}
-          {swapStatus == "insufficientBalance" && (
-            <Div className="swap-btn" id="disabled-btn">
-              <span>Insufficient {fromToken?.symbol} balance </span>
-            </Div>
-          )}
-          {swapStatus == "enterAmount" && (
-            <Div className="swap-btn" id="disabled-btn">
-              <span>{text.ENTER_AMOUNT}</span>
-            </Div>
-          )}
+    const { swapStatus, tokenIn, disableSwap } = useSelector((state) => state.swap)
+    const customStyle = {
+        width: 'auto',
+        marginTop: '20px',
+    }
+	return (
+        <div className='center'>
+            {swapStatus === 'enterAmount' && <BigButtons text='ENTER AMOUNT' disabled style={customStyle} textColor='#FFFFFF' bgColor='#7C63F5' hideIcon={true}/>}
+            {swapStatus === 'swap' && <BigButtons disabled={disableSwap} onClick={() => swapActions.getSwapTransaction(props.amounts)} text='SWAP' style={{marginTop: '20px'}} textColor='#FFFFFF' bgColor='#7C63F5'  hideIcon={true}/>}
+            {swapStatus === 'swapAnyway' && <BigButtons disabled={disableSwap}  onClick={() => swapActions.getSwapTransaction(props.amounts)} text='SWAP ANYWAY' style={customStyle} textColor='#FFFFFF' bgColor='#FF5722' hideIcon={true}/>}
+            {swapStatus === 'insufficientBalance' && <BigButtons disabled text={`Insufficient ${tokenIn.code} balance`} style={customStyle} textColor='#FFFFFF' bgColor='#7C63F5'  hideIcon={true}/>}
+            {swapStatus === 'feeError' && <BigButtons disabled text='Insufficient balance for swap fee' style={customStyle} textColor='#FFFFFF' bgColor='#7C63F5'  hideIcon={true}/>}
         </div>
-      )}
-    </Group>
-  );
-};
-const mapStateToProps = (state) => ({
-  walletReducer: state.walletReducer,
-  swapReducer: state.swapReducer,
-});
-
-export default connect(mapStateToProps, {
-  setPreviosPanel,
-  setActivePanel,
-  prepareSwapTransfer,
-})(SwapButton);
+	); 
+}
+export default SwapButton

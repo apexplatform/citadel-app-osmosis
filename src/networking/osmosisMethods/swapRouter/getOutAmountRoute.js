@@ -6,7 +6,7 @@ import { Dec } from "@keplr-wallet/unit";
 export const getOutAmountRoute = async(fromToken, toToken, amount) => {
     const denomIn = getDenomByCode(fromToken.code) || fromToken.fullDenom
     const denomOut = getDenomByCode(toToken.code) || toToken.fullDenom 
-    if (denomIn == "" || denomOut == ""){
+    if (denomIn === "" || denomOut === ""){
         return { error: "There is no asset for your symbol!" };
     }
     const MAX_HOPS = 2
@@ -21,7 +21,7 @@ export const getOutAmountRoute = async(fromToken, toToken, amount) => {
             }
         }
     }
-    if (bestRoute?.estimateOutAmount().toString() != '0')
+    if (bestRoute?.estimateOutAmount().toString() !== '0')
     {
         const result = {...bestRoute,
             estimateOutAmount: bestRoute.estimateOutAmount(),
