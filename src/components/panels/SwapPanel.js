@@ -104,7 +104,7 @@ const SwapPanel = () => {
                         balance={true} 
                         token={true} 
                         data={tokens} 
-                        style={{marginBottom: '30px'}}
+                        style={{margin: '10px 0 32px'}}
                         action={true}
                         field='from'
                         name='INPUT'

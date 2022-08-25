@@ -1,7 +1,7 @@
 import { types } from './types';
 import { WalletList } from '../../networking/models/WalletList';
 import { ValidationError } from '../../networking/models/Errors';
-import { errorActions, usersActions } from './index';
+import { errorActions, usersActions, panelActions } from './index';
 import { getRequest } from '../../networking/requests/getRequest';
 import { store } from '../store';
 import models from '../../networking/models';
@@ -139,9 +139,14 @@ const setActiveWallet = (wallet, save = true) => async(dispatch) => {
         payload: [],
       });
     dispatch({
+        type: types.SET_INCENTIVIZED_POOLS,
+        payload: [],
+    });
+    dispatch({
         type: types.SET_SELECTED_TOKENS,
         payload: [],
     });
+    panelActions.setLoader(true)
     if(save){
         const config = {
             lastWalletInfo: {

@@ -1,5 +1,5 @@
 import { types } from "./types";
-import { walletActions, errorActions } from "./";
+import { walletActions, errorActions, panelActions } from "./";
 import { store } from "../store";
 import { loadPoolData } from '../../networking/osmosisMethods/poolMethods'
 
@@ -89,6 +89,7 @@ const loadPoolList = (count = 0) => async(dispatch) => {
             type: types.SET_SUPERFLUID_DELEGATIONS,
             payload: superfluidDelegations,
           });
+          panelActions.setLoader(false)
         }else{
           // if(count<=3){
           //   setTimeout(() => dispatch(loadPoolList(count++)) , 5000)

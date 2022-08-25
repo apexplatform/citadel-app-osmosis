@@ -6,7 +6,8 @@ const paramsAsObject = qs.parse(params);
 const initialState = {
     previousPanel: '/',
     bottomInset: paramsAsObject.bottomInset,
-    borderRadius: paramsAsObject.borderRadius
+    borderRadius: paramsAsObject.borderRadius,
+    loader: true
 };
 export default function PanelReducer(state = initialState, action) {
     switch (action.type) {
@@ -14,6 +15,11 @@ export default function PanelReducer(state = initialState, action) {
             return {
                 ...state,
                 previousPanel: action.payload,
+            };
+        case types.SET_LOADER:
+            return {
+                ...state,
+                loader: action.payload,
             };
         default:
             return state;

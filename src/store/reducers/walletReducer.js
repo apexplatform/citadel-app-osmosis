@@ -39,11 +39,6 @@ export default function WalletReducer(state = initialState, action) {
                 ...state,
                 activeWallet: action.payload,
             };
-        case types.SET_LOADER:
-            return {
-                ...state,
-                loader: action.payload,
-            };
         case types.SET_PREPARE_TRANSFER_RESPONSE:
             return {
                 ...state,

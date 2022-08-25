@@ -44,7 +44,9 @@ const MainView = () => {
     const [showSuccess, setShowSuccess] = useState(errors);
     useEffect(() => {
         setShowSuccess(errors);
-        dispatch(poolActions.loadPoolList())
+        if(!errors) {
+            dispatch(poolActions.loadPoolList())
+        }
         // eslint-disable-next-line 
     }, [errors,activeWallet]);
     const clearErrors = () => {

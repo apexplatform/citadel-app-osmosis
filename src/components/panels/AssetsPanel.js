@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { BalanceInfoCard, AddressCard, BalanceInfoCardItem, Toggle} from "@citadeldao/apps-ui-kit/dist/main"
+import { BalanceInfoCard, AddressCard, BalanceInfoCardItem, Toggle, Loader } from "@citadeldao/apps-ui-kit/dist/main"
 import { useSelector } from "react-redux"
 import { prettyNumber } from '../helpers/numberFormatter'
 import { getMyPoolList, sortAssetsList, sortPoolAssetsList } from "../helpers/index";
@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 const Assets = () => {
     const { tokens, activeWallet, usdPrice } = useSelector((state) => state.wallet)
     const { allPools, incentivizedPools } = useSelector((state) => state.pool)
+    const { loader } = useSelector((state) => state.panels)
     const [showPools, setShowPools] = useState(false)
     const [poolAssetsList, setPoolAssetsList] = useState([]);
     const [assetsList, setAssetsList] = useState([]);
@@ -82,10 +83,10 @@ const Assets = () => {
     return (
         <div className='tab-content'>
             <BalanceInfoCard  style={{marginBottom:'10px'}} >
-                <BalanceInfoCardItem title='Total assets' textColor='#59779A' balance={prettyNumber(totalBalance, 2)} amountColor='#5639E0' usdSymbol='$'/>
-                <BalanceInfoCardItem title='Available assets' textColor='#59779A' balance={prettyNumber(availableBalance, 2)} amountColor='#D900AB' usdSymbol='$'/>
-                <BalanceInfoCardItem title='Bonded assets' textColor='#59779A' balance={prettyNumber(bondedBalance, 2)} amountColor='#D85830' usdSymbol='$'/>
-                <BalanceInfoCardItem title='Staked OSMO' textColor='#59779A' balance={prettyNumber(stakedBalance, 2)} amountColor='#00B2FE' usdSymbol='$'/>
+                <BalanceInfoCardItem title='Total assets' textColor='#59779A' balance={loader ? '-' : prettyNumber(totalBalance, 2)} amountColor='#5639E0' usdSymbol='$'/>
+                <BalanceInfoCardItem title='Available assets' textColor='#59779A' balance={loader ? '-' : prettyNumber(availableBalance, 2)} amountColor='#D900AB' usdSymbol='$'/>
+                <BalanceInfoCardItem title='Bonded assets' textColor='#59779A' balance={loader ? '-' : prettyNumber(bondedBalance, 2)} amountColor='#D85830' usdSymbol='$'/>
+                <BalanceInfoCardItem title='Staked OSMO' textColor='#59779A' balance={loader ? '-' : prettyNumber(stakedBalance, 2)} amountColor='#00B2FE' usdSymbol='$'/>
             </BalanceInfoCard>
             <Toggle text="Pool assets"  active={showPools} setActive={setShowPools} />
             { !showPools
@@ -98,7 +99,7 @@ const Assets = () => {
                     logoURI={item?.logoURI} 
                     className='asset-item'
                 />
-              )) : <p className='center'>No assets</p>
+              )) : loader ? <Loader /> : <p className='center'>No assets</p>
             : poolAssetsList.length ? poolAssetsList?.map((item, i) => (
                 <AddressCard
                     data={{...item, balance: prettyNumber(item?.balance)}} 
@@ -110,7 +111,7 @@ const Assets = () => {
                     onClick={() => openPool(item.pool)}
                     logoURI={item?.logoURI} 
                 />
-              )) : <p className='center'>No pool assets</p>
+              )) : loader ? <Loader /> : <p className='center'>No pool assets</p>
               }
         </div>
     )

@@ -8,6 +8,14 @@ const setPreviousPanel = (panel) => {
     });
 };
 
+const setLoader = (loader) => {
+    store.dispatch({
+        type: types.SET_LOADER,
+        payload: loader,
+    });
+};
+
 export const panelActions = {
     setPreviousPanel,
+    setLoader
 };

@@ -5,8 +5,8 @@ import { swapPools } from './poolLists'
 import { Dec } from "@keplr-wallet/unit";
 export const getOutAmountRoute = async(fromToken, toToken, amount) => {
     const denomIn = getDenomByCode(fromToken.code) || fromToken.fullDenom
-    const denomOut = getDenomByCode(toToken.code) || toToken.fullDenom 
-    if (denomIn === "" || denomOut === ""){
+    const denomOut = getDenomByCode(toToken.code) || toToken.fullDenom
+    if (denomIn === "" || denomOut === "" || !denomIn || !denomOut){
         return { error: "There is no asset for your symbol!" };
     }
     const MAX_HOPS = 2
@@ -27,7 +27,8 @@ export const getOutAmountRoute = async(fromToken, toToken, amount) => {
             estimateOutAmount: bestRoute.estimateOutAmount(),
             estimateRate: bestRoute.estimateRate(),
             estimateSlippage: bestRoute.estimateSlipage(),
-            swapFee: bestRoute.swapFee()
+            swapFee: bestRoute.swapFee(),
+            error: false
         }
         return result;
     }

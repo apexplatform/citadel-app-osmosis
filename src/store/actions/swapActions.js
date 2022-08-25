@@ -101,6 +101,7 @@ const getSwapInfo = (amount = 0, isOut = true) => async(dispatch) => {
         res = await getInAmountRoute(tokenIn,tokenOut,amount)
       }
     }
+    console.log(res)
     if (!res.error) {
       dispatch({
         type: types.SET_OUT_AMOUNT,
@@ -130,14 +131,15 @@ const getSwapInfo = (amount = 0, isOut = true) => async(dispatch) => {
         type: types.SET_TO_USD_PRICE,
         payload: res.poolRoute && res.poolRoute[res.poolRoute?.length - 1]?.to?.usdPrice,
       });
+    }else{
+      dispatch(errorActions.checkErrors(res.error))
     }
     if(res.error || +amount === 0){
       clearSwapInfo()
     }
-    dispatch(checkSwapStatus(amount, isOut));
+    dispatch(checkSwapStatus(amount, res.error));
   } catch (err) {
-    console.log(err)
-    dispatch(checkSwapStatus(amount, isOut));
+    dispatch(checkSwapStatus(amount));
   }
 }
 
@@ -207,11 +209,15 @@ const getSwapTransaction = (formattedAmounts) => {
   };
 
 
-const checkSwapStatus = (amount) => dispatch => {
+const checkSwapStatus = (amount, error) => dispatch => {
   const { tokenIn, slippage, slippageTolerance } = store.getState().swap
   const { activeWallet } = store.getState().wallet
   const balance = tokenIn?.balance
   let feeProcent = activeWallet?.code === tokenIn?.code ? 0.1 : 0
+  if(error){
+    dispatch(setSwapStatus('disabled'))
+    return
+  }
   if(+amount > 0) {
     if(+amount > +balance){
       dispatch(setSwapStatus('insufficientBalance'))

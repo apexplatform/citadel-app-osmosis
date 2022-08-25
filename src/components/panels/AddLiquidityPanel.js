@@ -194,7 +194,7 @@ const AddLiquidityPanel = () => {
                         index={index}
                         style={{marginBottom : '14px'}} 
                         value={token.amount} 
-                        setValue={updateAmount} 
+                        setValue={(value) => updateAmount(value, token.network, index)} 
                         selectedOption={{...token, usdPrice: prettyNumber(usdPrice,2)}} 
                         setSelectedOption={selectToken} 
                         onMaxClick={() => updateAmount(token.balance, token.network, index, true)}

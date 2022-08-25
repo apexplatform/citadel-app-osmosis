@@ -171,9 +171,9 @@ const checkErrors = (error) => dispatch => {
             payload: true,
         });
     } else if (error) {
-        let errorText = error?.message || 'Something went wrong.';
+        let errorText = error?.message || error;
         for (let i = 0; i < errorList.length; i++) {
-            if (error.message?.toLowerCase().includes(errorList[i].error.toLowerCase())) {
+            if (errorText?.toLowerCase().includes(errorList[i].error.toLowerCase())) {
                 errorText = errorList[i].description;
                 break;
             }
