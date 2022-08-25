@@ -176,6 +176,7 @@ const loadTokenBalances = async(address) => {
                 decimals: "6",
                 denom: "uosmo",
                 name: "Osmosis",
+                net: "osmosis",
                 fullDenom: "uosmo",
                 logoURI: "img/tokens/osmosis.svg",
                 balance: address?.balance?.mainBalance || 0,

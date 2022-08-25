@@ -101,7 +101,6 @@ const getSwapInfo = (amount = 0, isOut = true) => async(dispatch) => {
         res = await getInAmountRoute(tokenIn,tokenOut,amount)
       }
     }
-    console.log(res)
     if (!res.error) {
       dispatch({
         type: types.SET_OUT_AMOUNT,
@@ -131,7 +130,7 @@ const getSwapInfo = (amount = 0, isOut = true) => async(dispatch) => {
         type: types.SET_TO_USD_PRICE,
         payload: res.poolRoute && res.poolRoute[res.poolRoute?.length - 1]?.to?.usdPrice,
       });
-    }else{
+    }else if(+amount > 0){
       dispatch(errorActions.checkErrors(res.error))
     }
     if(res.error || +amount === 0){

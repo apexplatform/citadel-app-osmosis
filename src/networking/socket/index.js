@@ -49,7 +49,7 @@ export class SocketManager {
 				if(data.address && data.balance && data.net){
 					wallets.forEach(item => {
 						if(item.address === data.address && item.network === data.net){
-							item.balance = data.balance?.mainBalance
+							item.balance = data.balance
 						}
 					})
 					store.dispatch({
