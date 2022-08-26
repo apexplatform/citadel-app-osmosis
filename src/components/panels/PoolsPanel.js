@@ -46,7 +46,7 @@ const PoolsPanel = () => {
           }
           if (active === "tab3") {
             setMyPools(
-              getMyPoolList(allPools.filter((pool) => findPool(pool, name)))
+              myPools.filter((pool) => findPool(pool, name))
             );
           }
         } else {
@@ -104,7 +104,7 @@ const PoolsPanel = () => {
                         }  
                     </Tab>
                     <Tab id='tab2' label='Incentivized Pools'>
-                        <Search  style={{margin: '10px 0 16px'}} placeholder='Start typing..'/>
+                        <Search value={searchText} onChange={searchPool} style={{margin: '10px 0 16px'}} placeholder='Start typing..'/>
                         {
                           incentivizedList?.length ? incentivizedList?.map((pool,i) => (
                                 <PoolItem  
@@ -126,7 +126,7 @@ const PoolsPanel = () => {
                         }  
                     </Tab>
                     <Tab id='tab3' label='My Pools'>
-                        <Search style={{margin: '10px 0 16px'}} placeholder='Start typing..'/>
+                        <Search  value={searchText} onChange={searchPool} style={{margin: '10px 0 16px'}} placeholder='Start typing..'/>
                         {
                           myPools?.length ? myPools?.map((pool,i) => (
                                 <PoolItem  
