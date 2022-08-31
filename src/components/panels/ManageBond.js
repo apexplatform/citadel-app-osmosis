@@ -59,9 +59,9 @@ const ManageBondPanel = () => {
         },
         {
             title: 'Amount',
-            day1: <p className='table-amount-bold'>{pool?.lockDurations[0]?.lockup.amount.maxDecimals(2).trim(true).toString() || 0}<span>GAMM/{pool.id}</span></p>,
-            days7: <p className='table-amount-bold'>{pool?.lockDurations[1]?.lockup.amount.maxDecimals(2).trim(true).toString() || 0}<span>GAMM/{pool.id}</span></p>,
-            days14: <p className='table-amount-bold'>{pool?.lockDurations[2]?.lockup.amount.maxDecimals(2).trim(true).toString() || 0}<span>GAMM/{pool.id}</span></p>,
+            day1: <div className='table-cell-row'><p className='table-amount-bold'>{pool?.lockDurations[0]?.lockup.amount.maxDecimals(2).trim(true).toString() || 0}</p><span>GAMM/{pool.id}</span></div>,
+            days7: <div className='table-cell-row'><p className='table-amount-bold'>{pool?.lockDurations[1]?.lockup.amount.maxDecimals(2).trim(true).toString() || 0}</p><span>GAMM/{pool.id}</span></div>,
+            days14: <div className='table-cell-row'><p className='table-amount-bold'>{pool?.lockDurations[2]?.lockup.amount.maxDecimals(2).trim(true).toString() || 0}</p><span>GAMM/{pool.id}</span></div>,
         }
     ];
     const unbondings = [
@@ -84,7 +84,7 @@ const ManageBondPanel = () => {
                 Object.keys(elem).forEach(key => {
                     if(key.includes(item.duration.asDays())){
                         if(elem.title === 'Amount'){
-                            elem[key] = <p className='table-amount-bold'>{item.amount?.maxDecimals(2).trim(true).toString() || 0}<span>GAMM/{pool.id}</span></p>
+                            elem[key] = <div className='table-cell-row'><p className='table-amount-bold'>{item.amount?.maxDecimals(2).trim(true).toString() || 0}</p><span>GAMM/{pool.id}</span></div>
                         }else{
                             elem[key] =  <p className='table-date-normal'>{moment(item.endTime).fromNow()}</p>
                         }

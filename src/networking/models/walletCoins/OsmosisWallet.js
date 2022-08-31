@@ -406,6 +406,7 @@ export default class OsmosisWallet extends Wallet {
           value: {
             owner: this.address,
             ID: id,
+            coins: []
           },
         });
       }else{

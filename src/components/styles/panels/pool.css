@@ -194,6 +194,16 @@
 
 .table-amount-bold{
     color: #5639E0;
+    margin-right: 4px;
+}
+
+.table-cell-row{
+    display: flex;
+    flex-wrap: wrap;
+}
+.table-cell-row span{
+    color: #292929;
+    font-weight: 400;
 }
 
 .table-apy-bold span, .table-amount-bold span{
