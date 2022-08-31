@@ -43,9 +43,9 @@ const UnbondPanel = () => {
                 {pool.lockDurations.map((item) => (
                     <div key={item.duration} onClick={() => checkOption(item)}>
                         <BalanceInfoCard style={{marginBottom: '16px'}} className={option?.duration === item?.duration ? 'active-card' : ''}>
-                            <BalanceInfoCardItem title='Unbonding duration' amountColor='#292929' textColor='#59779A' balance= {item.duration === 1 ? 'a day' : item.duration + ' days'} />
-                            <BalanceInfoCardItem className='center-text' title='Current ARY' textColor='#59779A' balance={item.apr} amountColor='#D900AB' symbol='%'/>
-                            <BalanceInfoCardItem className='right-text' title='Amount' textColor='#59779A' balance= {item.lockup.amount.maxDecimals(2).trim(true).toString() || 0} amountColor='#5639E0' symbol={'GAMM/' + pool.id}/>
+                            <BalanceInfoCardItem title='Unbonding duration' amountColor='#292929' textColor='#59779A'>{item.duration === 1 ? 'a day' : item.duration + ' days'}</BalanceInfoCardItem>
+                            <BalanceInfoCardItem className='center-text' title='Current ARY' textColor='#59779A' amountColor='#D900AB' symbol='%'>{item.apr}</BalanceInfoCardItem>
+                            <BalanceInfoCardItem className='right-text' title='Amount' textColor='#59779A' amountColor='#5639E0' symbol={'GAMM/' + pool.id}>{item.lockup.amount.maxDecimals(2).trim(true).toString() || 0}</BalanceInfoCardItem>
                         </BalanceInfoCard>
                     </div>
                     
