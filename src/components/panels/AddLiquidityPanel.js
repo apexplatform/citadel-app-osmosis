@@ -26,7 +26,8 @@ const AddLiquidityPanel = () => {
             code: pool.poolCoinInfo[index].coinDenom,
             net: 'osmosis',
             network: pool.poolCoinInfo[index].coinDenom,
-            balance: tokens.find(elem => elem.code === pool.poolCoinInfo[index].coinDenom)?.balance || 0
+            balance: tokens.find(elem => elem.code === pool.poolCoinInfo[index].coinDenom)?.balance || 0,
+            logoImg: tokens.find(elem => elem.code === pool.poolCoinInfo[index].coinDenom)?.logoURI && <img src={tokens.find(elem => elem.code === pool.poolCoinInfo[index].coinDenom)?.logoURI} alt='icon' />
         });
     });
     
@@ -192,6 +193,7 @@ const AddLiquidityPanel = () => {
                         data={amounts} 
                         usdPrice={true}
                         index={index}
+                        logoImg={token.logoImg}
                         style={{marginBottom : '14px'}} 
                         value={token.amount} 
                         setValue={(value) => updateAmount(value, token.network, index)} 

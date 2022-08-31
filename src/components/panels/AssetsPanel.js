@@ -83,10 +83,10 @@ const Assets = () => {
     return (
         <div className='tab-content'>
             <BalanceInfoCard  style={{marginBottom:'10px'}} >
-                <BalanceInfoCardItem title='Total assets' textColor='#59779A' balance={loader ? '-' : prettyNumber(totalBalance, 2)} amountColor='#5639E0' usdSymbol='$'/>
-                <BalanceInfoCardItem title='Available assets' textColor='#59779A' balance={loader ? '-' : prettyNumber(availableBalance, 2)} amountColor='#D900AB' usdSymbol='$'/>
-                <BalanceInfoCardItem title='Bonded assets' textColor='#59779A' balance={loader ? '-' : prettyNumber(bondedBalance, 2)} amountColor='#D85830' usdSymbol='$'/>
-                <BalanceInfoCardItem title='Staked OSMO' textColor='#59779A' balance={loader ? '-' : prettyNumber(stakedBalance, 2)} amountColor='#00B2FE' usdSymbol='$'/>
+                <BalanceInfoCardItem title='Total assets' textColor='#59779A' amountColor='#5639E0' usdSymbol='$'>{loader ? '-' : prettyNumber(totalBalance, 2)} </BalanceInfoCardItem>
+                <BalanceInfoCardItem title='Available assets' textColor='#59779A' amountColor='#D900AB' usdSymbol='$'>{loader ? '-' : prettyNumber(availableBalance, 2)}</BalanceInfoCardItem>
+                <BalanceInfoCardItem title='Bonded assets' textColor='#59779A' amountColor='#D85830' usdSymbol='$'>{loader ? '-' : prettyNumber(bondedBalance, 2)} </BalanceInfoCardItem>
+                <BalanceInfoCardItem title='Staked OSMO' textColor='#59779A' amountColor='#00B2FE' usdSymbol='$'>{loader ? '-' : prettyNumber(stakedBalance, 2)} </BalanceInfoCardItem>
             </BalanceInfoCard>
             <Toggle text="Pool assets"  active={showPools} setActive={setShowPools} />
             { !showPools

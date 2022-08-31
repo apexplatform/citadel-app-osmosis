@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react'
-import { Header, NoValidatorCard, ValidatorCard, Content, GuideCard, SelectedCard, CoinIcons, InfoCardBlock, InfoCardItem, BigButtons } from '@citadeldao/apps-ui-kit/dist/main'
+import { Header, NoValidatorCard, ValidatorCard, Content, GuideCard, InfoCardBlock, InfoCardItem, BigButtons } from '@citadeldao/apps-ui-kit/dist/main'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
 import BigNumber from "bignumber.js";
@@ -41,15 +41,11 @@ const PoolDetailsPanel = (props) => {
         // eslint-disable-next-line
     },[totalDelegations])
     const navigate = useNavigate()
-    const [radio, setRadio] = useState('')
 
     useEffect(() => {
         panelActions.setPreviousPanel(location.pathname)
     },[location])
     
-    const radioChangeHandler = (id) => {
-        setRadio(id)
-    }
     const back = () => navigate(ROUTES.POOLS)
     let headerTitle = "Pool #" + pool.id + " ";
     pool.poolInfo?.forEach((item, i) => {
@@ -116,28 +112,22 @@ const PoolDetailsPanel = (props) => {
                         <BigButtons onClick={() => navigate(ROUTES.REMOVE_LIQUIDITY)} text='Remove Liquidity' textColor='#FFFFFF' bgColor='#0095D6'  hideIcon={true}/>
                     </div>
                 </div>
-                <div className='row'>
-                {pool.lockDurations?.map((item) => (
-                    <SelectedCard 
-                        key={item?.duration}
-                        label={item.duration === 1 ? (
-                            <p>A day</p>
-                          ) : (
-                            <p>{item.duration} days</p>
-                          )}
-                        amount={item.apr} 
-                        amountColor="#3A5EE6" 
-                        bgColor={(pool.isSuperfluidPool && item.duration === 14) ? "#E4F3F5" : "#F4F6FF" }
-                        id={item?.duration}  
-                        changed={() => radioChangeHandler(item?.duration)} 
-                        value={item?.duration}
-                        icon={pool.isSuperfluidPool && item.duration === 14 ? <CoinIcons icon='osmosis' color='#5639E0' size='small'/> : null}
-                        isSelected={radio === item?.duration}
-                        selectedColor="#F1EEFF"
-                        borderColor="#7C63F5"
-                     />
-                    ))}
-                </div>
+                {myLiquidity > 0 && 
+                    <div onClick={() => {
+                            navigate(ROUTES.MANAGE_BOND); 
+                            poolActions.setSelectedNode(null);
+                            poolActions.setIsSuperfluidLock(showSuperfluidDelegations)}
+                        }>
+                        <GuideCard 
+                            title='Manage your bond' 
+                            background='linear-gradient(90deg, rgba(212, 252, 121, 0.2) 0%, rgba(150, 230, 161, 0.2) 100%)' 
+                            textColor='#003910' 
+                            info={true} 
+                            arrowColor='#1C622F' 
+                            data={bondData}
+                        />
+                    </div>    
+                }
                 {!showSuperfluidDelegations && pool.isSuperfluidPool && showSelectValidator &&
                     <NoValidatorCard 
                         style={{marginTop: '24px'}} 
@@ -156,23 +146,7 @@ const PoolDetailsPanel = (props) => {
                         amount={amount}
                         symbol={'OSMO'}
                         /> )) 
-                }
-                {myLiquidity > 0 && 
-                    <div onClick={() => {
-                            navigate(ROUTES.MANAGE_BOND); 
-                            poolActions.setSelectedNode(null);
-                            poolActions.setIsSuperfluidLock(showSuperfluidDelegations)}
-                        }>
-                        <GuideCard 
-                            title='Manage your bond' 
-                            background='linear-gradient(90deg, rgba(212, 252, 121, 0.2) 0%, rgba(150, 230, 161, 0.2) 100%)' 
-                            textColor='#003910' 
-                            info={true} 
-                            arrowColor='#1C622F' 
-                            data={bondData}
-                        />
-                    </div>    
-                }
+                    }
             </Content> 
         </section>
     )
