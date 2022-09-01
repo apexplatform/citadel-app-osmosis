@@ -106,9 +106,9 @@ const PoolDetailsPanel = (props) => {
         },
         {
             title: 'Amount',
-            day1: <div className='table-cell-row'><p className='table-amount-bold'>{pool?.lockDurations[0]?.lockup.amount.maxDecimals(2).trim(true).toString() || 0}</p><span>GAMM/{pool.id}</span></div>,
-            days7: <div className='table-cell-row'><p className='table-amount-bold'>{pool?.lockDurations[1]?.lockup.amount.maxDecimals(2).trim(true).toString() || 0}</p><span>GAMM/{pool.id}</span></div>,
-            days14: <div className='table-cell-row'><p className='table-amount-bold'>{pool?.lockDurations[2]?.lockup.amount.maxDecimals(2).trim(true).toString() || 0}</p><span>GAMM/{pool.id}</span></div>,
+            day1: <div className='table-cell-row'><p className='table-amount-bold'>{prettyNumber(pool?.lockDurations[0]?.lockup.amount.trim(true).toString() || 0)}</p><span>GAMM/{pool.id}</span></div>,
+            days7: <div className='table-cell-row'><p className='table-amount-bold'>{prettyNumber(pool?.lockDurations[1]?.lockup.amount.trim(true).toString() || 0)}</p><span>GAMM/{pool.id}</span></div>,
+            days14: <div className='table-cell-row'><p className='table-amount-bold'>{prettyNumber(pool?.lockDurations[2]?.lockup.amount.trim(true).toString() || 0)}</p><span>GAMM/{pool.id}</span></div>,
         },
         {
             title: 'USD Amount',
