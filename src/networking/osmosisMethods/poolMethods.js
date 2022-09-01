@@ -255,7 +255,9 @@ const updatePoolInfo = (pool, poolList, lockedCoins) => {
         let duration = lockableDuration.asDays();
         let lockup = getLockedCoinWithDuration(poolData, lockableDuration);
         lockup.amount._options.hideDenom = true;
-        lockDurations.push({ apr, duration, lockup, lockableDuration });
+        const lockedShareRatio = getLockedGammShareRatioByDuration(lockup.amount, pool);
+        let usdAmount = poolTVL.mul(lockedShareRatio.increasePrecision(2)).toString()
+        lockDurations.push({ apr, duration, lockup, lockableDuration, usdAmount });
       });
     }
     const isSuperfluidPool = checkSuperfluidPool(pool.id)
@@ -266,7 +268,7 @@ const updatePoolInfo = (pool, poolList, lockedCoins) => {
     if (lockedCoins.includes(foundedPool.id)) {
       const shareRatio = getAllGammShareRatio(foundedPool.id);
       const actualShareRatio = shareRatio.increasePrecision(2);
-      const lockedShareRatio = getLockedGammShareRatio(foundedPool.id);
+      const lockedShareRatio = getLockedGammShareRatio(foundedPool);
       const gammShare = getAvailableGammShare(foundedPool.id);
       const allGammShare = getAllGammShare(pool.id);
       allGammShare._options.hideDenom = true;
@@ -378,7 +380,7 @@ const generatePoolList = (pools, lockedCoins) => {
     if (lockedCoins.includes(pool.id)) {
       const shareRatio = getAllGammShareRatio(pool.id);
       const actualShareRatio = shareRatio.increasePrecision(2);
-      const lockedShareRatio = getLockedGammShareRatio(pool.id);
+      const lockedShareRatio = getLockedGammShareRatio(pool);
       const gammShare = getAvailableGammShare(pool.id);
       const allGammShare = getAllGammShare(pool.id);
       allGammShare._options.hideDenom = true;
@@ -675,12 +677,11 @@ export const getAllGammShareRatio = (poolId) => {
 };
 
 
-export const getLockedGammShareRatio = (poolId) => {
-  const pool = getPoolFromPagination(poolListWithPagination.data.pools, poolId);
+export const getLockedGammShareRatio = (pool) => {
   if (!pool) {
     return new IntPretty(new Int(0)).ready(false);
   }
-  const share = getLockedGammShare(poolId);
+  const share = getLockedGammShare(pool.id);
   const totalShare = new IntPretty(
     pool.totalShares.amount
   ).moveDecimalPointLeft(18);
