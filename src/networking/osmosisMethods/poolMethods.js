@@ -365,7 +365,9 @@ const generatePoolList = (pools, lockedCoins) => {
         let duration = lockableDuration.asDays();
         let lockup = getLockedCoinWithDuration(poolData, lockableDuration);
         lockup.amount._options.hideDenom = true;
-        lockDurations.push({ apr, duration, lockup, lockableDuration });
+        const lockedShareRatio = getLockedGammShareRatioByDuration(lockup.amount, pool);
+        let usdAmount = poolTVL.mul(lockedShareRatio.increasePrecision(2)).toString()
+        lockDurations.push({ apr, duration, lockup, lockableDuration, usdAmount });
       });
     }
     const isSuperfluidPool = checkSuperfluidPool(pool.id)
@@ -684,9 +686,17 @@ export const getLockedGammShareRatio = (poolId) => {
   ).moveDecimalPointLeft(18);
   return new IntPretty(
     share.quo(totalShare).mul(DecUtils.getTenExponentNInPrecisionRange(2))
-  )
-    .maxDecimals(2)
-    .trim(true);
+  ).maxDecimals(2).trim(true);
+};
+
+
+const getLockedGammShareRatioByDuration = (share,pool) => {
+  const totalShare = new IntPretty(
+    pool.totalShares.amount
+  ).moveDecimalPointLeft(18);
+  return new IntPretty(
+    share.quo(totalShare).mul(DecUtils.getTenExponentNInPrecisionRange(2))
+  ).maxDecimals(2).trim(true);
 };
 
 

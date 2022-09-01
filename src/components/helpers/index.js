@@ -29,10 +29,10 @@ export const getSymbol = (token,tokenList) => {
 
 export const sortPoolAssetsList = (list) => {
   let sortedList = list.sort(function (a, b) {
-    if (+a.usdBalance === +b.usdBalance) {
+    if (+a.usdPrice === +b.usdPrice) {
       return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
     } else {
-      return +a.usdBalance < +b.usdBalance ? 1 : -1;
+      return +a.usdPrice < +b.usdPrice ? 1 : -1;
     }
   });
   return sortedList;
@@ -40,10 +40,10 @@ export const sortPoolAssetsList = (list) => {
 
 export const sortAssetsList = (list) => {
   let sortedList = list.sort(function (a, b) {
-    if (+a.usdBalance === +b.usdBalance) {
+    if (+a.usdPrice === +b.usdPrice) {
       return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
     } else {
-      return +a.usdBalance < +b.usdBalance ? 1 : -1;
+      return +a.usdPrice < +b.usdPrice ? 1 : -1;
     }
   });
   let filteredList = sortedList.filter((item) => item.code !== "OSMO");
