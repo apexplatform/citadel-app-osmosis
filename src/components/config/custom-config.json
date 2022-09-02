@@ -8,7 +8,7 @@
         "TABBAR_ITEMS": [
             {"TITLE": "Swap", "ICON": "arrows-towards", "ROUTES": "/"},
             {"TITLE": "Pools", "ICON": "droplet", "ROUTES": "/main/pools"},
-            {"TITLE": "Add pool", "ICON": "plus", "ROUTES": "/main/add-pool"},
+            {"TITLE": "Add pool", "ICON": "plus-droplet", "ROUTES": "/main/add-pool"},
             {"TITLE": "Transactions", "ICON": "square-list", "ROUTES": "/main/transactions"}
         ]
     },

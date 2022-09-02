@@ -80,8 +80,8 @@ export function numberWithCommas(x, decimals) {
 
 
 export const amountFormatter = (amount) => {
-  amount = amount.toString().replace(/[^0-9.]/g, "");
-  if (amount.length === 2 && amount[1] !== "." && amount[1] === "0") {
+  amount = amount.toString().replace(/[^0-9\.]/g, "");
+  if (amount.length === 2 && amount[1] !== "." && amount[1] === "0" && amount[0] === '0') {
     amount = amount[0]
   } else if (amount[0] === "0" && amount[1] !== ".") {
     amount = BigNumber(amount).toFixed()

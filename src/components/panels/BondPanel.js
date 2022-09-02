@@ -7,7 +7,7 @@ import { amountFormatter, prettyNumber } from '../helpers/numberFormatter';
 import ROUTES  from '../../routes';
 
 const BondPanel = () => {
-    const { pool, selectedValidator, isSuperfluidLock } = useSelector(state => state.pool)
+    const { pool, selectedValidator, isSuperfluidLock, amount } = useSelector(state => state.pool)
     const navigate = useNavigate()
     const location = useLocation()
     const back = () => navigate(ROUTES.MANAGE_BOND)
@@ -20,13 +20,15 @@ const BondPanel = () => {
         // eslint-disable-next-line
     },[])
     const [error, setError] = useState(false);
-    const [shareInAmount, setAmount] = useState(0);
+    const [shareInAmount, setAmount] = useState(amount);
     const updateAmount = (val, isMax = false) => {
         val = amountFormatter(val)
         setAmount(val)
+        poolActions.setAmount(val)
         if (+pool.gammShare?.toString() > 0) {
           let amount = isMax ? pool.gammShare?.toString() : val;
           setAmount(amount);
+          poolActions.setAmount(amount)
           const balance = pool.gammShare?.maxDecimals(6).toString();
           setError(+balance < +val);
         } else {
