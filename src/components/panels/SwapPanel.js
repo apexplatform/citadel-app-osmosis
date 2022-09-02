@@ -45,7 +45,6 @@ const SwapPanel = () => {
         dispatch(swapActions.setTokenIn(tokenOut));
         dispatch(swapActions.setTokenOut(tokenIn));
         dispatch(swapActions.setAmount(formattedAmounts[independentField],!isExact));
-        console.log(formattedAmounts[independentField],'--formattedAmounts[independentField]')
         dispatch(swapActions.getSwapInfo(formattedAmounts[independentField],!isExact));
         setExactIn(!isExact)
     };
