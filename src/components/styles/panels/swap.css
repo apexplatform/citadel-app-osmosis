@@ -2,6 +2,7 @@
     position: absolute;
     left: 45%;
     top: 37%;
+    z-index: 1;
 }
 
 .swap-inputs{
