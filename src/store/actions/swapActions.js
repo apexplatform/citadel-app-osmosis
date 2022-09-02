@@ -5,6 +5,7 @@ import BigNumber from 'bignumber.js';
 import { getAllPools } from '../../networking/osmosisMethods/swapRouter/poolLists'
 import { getOutAmountRoute } from '../../networking/osmosisMethods/swapRouter/getOutAmountRoute.js'
 import { getInAmountRoute } from '../../networking/osmosisMethods/swapRouter/getInAmountRoute'
+import { prettyNumber } from "../../components/helpers/numberFormatter";
 const loadSwapPools = () => async(dispatch) => {
   let { swapPools } = await getAllPools()
   console.log('--swapPools updated')
@@ -209,11 +210,14 @@ const getSwapTransaction = (formattedAmounts) => {
 
 
 const checkSwapStatus = (amount, error) => dispatch => {
-  const { tokenIn, slippage, slippageTolerance } = store.getState().swap
+  const { tokenIn, slippage, slippageTolerance, outAmout, isExactIn } = store.getState().swap
   const { activeWallet } = store.getState().wallet
   const balance = tokenIn?.balance
   let feeProcent = activeWallet?.code === tokenIn?.code ? 0.1 : 0
-  if(error){
+  if(!isExactIn){
+    amount = prettyNumber(outAmout,6,true)
+  }
+  if(error || prettyNumber(outAmout,6,true) === 0){
     dispatch(setSwapStatus('disabled'))
     return
   }

@@ -10,7 +10,7 @@ const cutNumber = (number, digits = 0) =>
 
 const formatValue = (value) => value.toString().trim().replaceAll(',', '');
 
-export const prettyNumber = (value, maxDecimals=6) => {
+export const prettyNumber = (value, maxDecimals=6, isZero = false) => {
     if (!value) {
         return 0;
     }
@@ -25,6 +25,7 @@ export const prettyNumber = (value, maxDecimals=6) => {
 
     // |value| < 1
     if (absoluteValue && cutNumber(absoluteValue, maxDecimals) === 0) {
+      if(isZero) return 0
         return '~0';
     }
 

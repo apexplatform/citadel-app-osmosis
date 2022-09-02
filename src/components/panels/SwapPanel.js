@@ -38,13 +38,14 @@ const SwapPanel = () => {
     };
     const formattedAmounts = {
         [independentField]: amount,
-        [dependentField]: prettyNumber(parsedAmounts[dependentField],+tokenOut?.decimals),
-      };
+        [dependentField]: prettyNumber(parsedAmounts[dependentField],+tokenOut?.decimals, true),
+    };
     const reverseTokens = () => {
         dispatch(swapActions.setIndependentField(dependentField));
         dispatch(swapActions.setTokenIn(tokenOut));
         dispatch(swapActions.setTokenOut(tokenIn));
         dispatch(swapActions.setAmount(formattedAmounts[independentField],!isExact));
+        console.log(formattedAmounts[independentField],'--formattedAmounts[independentField]')
         dispatch(swapActions.getSwapInfo(formattedAmounts[independentField],!isExact));
         setExactIn(!isExact)
     };
