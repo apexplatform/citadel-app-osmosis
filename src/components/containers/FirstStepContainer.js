@@ -78,7 +78,7 @@ const FirstStepContainer = (props) => {
                     />
                 </div>
             ))}
-            <BlockButton onClick={() => addTokens()} text='Add new token' iconColor='#E5EDF5' textColor='#6B93C0' bgColor='#6B93C0' bgColorBtn='#F4F6FF' iconTxt='add-icon' iconHoverColor='#FFFFFF' iconHoverBgColor='#5639E0'/>
+            <BlockButton onClick={() => addTokens()} text='Add new token' iconColor='#6B93C0' textColor='#6B93C0' bgColor='#F4F6FF' bgColorBtn='#F4F6FF' icon='plus' iconHoverColor='#FFFFFF' iconHoverBgColor='#5639E0'/>
             {tokensList.length < 2 &&<div className='row' id='amount-error'>
                 <CustomIcon icon='alarm' color='#EA2929' size = 'small' />
                 <p>Minimum of 2 assets required</p>
