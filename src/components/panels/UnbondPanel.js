@@ -52,7 +52,7 @@ const UnbondPanel = () => {
                     
                 ))}
                 <div className='center'>
-                    <BigButtons disabled={error} onClick={() => prepareUnbondTokens()} style={{marginTop: '16px'}} text='Unbond' textColor='#FFFFFF' bgColor='#7C63F5'  hideIcon={true}/>
+                    <BigButtons disabled={error} onClick={() => prepareUnbondTokens()} style={{marginTop: '16px'}} text='Unbond' textColor='#FFFFFF' bgColor='#7C63F5'  hidename={true}/>
                 </div>
             </Content>
         </div>

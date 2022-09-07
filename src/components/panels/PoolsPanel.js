@@ -144,7 +144,13 @@ const PoolsPanel = () => {
                                     <PoolItemInfo text='Pool liquidity' amount={pool.poolTVL?.toString().replace("$", "")} symbol='$' textColor='#5639E0' symbolColor='#292929'/>
                                     <PoolItemInfo text='My liquidity' amount={pool.myLiquidity} symbol='$' textColor='#0F8932' symbolColor='#292929'/>
                                 </PoolItem>
-                            )) : <p className='center'>No pools</p>
+                            )) : 
+                            <div className="no-transactions-block">
+                              <img src='img/no-pools.svg' alt='noTransactions'/>
+                              <h3>No pools yet</h3>
+                              <p>Pools will appear upon addition.<br/>
+                                You can add them via the search tab above. </p>
+                            </div>
                         }  
                     </Tab>
                 </Tablist> 

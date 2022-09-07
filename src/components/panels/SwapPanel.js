@@ -1,5 +1,5 @@
 import React, {useState,useEffect} from 'react';
-import { Content, CustomIcon, Tabbar, EditAmount, SelectToken, InfoCardBlock, InfoCardItem} from '@citadeldao/apps-ui-kit/dist/main';
+import { Content, Icon, Tabbar, EditAmount, SelectToken, InfoCardBlock, InfoCardItem, IconButton } from '@citadeldao/apps-ui-kit/dist/main';
 import { Config } from '../config/config';
 import { useSelector, useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
@@ -113,7 +113,7 @@ const SwapPanel = () => {
                         balanceView={balanceView} setBalanceView={setBalanceView} 
                         onClick={() => setSelectedOption('INPUT')}
                         />
-                    <CustomIcon onClick={reverseTokens} icon='swap-icon' id='swap-center-btn' />
+                    <IconButton onClick={reverseTokens} type="hexagon" icon='arrows-towards'  className='swap-center-btn' width={60} height={60} bgColor="#C6D1FF" iconColor="#173296" borderColor="#869FFF"/>
                     <SelectToken 
                             balance={true} 
                             usdPrice={prettyNumber(toUSD * formattedAmounts["OUTPUT"],2)}
@@ -139,9 +139,9 @@ const SwapPanel = () => {
                 <span className="route-row">{routes ? routes?.map((item,i) =>(
             i===0 ?
               <span key={i}>{ getSymbol(item?.from, tokens) }
-              <CustomIcon icon={'right'} color='#A8C3E1' />{ getSymbol(item?.to, tokens) }</span>
+              <Icon name={'angle-right-thin'} color='#A8C3E1' />{ getSymbol(item?.to, tokens) }</span>
             :
-              <span key={i}><CustomIcon icon={'right'} color='#A8C3E1' />{ getSymbol(item?.to, tokens) } </span>
+              <span key={i}><Icon name={'angle-right-thin'} color='#A8C3E1' />{ getSymbol(item?.to, tokens) } </span>
             )) : '-'}
             </span>
             </InfoCardItem>

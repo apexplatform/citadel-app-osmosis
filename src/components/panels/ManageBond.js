@@ -112,8 +112,8 @@ const ManageBondPanel = () => {
                     data={bondings}
                 />
                 <div className='manage-bond-btns-row'>
-                    <BigButtons onClick={() => navigate(ROUTES.BOND)} text='Bond' textColor='#FFFFFF' bgColor='#7C63F5'  hideIcon={true}/>
-                    <BigButtons onClick={() => navigate(ROUTES.UNBOND)} text='Unbond' textColor='#FFFFFF' bgColor='#0095D6'  hideIcon={true}/>
+                    <BigButtons onClick={() => navigate(ROUTES.BOND)} text='Bond' textColor='#FFFFFF' bgColor='#7C63F5'  hidename={true}/>
+                    <BigButtons onClick={() => navigate(ROUTES.UNBOND)} text='Unbond' textColor='#FFFFFF' bgColor='#0095D6'  hidename={true}/>
                 </div>
                 {pool.unlockingDatas?.length > 0 && 
                 <div className='center'>

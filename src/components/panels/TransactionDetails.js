@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import ROUTES from "../../routes";
 import { useSelector } from "react-redux";
-import { Header, Content, CustomIcon, InfoCardBlock, InfoCardItem } from "@citadeldao/apps-ui-kit/dist/main";
+import { Header, Content, Icon, InfoCardBlock, InfoCardItem } from "@citadeldao/apps-ui-kit/dist/main";
 import text from "../../text.json";
 import { Config } from '../config/config';
 import moment from "moment";
@@ -75,7 +75,7 @@ const TransactionDetails = (props) => {
                     style={{ cursor: "pointer" }}
                     rel="noreferrer"
                   >
-                    <CustomIcon icon='link' />
+                    <Icon name='arrow-from-square-to-square' />
                   </a>
                 ) : (
                   ""
@@ -84,7 +84,7 @@ const TransactionDetails = (props) => {
             </InfoCardItem>
           ))}
           <InfoCardItem text={text.VIEW_TRANSACTION}>
-            <a href={activeWallet.getTxUrl(data?.hash?.value)} className='transaction-link' target='_blank' rel="noreferrer"><CustomIcon icon='link' /></a>
+            <a href={activeWallet.getTxUrl(data?.hash?.value)} className='transaction-link' target='_blank' rel="noreferrer"><Icon name='link' /></a>
           </InfoCardItem>
         </InfoCardBlock>
       </Content>

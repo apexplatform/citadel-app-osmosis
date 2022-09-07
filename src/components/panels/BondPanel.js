@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Content, Header, CustomIcon, ValidatorCard, NoValidatorCard, SelectedCard, BigButtons, CoinIcons, SelectToken, NotificationCard} from '@citadeldao/apps-ui-kit/dist/main';
+import { Content, Header, Icon, ValidatorCard, NoValidatorCard, SelectedCard, BigButtons, CoinIcon, SelectToken, NotificationCard} from '@citadeldao/apps-ui-kit/dist/main';
 import { useSelector } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { poolActions, panelActions } from '../../store/actions';
@@ -69,7 +69,7 @@ const BondPanel = () => {
                         id={item?.duration}  
                         changed={() => radioChangeHandler(item)} 
                         value={item?.duration}
-                        icon={pool.isSuperfluidPool && item.duration === 14 ? <CoinIcons icon='osmosis' color='#5639E0' size='small'/> : null}
+                        name={pool.isSuperfluidPool && item.duration === 14 ? <CoinIcon name='osmosis' color='#5639E0' size='small'/> : null}
                         isSelected={activeOption.duration === item?.duration}
                         selectedColor="#F1EEFF"
                         borderColor="#7C63F5"
@@ -112,11 +112,11 @@ const BondPanel = () => {
                     hideIcon
                 />
                 {error && <div className='row' id='amount-error'>
-                    <CustomIcon icon='alarm' color='#EA2929' size = 'small' />
+                    <Icon name='alarm-octagon' color='#EA2929' size = 'small' />
                     <p>Insufficient amount</p>
                 </div>}
                  <div className='center'>
-                    <BigButtons disabled={error || shareInAmount <= 0} onClick={() => prepareLockTokens()} style={{marginTop: '16px'}} text='Bond' textColor='#FFFFFF' bgColor='#7C63F5'  hideIcon={true}/>
+                    <BigButtons disabled={error || shareInAmount <= 0} onClick={() => prepareLockTokens()} style={{marginTop: '16px'}} text='Bond' textColor='#FFFFFF' bgColor='#7C63F5'  hidename={true}/>
                 </div>
             </Content>
         </div>

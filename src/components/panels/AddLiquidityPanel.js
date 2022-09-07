@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Content, Header, SelectInput, CustomIcon, AmountInput, SmallCheckbox, BigButtons } from '@citadeldao/apps-ui-kit/dist/main';
+import { Content, Header, SelectInput, Icon, AmountInput, SmallCheckbox, BigButtons } from '@citadeldao/apps-ui-kit/dist/main';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { poolActions } from '../../store/actions';
@@ -204,11 +204,11 @@ const AddLiquidityPanel = () => {
                 }
                 <SmallCheckbox text="Single Asset LP" textColor='#3C5B7E' isChecked={singleLp} disabled={false} onClick={() =>  setSingleLp(!singleLp)}/>
                 {error && <div className='row' id='amount-error'>
-                    <CustomIcon icon='alarm' color='#EA2929' size = 'small' />
+                    <Icon name='alarm-octagon' color='#EA2929' size = 'small' />
                     <p>{error}</p>
                 </div>}
                 <div className='center'>
-                    <BigButtons disabled={error} onClick={() => prepareJoinPool()} style={{marginTop: '16px'}} text='Add' textColor='#FFFFFF' bgColor='#7C63F5'  hideIcon={true}/>
+                    <BigButtons disabled={error} onClick={() => prepareJoinPool()} style={{marginTop: '16px'}} text='Add' textColor='#FFFFFF' bgColor='#7C63F5'  hidename={true}/>
                 </div>
             </Content>
         </div>

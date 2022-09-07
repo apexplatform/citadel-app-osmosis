@@ -161,8 +161,8 @@ const PoolDetailsPanel = (props) => {
                         </p>
                     </div>
                     <div className='pool-liquidity-btns-row'>
-                        <BigButtons onClick={() => navigate(ROUTES.ADD_LIQUIDITY)} text='Add Liquidity' textColor='#FFFFFF' bgColor='#7C63F5'  hideIcon={true}/>
-                        <BigButtons onClick={() => navigate(ROUTES.REMOVE_LIQUIDITY)} text='Remove Liquidity' textColor='#FFFFFF' bgColor='#0095D6'  hideIcon={true}/>
+                        <BigButtons onClick={() => navigate(ROUTES.ADD_LIQUIDITY)} text='Add Liquidity' textColor='#FFFFFF' bgColor='#7C63F5'  hidename={true}/>
+                        <BigButtons onClick={() => navigate(ROUTES.REMOVE_LIQUIDITY)} text='Remove Liquidity' textColor='#FFFFFF' bgColor='#0095D6'  hidename={true}/>
                     </div>
                 </div>
                 {myLiquidity > 0 && 
