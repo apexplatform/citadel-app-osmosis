@@ -35,7 +35,7 @@ export const getAllPools = async () => {
       );
    
       poolListWithPagination = await axios.get(
-        "https://lcd-osmosis.keplr.app/osmosis/gamm/v1beta1/pools?pagination.limit=750"
+        "https://lcd-osmosis.keplr.app/osmosis/gamm/v1beta1/pools?pagination.limit=1000"
       );
       swapPools = generatePoolList(poolListWithPagination.data?.pools,poolListResponse.data);
       const lastSuccessUpdateTime = new Date();
