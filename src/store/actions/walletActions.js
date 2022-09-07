@@ -1,7 +1,7 @@
 import { types } from './types';
 import { WalletList } from '../../networking/models/WalletList';
 import { ValidationError } from '../../networking/models/Errors';
-import { errorActions, usersActions, panelActions } from './index';
+import { errorActions, usersActions, panelActions, swapActions } from './index';
 import { getRequest } from '../../networking/requests/getRequest';
 import { store } from '../store';
 import models from '../../networking/models';
@@ -163,7 +163,7 @@ const setActiveWallet = (wallet, save = true) => async(dispatch) => {
 const loadTokenBalances = async(address) => {
     const wallet = getWalletConstructor(address)
     const { networks } = store.getState().wallet
-    const { tokenIn, tokenOut } = store.getState().swap;
+    const { tokenIn, tokenOut, amount } = store.getState().swap;
     if(wallet && networks){
         const balances = await wallet.getAllTokenBalance()
         let tokenList = []
@@ -209,6 +209,12 @@ const loadTokenBalances = async(address) => {
                 });
             });
         }
+        if(tokenIn?.code === address?.code){
+            tokenIn.balance = address?.balance?.mainBalance
+        }
+        if(tokenOut?.code === address?.code){
+            tokenOut.balance = address?.balance?.mainBalance
+        }
         store.dispatch({
             type: types.SET_TOKENS,
             payload: tokenList
@@ -221,6 +227,7 @@ const loadTokenBalances = async(address) => {
             type: types.SET_TOKEN_OUT,
             payload: !tokenOut ? tokenList.find(token => token.code === 'ATOM') : tokenOut,
           });
+        store.dispatch(swapActions.checkSwapStatus(amount, false))
     }
 
     setTimeout(()=>{

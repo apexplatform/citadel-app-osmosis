@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { poolActions } from '../../store/actions';
 import ROUTES  from '../../routes';
+import { prettyNumber } from '../helpers/numberFormatter';
 
 const UnbondPanel = () => {
     const { pool, isSuperfluidLock } = useSelector(state => state.pool)
@@ -45,7 +46,7 @@ const UnbondPanel = () => {
                         <BalanceInfoCard style={{marginBottom: '16px'}} className={option?.duration === item?.duration ? 'active-card' : ''}>
                             <BalanceInfoCardItem title='Unbonding duration' amountColor='#292929' textColor='#59779A'>{item.duration === 1 ? 'a day' : item.duration + ' days'}</BalanceInfoCardItem>
                             <BalanceInfoCardItem className='center-text' title='Current ARY' textColor='#59779A' amountColor='#D900AB' symbol='%'>{item.apr}</BalanceInfoCardItem>
-                            <BalanceInfoCardItem className='right-text' title='Amount' textColor='#59779A' amountColor='#5639E0' symbol={'GAMM/' + pool.id}>{item.lockup.amount.maxDecimals(2).trim(true).toString() || 0}</BalanceInfoCardItem>
+                            <BalanceInfoCardItem className='right-text' title='Amount' textColor='#59779A' amountColor='#5639E0' symbol={'GAMM/' + pool.id}>{prettyNumber(item.lockup.amount.trim(true).toString() || 0)}</BalanceInfoCardItem>
                         </BalanceInfoCard>
                     </div>
                     
