@@ -402,7 +402,7 @@ export default class OsmosisWallet extends Wallet {
     selectedDuration.lockup.lockIds?.forEach((id) => {
       if(!isSyntheticLock){
         messages.push({
-          type: "osmosis/lockup/begin-unlock-period-lock",
+          type: "osmosis/lockup/begin-unlocking",
           value: {
             owner: this.address,
             ID: id,
