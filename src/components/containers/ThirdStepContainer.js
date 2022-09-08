@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useSelector } from 'react-redux';
-import { SelectToken, Icon, SmallCheckbox, BigButtons, AmountInput } from '@citadeldao/apps-ui-kit/dist/main';
+import { SelectToken, Icon, SmallCheckbox, Button, AmountInput } from '@citadeldao/apps-ui-kit/dist/main';
 import { poolActions } from '../../store/actions';
 import text from "../../text.json";
 import { prettyNumber } from "../helpers/numberFormatter";
@@ -95,11 +95,11 @@ const ThirdStepContainer = (props) => {
             <AmountInput inputTitle='Swap fee' data={{network: '%'}} value={fee} checkAmount={checkFee}/>
             <SmallCheckbox text="I understand  that creating a new pool will cost 100 OSMO" textColor='#3C5B7E' isChecked={isChecked} disabled={false} onClick={() => checkError()}/>
             {error &&<div className='row' id='amount-error'>
-                <Icon name='alarm-octagon' color='#EA2929' size = 'small' />
+                <Icon name='alarm-octagon' color='#EA2929' width='16px' />
                 <p>{error}</p>
             </div>}
             <div className='center'>
-                <BigButtons onClick={() => createPool()} style={{marginTop: '16px'}} disabled={isChecked && activeWallet.balance?.mainBalance > 100 ? false : true} text='Create pool' textColor='#FFFFFF' bgColor='#0095D6'  hidename={true}/>
+                <Button onClick={() => createPool()} hoverBgColor='#5639E0' style={{marginTop: '16px'}} disabled={isChecked && activeWallet.balance?.mainBalance > 100 ? false : true} textColor='#FFFFFF' bgColor='#0095D6'>Create pool</Button>
             </div>
         </div>
     )

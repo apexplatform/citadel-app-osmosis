@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import { Content, Header, Table, BigButtons } from '@citadeldao/apps-ui-kit/dist/main';
+import { Content, Header, Table, Button } from '@citadeldao/apps-ui-kit/dist/main';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { panelActions } from '../../store/actions';
@@ -112,8 +112,8 @@ const ManageBondPanel = () => {
                     data={bondings}
                 />
                 <div className='manage-bond-btns-row'>
-                    <BigButtons onClick={() => navigate(ROUTES.BOND)} text='Bond' textColor='#FFFFFF' bgColor='#7C63F5'  hidename={true}/>
-                    <BigButtons onClick={() => navigate(ROUTES.UNBOND)} text='Unbond' textColor='#FFFFFF' bgColor='#0095D6'  hidename={true}/>
+                    <Button onClick={() => navigate(ROUTES.BOND)} style={{marginRight: '10px'}} textColor='#FFFFFF' hoverBgColor='#5639E0' bgColor='#7C63F5'>Bond</Button>
+                    <Button onClick={() => navigate(ROUTES.UNBOND)} textColor='#FFFFFF' hoverBgColor='#005376' bgColor='#0095D6'>Unbond</Button>
                 </div>
                 {pool.unlockingDatas?.length > 0 && 
                 <div className='center'>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Content, Header, BigButtons, BalanceInfoCard, BalanceInfoCardItem } from '@citadeldao/apps-ui-kit/dist/main';
+import { Content, Header, Button, BalanceInfoCard, BalanceInfoCardItem } from '@citadeldao/apps-ui-kit/dist/main';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { poolActions } from '../../store/actions';
@@ -52,7 +52,7 @@ const UnbondPanel = () => {
                     
                 ))}
                 <div className='center'>
-                    <BigButtons disabled={error} onClick={() => prepareUnbondTokens()} style={{marginTop: '16px'}} text='Unbond' textColor='#FFFFFF' bgColor='#7C63F5'  hidename={true}/>
+                    <Button disabled={error} hoverBgColor='#5639E0' onClick={() => prepareUnbondTokens()} style={{marginTop: '16px'}} textColor='#FFFFFF' bgColor='#7C63F5'>Unbond</Button>
                 </div>
             </Content>
         </div>

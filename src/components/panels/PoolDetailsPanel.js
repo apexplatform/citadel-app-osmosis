@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react'
-import { Header, NoValidatorCard, ValidatorCard, Table, Content, GuideCard, InfoCardBlock, InfoCardItem, BigButtons } from '@citadeldao/apps-ui-kit/dist/main'
+import { Header, NoValidatorCard, ValidatorCard, Table, Content, GuideCard, InfoCardBlock, InfoCardItem, Button } from '@citadeldao/apps-ui-kit/dist/main'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
 import BigNumber from "bignumber.js";
@@ -161,8 +161,8 @@ const PoolDetailsPanel = (props) => {
                         </p>
                     </div>
                     <div className='pool-liquidity-btns-row'>
-                        <BigButtons onClick={() => navigate(ROUTES.ADD_LIQUIDITY)} text='Add Liquidity' textColor='#FFFFFF' bgColor='#7C63F5'  hidename={true}/>
-                        <BigButtons onClick={() => navigate(ROUTES.REMOVE_LIQUIDITY)} text='Remove Liquidity' textColor='#FFFFFF' bgColor='#0095D6'  hidename={true}/>
+                        <Button onClick={() => navigate(ROUTES.ADD_LIQUIDITY)} style={{marginRight: '10px'}} textColor='#FFFFFF' bgColor='#7C63F5' hoverBgColor='#5639E0'>Add Liquidity</Button>
+                        <Button onClick={() => navigate(ROUTES.REMOVE_LIQUIDITY)} textColor='#FFFFFF' bgColor='#0095D6' hoverBgColor='#005376'>Remove Liquidity</Button>
                     </div>
                 </div>
                 {myLiquidity > 0 && 

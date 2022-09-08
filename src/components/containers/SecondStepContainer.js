@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useSelector } from 'react-redux';
-import { SelectToken, Icon, BigButtons} from '@citadeldao/apps-ui-kit/dist/main';
+import { SelectToken, Icon, Button} from '@citadeldao/apps-ui-kit/dist/main';
 import { poolActions } from '../../store/actions';
 import text from "../../text.json";
 import { prettyNumber } from "../helpers/numberFormatter";
@@ -65,11 +65,11 @@ const SecondStepContainer = (props) => {
                 ))
             }
             {error &&<div className='row' id='amount-error'>
-                <Icon name='alarm-octagon' color='#EA2929' size = 'small' />
+                <Icon name='alarm-octagon' color='#EA2929' width='16px' />
                 <p>{error}</p>
             </div>}
             <div className='center'>
-                <BigButtons onClick={() => nextStep()} style={{marginTop: '16px'}} disabled={!error ? false : true} text='Next' textColor='#FFFFFF' bgColor='#0095D6'  hidename={true}/>
+                <Button onClick={() => nextStep()} hoverBgColor='#5639E0' style={{marginTop: '16px'}} disabled={!error ? false : true} textColor='#FFFFFF' bgColor='#0095D6'>Next</Button>
             </div>
         </div>
     )

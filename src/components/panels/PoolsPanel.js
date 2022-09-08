@@ -149,7 +149,7 @@ const PoolsPanel = () => {
                               <img src='img/no-pools.svg' alt='noTransactions'/>
                               <h3>No pools yet</h3>
                               <p>Pools will appear upon addition.<br/>
-                                You can add them via the search tab above. </p>
+                                You can add them via the search Tababove. </p>
                             </div>
                         }  
                     </Tab>

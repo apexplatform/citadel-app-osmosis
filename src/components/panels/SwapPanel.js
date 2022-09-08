@@ -139,9 +139,9 @@ const SwapPanel = () => {
                 <span className="route-row">{routes ? routes?.map((item,i) =>(
             i===0 ?
               <span key={i}>{ getSymbol(item?.from, tokens) }
-              <Icon name={'angle-right-thin'} color='#A8C3E1' />{ getSymbol(item?.to, tokens) }</span>
+              <Icon className='icon--route' name={'angle-right-thin'} color='#A8C3E1' width='12px' />{ getSymbol(item?.to, tokens) }</span>
             :
-              <span key={i}><Icon name={'angle-right-thin'} color='#A8C3E1' />{ getSymbol(item?.to, tokens) } </span>
+              <span key={i}><Icon className='icon--route' name={'angle-right-thin'} color='#A8C3E1' width='12px'/>{ getSymbol(item?.to, tokens) } </span>
             )) : '-'}
             </span>
             </InfoCardItem>

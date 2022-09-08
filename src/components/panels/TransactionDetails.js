@@ -75,7 +75,7 @@ const TransactionDetails = (props) => {
                     style={{ cursor: "pointer" }}
                     rel="noreferrer"
                   >
-                    <Icon name='arrow-from-square-to-square' />
+                    <Icon name='arrow-from-square-to-square' width='16px'/>
                   </a>
                 ) : (
                   ""
@@ -84,7 +84,7 @@ const TransactionDetails = (props) => {
             </InfoCardItem>
           ))}
           <InfoCardItem text={text.VIEW_TRANSACTION}>
-            <a href={activeWallet.getTxUrl(data?.hash?.value)} className='transaction-link' target='_blank' rel="noreferrer"><Icon name='link' /></a>
+            <a href={activeWallet.getTxUrl(data?.hash?.value)} className='transaction-link' target='_blank' rel="noreferrer"><Icon name='arrow-from-square-to-square' width='16px'/></a>
           </InfoCardItem>
         </InfoCardBlock>
       </Content>

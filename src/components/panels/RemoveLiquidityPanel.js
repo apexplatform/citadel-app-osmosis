@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Content, Header, Icon, AmountInput, BigButtons, InfoCardBlock, InfoCardItem } from '@citadeldao/apps-ui-kit/dist/main';
+import { Content, Header, Icon, AmountInput, Button, InfoCardBlock, InfoCardItem } from '@citadeldao/apps-ui-kit/dist/main';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { poolActions } from '../../store/actions';
@@ -75,11 +75,11 @@ const RemoveLiquidityPanel = () => {
                     ))}
                 </InfoCardBlock>
                 {error && <div className='row' id='amount-error'>
-                    <Icon name='alarm-octagon' color='#EA2929' size = 'small' />
+                    <Icon name='alarm-octagon' color='#EA2929' width='16px'/>
                     <p>Insufficient amount</p>
                 </div>}
                 <div className='center'>
-                    <BigButtons disabled={error} onClick={() => prepareExitPool()} style={{marginTop: '16px'}} text='Remove' textColor='#FFFFFF' bgColor='#7C63F5'  hidename={true}/>
+                    <Button disabled={error} onClick={() => prepareExitPool()} hoverBgColor='#5639E0' style={{marginTop: '16px'}} textColor='#FFFFFF' bgColor='#7C63F5'>Remove</Button>
                 </div>
             </Content>
         </div>

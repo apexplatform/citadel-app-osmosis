@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ClearSelectInput, Icon, BlockButton, BigButtons} from '@citadeldao/apps-ui-kit/dist/main';
+import { ClearSelectInput, Icon, Button} from '@citadeldao/apps-ui-kit/dist/main';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import ROUTES from '../../routes'
@@ -78,13 +78,13 @@ const FirstStepContainer = (props) => {
                     />
                 </div>
             ))}
-            <BlockButton onClick={() => addTokens()} text='Add new token' iconColor='#6B93C0' textColor='#6B93C0' bgColor='#F4F6FF' bgColorBtn='#F4F6FF' name='plus' iconHoverColor='#FFFFFF' iconHoverBgColor='#5639E0'/>
+            <Button onClick={() => addTokens()} iconColor='#6B93C0' textColor='#6B93C0' bgColor='#F4F6FF' bgColorBtn='#F4F6FF' icon='plus' iconHoverColor='#FFFFFF' type='long' iconHoverBgColor='#5639E0'>Add new token</Button>
             {tokensList.length < 2 &&<div className='row' id='amount-error'>
-                <Icon name='alarm-octagon' color='#EA2929' size = 'small' />
+                <Icon name='alarm-octagon' color='#EA2929' width='16px'/>
                 <p>Minimum of 2 assets required</p>
             </div>}
             <div className='center'>
-                <BigButtons onClick={() => nextStep()} style={{marginTop: '16px'}} disabled={tokensList.length >= 2 && !percentError ? false : true} text='Next' textColor='#FFFFFF' bgColor='#0095D6'  hidename={true}/>
+                <Button onClick={() => nextStep()} hoverBgColor='#5639E0' style={{marginTop: '16px'}} disabled={tokensList.length >= 2 && !percentError ? false : true}  textColor='#FFFFFF' bgColor='#0095D6'>Next</Button>
             </div>
         </div>
     )

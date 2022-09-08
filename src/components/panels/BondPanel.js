@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Content, Header, Icon, ValidatorCard, NoValidatorCard, SelectedCard, BigButtons, CoinIcon, SelectToken, NotificationCard} from '@citadeldao/apps-ui-kit/dist/main';
+import { Content, Header, Icon, ValidatorCard, NoValidatorCard, SelectedCard, Button, CoinIcon, SelectToken, NotificationCard} from '@citadeldao/apps-ui-kit/dist/main';
 import { useSelector } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { poolActions, panelActions } from '../../store/actions';
@@ -112,11 +112,11 @@ const BondPanel = () => {
                     hideIcon
                 />
                 {error && <div className='row' id='amount-error'>
-                    <Icon name='alarm-octagon' color='#EA2929' size = 'small' />
+                    <Icon name='alarm-octagon' color='#EA2929' width='16px'/>
                     <p>Insufficient amount</p>
                 </div>}
                  <div className='center'>
-                    <BigButtons disabled={error || shareInAmount <= 0} onClick={() => prepareLockTokens()} style={{marginTop: '16px'}} text='Bond' textColor='#FFFFFF' bgColor='#7C63F5'  hidename={true}/>
+                    <Button disabled={error || shareInAmount <= 0} onClick={() => prepareLockTokens()} hoverBgColor='#5639E0' style={{marginTop: '16px'}} textColor='#FFFFFF' bgColor='#7C63F5'>Bond</Button>
                 </div>
             </Content>
         </div>
