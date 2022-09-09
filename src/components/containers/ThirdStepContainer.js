@@ -94,8 +94,11 @@ const ThirdStepContainer = (props) => {
             }
             <AmountInput inputTitle='Swap fee' data={{network: '%'}} value={fee} checkAmount={checkFee}/>
             <SmallCheckbox text="I understand  that creating a new pool will cost 100 OSMO" textColor='#3C5B7E' isChecked={isChecked} disabled={false} onClick={() => checkError()}/>
-            {error &&<div className='row' id='amount-error'>
-                <Icon name='alarm-octagon' color='#EA2929' width='16px' />
+            {error &&
+            <div className='row' id='amount-error'>
+                <div className='amount-error__circle'>
+                  <Icon name='alarm-octagon' color='#EA2929' width='16px'/>
+                </div>
                 <p>{error}</p>
             </div>}
             <div className='center'>
