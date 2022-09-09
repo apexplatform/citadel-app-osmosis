@@ -1,0 +1,276 @@
+.pool-step-block{
+    text-align: center;
+    width: 50%;
+    margin: 20px auto;
+}
+
+.pool-step-block p{
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 22px;
+    text-align: center;
+    margin: 0;
+    color: #6B93C0;
+}
+
+.pool-step-block p:first-child{
+    margin-left: 4px;
+}
+
+
+.pool-step-block p:last-child{
+    margin-right: 5px;
+}
+
+.pool-steps-numbers .active-step, .pool-steps-numbers .passed-step{
+    color: black !important;
+    background-color: transparent !important;
+}
+
+
+.pool-step-row{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 10px;
+    font-family: 'Panton';
+    font-weight: 600;
+}
+
+.pool-step-row .active-step{
+    background-color: #002BCC;
+}
+.pool-step-row .passed-step{
+    background: #00B933;
+}
+
+.pool-step-row hr{
+    width: 40%;
+    border: 1px solid #C3D6EC;
+    border-top: none;
+}
+
+.pool-step-row span{
+    width: 18px;
+    height: 18px !important;
+    display: inline-block;
+    border-radius: 50%;
+    border: 2px solid #C3D6EC;
+    background-color: white;
+}
+
+.steps-container .balance-input input{
+    color: #D900AB !important;
+}
+
+.pool-purple-text{
+    color: #D900AB;
+    font-weight: 700;
+}
+
+.pool-purple-text span{
+    font-weight: 400;
+    color: #292929;
+}
+
+.pool-details-panel .big-btn{
+    text-transform: capitalize !important;
+    padding: 16px;
+    margin-left: 16px;
+    box-shadow: 0px 4px 25px rgba(86, 57, 224, 0.3);
+}
+
+.amount-purple-text{
+    color: #5639E0;
+    font-size: 24px;
+    line-height: 29px;
+    width: fit-content;
+    margin: 0;
+    word-wrap: none;
+}
+
+.amount-purple-text span{
+    color: #292929;
+    font-weight: 400;
+    font-size: 16px;
+}
+
+.pool-amounts-row{
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-top: 10px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+}
+
+.pool-green-text{
+    font-size: 14px;
+    line-height: 17px;
+    color: #0F8932;
+}
+
+.pool-amounts-row > div > p{
+    margin: 0;
+}
+
+.pool-green-text span{
+    color: #6B93C0;
+}
+
+.pool-liquidity-btns-row{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+    margin-top: 16px;
+}
+
+.pool-amount-block{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.selected-card-item {
+    width: 32% !important;
+    margin-top: 16px;
+}
+
+.guide-card-block{
+    margin-top: 24px;
+}
+
+.info-card-header-h2{
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 19px;
+    color: #3C5B7E;
+}
+
+.amount-p{
+    font-weight: 700 !important;
+    font-size: 16px;
+    line-height: 19px;
+    text-align: right;
+    color: #5639E0 !important;
+    margin: 0;
+}
+
+.amount-p span{
+    font-weight: 400;
+    color: black;
+}
+
+.manage-bond-h2{
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 24px;
+    text-align: center;
+    color: #292929;
+    margin-top: 0;
+}
+
+.manage-bond-btns-row{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: 24px 0;
+}
+
+.manage-bond-btns-row .btn-container {
+    width: 30% !important;
+    margin: 0 20px;
+}
+
+.manage-bond-btns-row button {
+    width: 100% !important;
+}
+
+.table-apy-bold,.table-amount-bold{
+    margin: 0;
+}
+
+.table-amount-bold{
+    color: #5639E0;
+    margin-right: 4px;
+}
+
+.table-cell-row{
+    display: flex;
+    flex-wrap: wrap;
+}
+.table-cell-row span{
+    color: #292929;
+    font-weight: 400;
+}
+
+.table-apy-bold span, .table-amount-bold span{
+    font-weight: 400;
+    color: #292929;
+    margin-left: 4px;
+}
+
+.table-date-normal{
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    color: #6B93C0;
+    margin: 0;
+}
+
+.unbond-description-p{
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 27px;
+    color: #3F337D;
+}
+
+.center-text{
+    text-align: center;
+}
+.right-text .balance-card__token{
+    justify-content: flex-end;
+}
+
+.active-card{
+    background: #3A5EE6 !important;
+}
+
+.active-card h2 {
+    color: #B7F6FF !important;
+}
+
+.active-card * {
+    color: #FFFFFF !important;
+}
+
+.active-card .center-text .balance-card-amount{
+    color: #00DFFF !important;
+}
+
+.active-card .right-text .balance-card-amount{
+    color: #B7F6FF !important;
+}
+
+@media screen and (max-width: 1500px) {
+    .pool-liquidity-btns-row{
+        width: 100%;
+    }
+}
+
+
+@media screen and (max-width: 1600px) {
+    .selected-card-item {
+        width: 48% !important;
+        margin-bottom: 0;
+    }
+}
+
+
+@media screen and (max-width: 1100px) {
+    .selected-card-item {
+        width: 98% !important;
+    }
+}
