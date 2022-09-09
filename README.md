@@ -1,70 +1,102 @@
-# Getting Started with Create React App
+![osmosis](https://github.com/BaratMaira/OsmosisLogo/blob/main/OsmosisLogo.png?raw=true)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Osmosis Citadel.one app
+   
+   Citadel.one started its journey as a validator and easy-to-use staking wallet; now the main focus is to provide an ecosystem-like platform that empowers various crypto use-cases. With this in mind, we’ve integrated Osmosis among the first show-cases in Citadel.one App Store along with Uniswap and PancakeSwap . We’ve carefully packed all the functionality of Osmosis, including Superfluid, and implemented it inside the web version of our platform - mobile integration is also in the pipeline. Additionally, users will be able to take advantage of Osmosis functionality "implicitly" as a part of an aggregated swap, or receive tokens with the purpose to use it within another application immediately thereafter.
+   
+   Read more about Osmosis within Citadel.one App Store via the [link]
 
-## Available Scripts
 
-In the project directory, you can run:
+Enabled actions:
+- [x] Swap with optimized routing
+- [x] Swap for exact amount out
+- [x] LP and bonding
+- [x] Superfluid staking
+- [x] Create new pool
+- [x] External API for other Citadel apps for a swap
+- [x] Update UI kit (remove VK elements)
+- [x] External insentivesied pools
+- [x] Frontier tokens
 
-### `npm start`
+[//]: #
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+   [link]: <https://medium.com/citadel-one/how-to-use-osmosis-extension-75fc5b6169e5>
+   
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## How to use Osmosis Router
 
-### `npm test`
+1. Call function `getAllPools` to load all pools information.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```
+import {getAllPools} from '/swapRouter/poolLists'
+const { swapPools } = await getAllPools()
+```
+This function sends a request to these APIs:
+1.https://api-osmosis.imperator.co/pools/v2/all?low_liquidity=true
+2.https://lcd-osmosis.keplr.app/osmosis/gamm/v1beta1/pools?pagination.limit=750
 
-### `npm run build`
+2. Call function `getOutAmountRoute` by passing 3 params inTokenCode, outTokenCode and amount to get swap trade information(to estimated).
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```
+import { getOutAmountRoute } from '/swapRouter/getOutAmountRoute'
+const trade = await getOutAmountRoute('ATOM', 'OSMO', 1)
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+3. Call function `getInAmountRoute` by passing 3 params inTokenCode, outTokenCode and amount to get swap trade information(from estimated).
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```
+import { getInAmountRoute } from '/swapRouter/getInAmountRoute'
+const trade = await getInAmountRoute('ATOM', 'OSMO', 1)
+```
+The results of getOutAmountRoute():
+```
+{
+    "amount": {
+        "int": "1000000000000000000"
+    },
+    "poolRoute": [
+        {
+            "id": 600,
+            "from": {
+                "denom": "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2",
+                "symbol": "ATOM",
+                "usdPrice": 20.485242404808886,
+                "decimal": 6
+            },
+            "to": {
+                "denom": "ibc/EA3E1640F9B1532AB129A571203A0B9F789A7F14BB66E350DCBFA18E1A1931F0",
+                "symbol": "CMDX",
+                "usdPrice": 0.9084815486230138,
+                "decimal": 6
+            },
+            "amountOut": {
+                "int": "22573906541813511626"
+            }
+        },
+        {
+            "id": 601,
+            "from": {
+                "denom": "ibc/EA3E1640F9B1532AB129A571203A0B9F789A7F14BB66E350DCBFA18E1A1931F0",
+                "symbol": "CMDX",
+                "usdPrice": 0.9084815486230138,
+                "decimal": 6
+            },
+            "to": {
+                "denom": "uosmo",
+                "symbol": "OSMO",
+                "usdPrice": 4.357306819205193,
+                "decimal": 6
+            },
+            "amountOut": {
+                "int": "4692485672576981532"
+            }
+        }
+    ],
+    "estimateOutAmount": {
+        "int": "4692485672576981532"
+    },
+    "estimateRate": 4.692485,
+    "estimateSlippage": 0.000014,
+    "swapFee": 0.00599
+}
+```
