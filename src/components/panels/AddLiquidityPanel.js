@@ -203,8 +203,11 @@ const AddLiquidityPanel = () => {
                     />
                 }
                 <SmallCheckbox text="Single Asset LP" textColor='#3C5B7E' isChecked={singleLp} disabled={false} onClick={() =>  setSingleLp(!singleLp)}/>
-                {error && <div className='row' id='amount-error'>
-                    <Icon name='alarm-octagon' color='#EA2929' width='16px'/>
+                {error && 
+                <div className='row' id='amount-error'>
+                    <div className='amount-error__circle'>
+                        <Icon name='alarm-octagon' color='#EA2929' width='16px'/>
+                    </div>
                     <p>{error}</p>
                 </div>}
                 <div className='center'>

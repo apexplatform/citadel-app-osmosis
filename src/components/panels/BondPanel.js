@@ -111,8 +111,11 @@ const BondPanel = () => {
                     bgColor='#E5EDF5'
                     hideIcon
                 />
-                {error && <div className='row' id='amount-error'>
-                    <Icon name='alarm-octagon' color='#EA2929' width='16px'/>
+                {error && 
+                <div className='row' id='amount-error'>
+                    <div className='amount-error__circle'>
+                        <Icon name='alarm-octagon' color='#EA2929' width='16px'/>
+                    </div>
                     <p>Insufficient amount</p>
                 </div>}
                  <div className='center'>

@@ -78,9 +78,12 @@ const FirstStepContainer = (props) => {
                     />
                 </div>
             ))}
-            <Button onClick={() => addTokens()} iconColor='#6B93C0' textColor='#6B93C0' bgColor='#F4F6FF' bgColorBtn='#F4F6FF' icon='plus' iconHoverColor='#FFFFFF' type='long' iconHoverBgColor='#5639E0'>Add new token</Button>
-            {tokensList.length < 2 &&<div className='row' id='amount-error'>
-                <Icon name='alarm-octagon' color='#EA2929' width='16px'/>
+            <Button onClick={() => addTokens()} iconColor='#6B93C0' textColor='#6B93C0' bgColor='#F4F6FF' iconBgColor='#E5EDF5' bgColorBtn='#F4F6FF' icon='plus' iconHoverColor='#5639E0' type='long' iconHoverBgColor='#fff'>Add new token</Button>
+            {tokensList.length < 2 &&
+            <div className='row' id='amount-error'>
+                <div className='amount-error__circle'>
+                    <Icon name='alarm-octagon' color='#EA2929' width='16px'/>
+                </div>
                 <p>Minimum of 2 assets required</p>
             </div>}
             <div className='center'>
