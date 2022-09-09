@@ -5,7 +5,7 @@
   "homepage": "./",
   "dependencies": {
     "@citadeldao/apps-sdk": "^0.0.18",
-    "@citadeldao/apps-ui-kit": "^0.378.0",
+    "@citadeldao/apps-ui-kit": "^0.382.0",
     "@keplr-wallet/unit": "^0.10.14",
     "@pancakeswap/sdk": "^2.4.5",
     "@sentry/react": "^7.1.1",
