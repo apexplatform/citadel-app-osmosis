@@ -14,6 +14,7 @@ const RemoveLiquidityPanel = () => {
     const navigate = useNavigate()
     const back = () => navigate(previousPanel)
     let inputTitle = "Pool #" + pool.id + " ";
+    let myLiquidity = prettyNumber(pool?.gammShare?.toString())
     pool.poolInfo?.forEach((item, i) => {
         if (i === pool.poolInfo.length - 1) {
             inputTitle += item.symbol;
@@ -23,7 +24,7 @@ const RemoveLiquidityPanel = () => {
     });
     const data = {
         network: 'GAMM/' + pool?.id,
-        myLiquidity: prettyNumber(pool?.gammShare?.maxDecimals(6).toString()).toString()
+        myLiquidity: myLiquidity.toString()
     }
     const [error, setError] = useState(false);
     const [poolAmounts, setPoolAmounts] = useState([]);
@@ -31,12 +32,11 @@ const RemoveLiquidityPanel = () => {
         val = amountFormatter(val)
         setAmount(val)
         if (val.length) {
-          if (+pool.gammShare?.toString() > 0) {
+          if (+myLiquidity > 0) {
             let amount = val; // pool.gammShare.toString() : 
             setAmount(amount);
             const amounts = estimateExitPool(amount, pool) || poolAmounts;
-            const balance = pool.gammShare.maxDecimals(6).toString();
-            setError(+balance < +val);
+            setError(+myLiquidity < +val);
             setPoolAmounts(amounts);
           } else {
             setError(true);
