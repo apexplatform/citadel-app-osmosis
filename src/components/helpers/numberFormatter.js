@@ -12,9 +12,9 @@ const formatValue = (value) => value.toString().trim().replaceAll(',', '');
 
 export const prettyNumber = (value, maxDecimals=6, isZero = false) => {
     if (!value) {
-        return 0;
+      return 0;
     }
-
+    value = value.toString().replaceAll(',','')
     // for string with range (iost APY "4.8-36.13" etc)
     if (Number.isNaN(+value)) {
         return value;

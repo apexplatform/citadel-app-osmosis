@@ -11,6 +11,7 @@ const BondPanel = () => {
     const navigate = useNavigate()
     const location = useLocation()
     const back = () => navigate(ROUTES.MANAGE_BOND)
+    let myLiquidity = prettyNumber(pool?.gammShare?.toString())
     const [activeOption, setActiveOption] = useState(pool.lockDurations[pool.lockDurations.length-1]);
     const radioChangeHandler = (id) => {
         setActiveOption(id)
@@ -25,12 +26,11 @@ const BondPanel = () => {
         val = amountFormatter(val)
         setAmount(val)
         poolActions.setAmount(val)
-        if (+pool.gammShare?.toString() > 0) {
-          let amount = isMax ? pool.gammShare?.toString() : val;
+        if (+myLiquidity > 0) {
+          let amount = isMax ? myLiquidity : val;
           setAmount(amount);
           poolActions.setAmount(amount)
-          const balance = pool.gammShare?.maxDecimals(6).toString();
-          setError(+balance < +val);
+          setError(+myLiquidity < +val);
         } else {
           setError(true);
         }
@@ -47,7 +47,7 @@ const BondPanel = () => {
     };
     const data = {
         network: 'osmosis',
-        balance: prettyNumber(pool.gammShare?.toString()),
+        balance: myLiquidity,
         code: 'GAMM/' + pool.id
     }
     return (
