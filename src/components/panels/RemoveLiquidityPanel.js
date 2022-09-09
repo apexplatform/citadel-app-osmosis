@@ -23,7 +23,7 @@ const RemoveLiquidityPanel = () => {
     });
     const data = {
         network: 'GAMM/' + pool?.id,
-        myLiquidity: prettyNumber(pool?.gammShare?.maxDecimals(6).toString())
+        myLiquidity: prettyNumber(pool?.gammShare?.maxDecimals(6).toString()).toString()
     }
     const [error, setError] = useState(false);
     const [poolAmounts, setPoolAmounts] = useState([]);
