@@ -20,6 +20,11 @@
     justify-content: center;
 }
 
+.icons-block-container{
+    width: 48px !important;
+    height: 48px !important;
+}
+
 @media screen and (max-width: 800px){
     .select-address-card{
         margin: 16px 16px 0;

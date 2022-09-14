@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Content, Header, SelectInput, Icon, AmountInput, SmallCheckbox, Button } from '@citadeldao/apps-ui-kit/dist/main';
+import { Content, Header, SelectInput, Icon, AmountInput, Checkbox, Button } from '@citadeldao/apps-ui-kit/dist/main';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { poolActions } from '../../store/actions';
@@ -24,7 +24,7 @@ const AddLiquidityPanel = () => {
             denom: item.token.denom,
             decimals: pool.poolCoinInfo[index].coinDecimals,
             code: pool.poolCoinInfo[index].coinDenom,
-            net: 'osmosis',
+            net: pool.poolCoinInfo[index].coinDenom,
             network: pool.poolCoinInfo[index].coinDenom,
             balance: tokens.find(elem => elem.code === pool.poolCoinInfo[index].coinDenom)?.balance || 0,
             logoImg: tokens.find(elem => elem.code === pool.poolCoinInfo[index].coinDenom)?.logoURI && <img src={tokens.find(elem => elem.code === pool.poolCoinInfo[index].coinDenom)?.logoURI} alt='icon' />
@@ -41,8 +41,11 @@ const AddLiquidityPanel = () => {
     });
     const [shareOutAmount, setShareOutAmount] = useState(null);
     const [amounts, setAmount] = useState(initialAmounts);
-    const [singleLp, setSingleLp] = useState(false);
     const [index, setIndex] = useState(0);
+    const [token,setToken] = useState(amounts[index])
+    const [amount, setSLPAmount] = useState(token.amount);
+    const [singleLp, setSingleLp] = useState(false);
+
     const tokenOptions = [];
     pool.poolCoinInfo.forEach((item, index) => {
         tokenOptions.push({
@@ -64,6 +67,7 @@ const AddLiquidityPanel = () => {
         setErrorZero(false);
         if (amount.length) {
             if (singleLp) {
+                setSLPAmount(amount)
                 setAmount(temp);
                 setUsdPrice(price * +temp[index].amount);
                 checkErrors(temp[index])
@@ -159,12 +163,13 @@ const AddLiquidityPanel = () => {
             navigate(ROUTES.POOL_DETAILS)
         }
     };
-    const [token,setToken] = useState(amounts[index])
+    
     const selectToken = (token) => {
         setIndex(token.index)
         setToken(token)
         checkErrors(token)
     }
+
     return (
         <div className='panel'>
             <Content>
@@ -195,14 +200,14 @@ const AddLiquidityPanel = () => {
                         index={index}
                         logoImg={token.logoImg}
                         style={{marginBottom : '14px'}} 
-                        value={token.amount} 
+                        value={amount} 
                         setValue={(value) => updateAmount(value, token.network, index)} 
                         selectedOption={{...token, usdPrice: prettyNumber(usdPrice,2)}} 
                         setSelectedOption={selectToken} 
                         onMaxClick={() => updateAmount(token.balance, token.network, index, true)}
                     />
                 }
-                <SmallCheckbox text="Single Asset LP" textColor='#3C5B7E' isChecked={singleLp} disabled={false} onClick={() =>  setSingleLp(!singleLp)}/>
+                <Checkbox textColor='#3C5B7E' value={singleLp} onChange={() =>  setSingleLp(!singleLp)}>Single Asset LP</Checkbox>
                 {error && 
                 <div className='row' id='amount-error'>
                     <div className='amount-error__circle'>

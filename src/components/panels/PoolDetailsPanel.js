@@ -12,7 +12,6 @@ import ROUTES from '../../routes';
 const PoolDetailsPanel = (props) => {
     const { pool, superfluidDelegations } = useSelector(state => state.pool)
     const { stakeNodes } = useSelector(state => state.wallet)
-    console.log(pool)
     const superfluidDelegatedValidators = stakeNodes?.filter(activeValidator =>
 		superfluidDelegations?.superfluid_delegation_records?.some(delegation => delegation.validator_address === activeValidator.address && delegation.delegation_amount.denom === 'gamm/pool/'+pool.id)
 	);

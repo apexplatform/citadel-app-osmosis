@@ -74,5 +74,3 @@ export const buildSwapTx = async() => {
     }
     
 }
-
-//https://localhost:10888/?token=c77fc682-857a-48fa-97ce-2b7dc0057b79&tokenIn=OSMO&tokenOut=ATOM&amountIn=1&address=osmo1kvlrstwyznanmf5j9fafr5yzfy64amr7elnaac&net=osmosis

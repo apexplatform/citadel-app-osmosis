@@ -57,7 +57,6 @@ const loadPoolList = (count = 0) => async(dispatch) => {
     const { pool } = store.getState().pool
     if (wallet) {
       const { status, data } = await wallet.getPools();
-        console.log(status,'--pool list status',count, data)
         if(status){
         const { incentivizedPools, mintPrice, allPools, balancesResponse, superfluidDelegations} = data
           dispatch({

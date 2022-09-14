@@ -17,14 +17,32 @@ export const logos = {
   "osmosis_axelar-usdc": {
     logoURI: "img/tokens/usdc.svg",
   },
+  "osmosis_axelar-link": {
+    logoURI: "img/tokens/link.svg",
+  },
   osmosis_mantle: {
     logoURI: "img/tokens/mntl.webp",
+  },
+  osmosis_agoric: {
+    logoURI: "img/tokens/bld.webp",
   },
   osmosis_cryptoorg: {
     logoURI: "img/tokens/cro.png",
   },
   osmosis_juno: {
     logoURI: "img/tokens/juno.svg",
+  },
+  osmosis_marble: {
+    logoURI: "img/tokens/marble.svg",
+  },
+  osmosis_tgrade: {
+    logoURI: "img/tokens/tgrade.svg",
+  },
+  osmosis_kujira: {
+    logoURI: "img/tokens/kuji.webp",
+  },
+  osmosis_neta: {
+    logoURI: "img/tokens/neta.svg",
   },
   osmosis_persistence: {
     logoURI: "img//tokens/xprt.png",

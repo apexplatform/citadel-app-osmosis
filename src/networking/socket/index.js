@@ -88,7 +88,6 @@ export class SocketManager {
 			this.socket.on('mempool-remove-tx-app',async (data) => {
 				console.log('mempool-remove-tx-app', data)
 				const { transactionResponse } = store.getState().wallet
-				console.log(transactionResponse,'--transactionResponse')
 				if(transactionResponse && transactionResponse.meta_info){
 					if(!transactionResponse.meta_info[0]?.title.includes('Swap')){
 						let interval = null;
@@ -98,7 +97,6 @@ export class SocketManager {
 						interval = setInterval(async () => {
 							count++;
 							tryAgain = await poolActions.updatePoolList();
-							console.log(tryAgain,count,'---updater')
 							if (!tryAgain || count > 3) {
 								clearInterval(interval);
 							}

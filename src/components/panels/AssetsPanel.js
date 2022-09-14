@@ -88,7 +88,7 @@ const Assets = () => {
                 <BalanceInfoCardItem title='Bonded assets' textColor='#59779A' amountColor='#D85830' usdSymbol='$'>{loader ? '-' : prettyNumber(bondedBalance, 2)} </BalanceInfoCardItem>
                 <BalanceInfoCardItem title='Staked OSMO' textColor='#59779A' amountColor='#00B2FE' usdSymbol='$'>{loader ? '-' : prettyNumber(stakedBalance, 2)} </BalanceInfoCardItem>
             </BalanceInfoCard>
-            <Toggle text="Pool assets"  active={showPools} setActive={setShowPools} />
+            <Toggle value={showPools} onChange={setShowPools} label="Pool assets" style={{margin: '16px 0'}}/>
             { !showPools
             ? assetsList.length ? assetsList?.map((item, i) => (
                 <AddressCard 

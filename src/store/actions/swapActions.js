@@ -8,7 +8,6 @@ import { getInAmountRoute } from '../../networking/osmosisMethods/swapRouter/get
 import { prettyNumber } from "../../components/helpers/numberFormatter";
 const loadSwapPools = () => async(dispatch) => {
   let { swapPools } = await getAllPools()
-  console.log('--swapPools updated')
   dispatch({
     type: types.SET_POOLS_LIST,
     payload: swapPools,

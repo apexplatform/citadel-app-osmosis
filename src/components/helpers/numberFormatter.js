@@ -81,7 +81,10 @@ export function numberWithCommas(x, decimals) {
 
 
 export const amountFormatter = (amount) => {
-  amount = amount.toString().replace(/[^0-9\.]/g, "");
+  amount = amount.toString().replace(/[^0-9\.]/g, '');
+  if(amount.split(".").length - 1 !== 1 && amount[amount.length-1] === '.'){
+    return amount.substr(0,amount.length-1)
+  }
   if (amount.length === 2 && amount[1] !== "." && amount[1] === "0" && amount[0] === '0') {
     amount = amount[0]
   } else if (amount[0] === "0" && amount[1] !== ".") {
