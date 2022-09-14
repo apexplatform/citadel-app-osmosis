@@ -74,6 +74,7 @@ const RemoveLiquidityPanel = () => {
                         </InfoCardItem>
                     ))}
                 </InfoCardBlock>
+
                 {error && 
                 <div className='row' id='amount-error'>
                     <div className='amount-error__circle'>
