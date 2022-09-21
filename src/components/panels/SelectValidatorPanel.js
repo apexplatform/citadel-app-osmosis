@@ -33,7 +33,7 @@ const SelectValidatorPanel = () => {
         <div className='panel'>
             <Content>
                 <Header border title="Select validator" style={{margin: '8px 0 16px 0'}} onClick={() => back()} back={true}/>
-                <Search style={{marginBottom: '10px'}} onChange={searchNode} placeholder='Start typing..'/>
+                <Input type='search' style={{marginBottom: '10px'}} onChange={searchNode} placeholder='Start typing..'/>
                 {list?.map((validator,i) =>(
                    <NodeValidatorCard
                     key={i}

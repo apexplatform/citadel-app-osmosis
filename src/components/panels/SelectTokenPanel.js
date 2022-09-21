@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Content, Header, Tabbar, Search } from '@citadeldao/apps-ui-kit/dist/main';
+import { Content, Header, Tabbar, Input } from '@citadeldao/apps-ui-kit/dist/main';
 import AddressBlock from '@citadeldao/apps-ui-kit/dist/components/uiKit/AddressBlock'
 import { Config } from '../config/config';
 import { useSelector, useDispatch } from 'react-redux';
@@ -23,10 +23,8 @@ const SelectTokenPanel = () => {
     const searchWallet = (wallet) => {
         let arr = tokens.filter(
           (item) =>
-            (item.code.substr(0, wallet.length).toLowerCase() ===
-              wallet.toLowerCase() ||
-            item.name.substr(0, wallet.length).toLowerCase() ===
-              wallet.toLowerCase()) && item.code !== secondToken.code
+            (item.code.toLowerCase().includes(wallet.toLowerCase()) ||
+            item.name.toLowerCase().includes(wallet.toLowerCase())) && item.code !== secondToken.code
         );
         setTokentList(sortList(arr));
         if (wallet.length < 1) setTokentList(sortList(tokens?.filter(elem => elem.code !== secondToken.code)));
@@ -55,7 +53,7 @@ const SelectTokenPanel = () => {
         <div className='panel'>
             <Content>
                 <Header border title="Select token" style={{margin: '8px 0 16px 0'}} onClick={() => back()} back={true}/>
-                <Search style={{marginBottom: '10px'}} onChange={searchWallet} placeholder='Start typing..'/>
+                <Input type='search' style={{marginBottom: '10px'}} onChange={searchWallet} placeholder='Start typing..'/>
                 {tokenList?.map((elem,i) =>(
                   <AddressBlock logoURI={elem.logoURI} onClick={() => setToken(elem)} active={activeToken?.code === elem?.code} style={{marginBottom: '10px'}} data={{...elem, balance: prettyNumber(elem?.balance)}} key={i}/>  
                 ))}

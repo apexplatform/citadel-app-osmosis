@@ -32,6 +32,7 @@ const loadWalletWithBalances = () => async (dispatch) => {
         if (wallets instanceof ValidationError) {
             dispatch(errorActions.checkErrors(wallets));
             stopSplashLoader();
+            panelActions.setLoader(false)
             return;
         }
         dispatch({

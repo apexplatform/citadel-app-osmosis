@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Content, Tabbar, Search, Tablist, Tab, PoolItemInfo, Loader } from '@citadeldao/apps-ui-kit/dist/main';
+import { Content, Tabbar, Input, Tablist, Tab, PoolItemInfo, Loader } from '@citadeldao/apps-ui-kit/dist/main';
 import PoolItem from '@citadeldao/apps-ui-kit/dist/components/uiKit/PoolItem'
 import { Config } from '../config/config';
 import { useSelector } from 'react-redux';
@@ -82,7 +82,7 @@ const PoolsPanel = () => {
             <Content>
                   <Tablist active={active} setActive={setActive} type="button">
                     <Tab id='tab1' label='All'>
-                        <Search value={searchText} onChange={searchPool} style={{margin: '10px 0 16px'}} placeholder='Start typing..'/>
+                        <Input type='search' value={searchText} onChange={searchPool} style={{margin: '10px 0 16px'}} placeholder='Start typing..'/>
                         {
                             allPoolsList?.length ? allPoolsList?.map((pool,i) => (
                                 <PoolItem  
@@ -104,7 +104,7 @@ const PoolsPanel = () => {
                         }  
                     </Tab>
                     <Tab id='tab2' label='Incentivized Pools'>
-                        <Search value={searchText} onChange={searchPool} style={{margin: '10px 0 16px'}} placeholder='Start typing..'/>
+                        <Input type='search' value={searchText} onChange={searchPool} style={{margin: '10px 0 16px'}} placeholder='Start typing..'/>
                         {
                           incentivizedList?.length ? incentivizedList?.map((pool,i) => (
                                 <PoolItem  
@@ -126,7 +126,7 @@ const PoolsPanel = () => {
                         }  
                     </Tab>
                     <Tab id='tab3' label='My Pools'>
-                        <Search  value={searchText} onChange={searchPool} style={{margin: '10px 0 16px'}} placeholder='Start typing..'/>
+                        <Input type='search'  value={searchText} onChange={searchPool} style={{margin: '10px 0 16px'}} placeholder='Start typing..'/>
                         {
                           myPools?.length ? myPools?.map((pool,i) => (
                                 <PoolItem  
