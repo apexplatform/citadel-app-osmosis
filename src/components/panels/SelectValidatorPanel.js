@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Content, Header, Tabbar, Search, NodeValidatorCard } from '@citadeldao/apps-ui-kit/dist/main';
+import { Content, Header, Tabbar, Input, NodeValidatorCard } from '@citadeldao/apps-ui-kit/dist/main';
 import { Config } from '../config/config';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
