@@ -96,7 +96,7 @@ const PoolsPanel = () => {
                                     network={'osmosis'}
                                     style={{marginBottom: "16px"}}
                                     poolInfo>
-                                    <PoolItemInfo text='Liquidity provider fee' amount={BigNumber(pool.poolParams?.swapFee * 100).toFixed(1)} symbol='%' textColor='#D900AB' symbolColor='#59779A'/>
+                                    <PoolItemInfo text='Liquidity provider fee' amount={BigNumber(pool.pool_params?.swap_fee * 100).toFixed(1)} symbol='%' textColor='#D900AB' symbolColor='#59779A'/>
                                     <PoolItemInfo text='Pool liquidity' amount={pool.poolTVL?.toString().replace("$", "")} symbol='$' textColor='#5639E0' symbolColor='#292929'/>
                                     <PoolItemInfo text='My liquidity' amount={pool.myLiquidity} symbol='$' textColor='#0F8932' symbolColor='#292929'/>
                                 </PoolItem>
@@ -118,7 +118,7 @@ const PoolsPanel = () => {
                                     network={'osmosis'}
                                     style={{marginBottom: "16px"}}
                                     poolInfo>
-                                    <PoolItemInfo text='Liquidity provider fee' amount={BigNumber(pool.poolParams?.swapFee * 100).toFixed(1)} symbol='%' textColor='#D900AB' symbolColor='#59779A'/>
+                                    <PoolItemInfo text='Liquidity provider fee' amount={BigNumber(pool.pool_params?.swap_fee * 100).toFixed(1)} symbol='%' textColor='#D900AB' symbolColor='#59779A'/>
                                     <PoolItemInfo text='Pool liquidity' amount={pool.poolTVL?.toString().replace("$", "")} symbol='$' textColor='#5639E0' symbolColor='#292929'/>
                                     <PoolItemInfo text='My liquidity' amount={pool.myLiquidity} symbol='$' textColor='#0F8932' symbolColor='#292929'/>
                                 </PoolItem>
@@ -140,7 +140,7 @@ const PoolsPanel = () => {
                                     network={'osmosis'}
                                     style={{marginBottom: "16px"}}
                                     poolInfo>
-                                    <PoolItemInfo text='Liquidity provider fee' amount={BigNumber(pool.poolParams?.swapFee * 100).toFixed(1)} symbol='%' textColor='#D900AB' symbolColor='#59779A'/>
+                                    <PoolItemInfo text='Liquidity provider fee' amount={BigNumber(pool.pool_params?.swap_fee * 100).toFixed(1)} symbol='%' textColor='#D900AB' symbolColor='#59779A'/>
                                     <PoolItemInfo text='Pool liquidity' amount={pool.poolTVL?.toString().replace("$", "")} symbol='$' textColor='#5639E0' symbolColor='#292929'/>
                                     <PoolItemInfo text='My liquidity' amount={pool.myLiquidity} symbol='$' textColor='#0F8932' symbolColor='#292929'/>
                                 </PoolItem>

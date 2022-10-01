@@ -4,10 +4,10 @@ export default class PoolInfo{
         constructor(opts) {
             this.id = +opts.id;
             this.address = opts.address;
-            this.swapFee = new Dec(opts.poolParams?.swapFee);
-            this.exitFee = new Dec(opts.poolParams?.exitFee);
-            this.assets = opts.listOfAssets;
-            this.totalWeight = new Dec(opts.totalWeight);
+            this.swapFee = new Dec(opts.pool_params?.swapFee);
+            this.exitFee = new Dec(opts.pool_params?.exitFee);
+            this.assets = opts.list_of_assets;
+            this.totalWeight = new Dec(opts.total_weight);
         }
         getRate(inAsset, outAsset){
             return oneDec.sub(this.swapFee).mul(outAsset.weight.quo(inAsset.weight)).mul(outAsset.amount.quo(inAsset.amount));

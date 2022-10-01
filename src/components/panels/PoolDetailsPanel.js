@@ -122,16 +122,16 @@ const PoolDetailsPanel = (props) => {
                 <Header border title={headerTitle} style={{margin: '8px 0 16px 0'}} onClick={() => back()} back={true}/>
                 <InfoCardBlock>
                     <InfoCardItem text={'Liquidity pool'} symbol={'$'}><span className='purple-text'>{pool.poolTVL?.toString().replace("$", "") || '-'}</span></InfoCardItem>
-                    <InfoCardItem text={'Swap fee'} symbol={'%'}><span className='pink-text'> {+pool.poolParams?.swapFee > 0 ? BigNumber(+pool.poolParams?.swapFee * 100).toFixed() : 0}{" "}</span></InfoCardItem>
-                    <InfoCardItem text={"Pool catalyst"}><p>{pool.poolAssets?.map((item, i) =>
-                        i === pool.poolAssets.length - 1 ? (
+                    <InfoCardItem text={'Swap fee'} symbol={'%'}><span className='pink-text'> {+pool.pool_params?.swap_fee > 0 ? BigNumber(+pool.pool_params?.swap_fee * 100).toFixed() : 0}{" "}</span></InfoCardItem>
+                    <InfoCardItem text={"Pool catalyst"}><p>{pool.pool_assets?.map((item, i) =>
+                        i === pool.pool_assets.length - 1 ? (
                         <span className="pool-purple-text" key={i}>
-                            {parseInt((+item.weight * 100) / +pool.totalWeight)}{" "}
+                            {parseInt((+item.weight * 100) / +pool.total_weight)}{" "}
                             <span> % {pool.poolInfo[i]?.symbol} </span>{" "}
                         </span>
                         ) : (
                         <span className="pool-purple-text" key={i}>
-                            {parseInt((+item.weight * 100) / +pool.totalWeight)}{" "}
+                            {parseInt((+item.weight * 100) / +pool.total_weight)}{" "}
                             <span> % {pool.poolInfo[i]?.symbol} /</span>{" "}
                         </span>
                         )

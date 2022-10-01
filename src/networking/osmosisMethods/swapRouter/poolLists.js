@@ -52,15 +52,15 @@ const generatePoolList = (pools,poolList) => {
     let newPools = [];
     pools.forEach((pool) => {
       if(poolList[pool.id]){
-        let listOfAssets = []
+        let list_of_assets = []
         poolList[pool.id]?.forEach((asset,i) => {
           let decimal = getTokenDecimal(asset.symbol,asset.denom)
           if(decimal){
-            listOfAssets.push(new Assets(new TokenInfo(asset.denom,asset.symbol,asset.price,decimal), new Dec(pool.poolAssets[i].weight).quo(new Dec(pool.totalWeight)), new Dec(pool.poolAssets[i].token.amount).quo(new Dec(Math.pow(10, decimal)))));
+            list_of_assets.push(new Assets(new TokenInfo(asset.denom,asset.symbol,asset.price,decimal), new Dec(pool.pool_assets[i].weight).quo(new Dec(pool.total_weight)), new Dec(pool.pool_assets[i].token.amount).quo(new Dec(Math.pow(10, decimal)))));
           }  
         })
-        if(listOfAssets.length === poolList[pool.id].length){
-          const poolInfo = new PoolInfo({ ...pool, totalWeight: poolList[pool.id][0]?.liquidity,listOfAssets});
+        if(list_of_assets.length === poolList[pool.id].length){
+          const poolInfo = new PoolInfo({ ...pool, total_weight: poolList[pool.id][0]?.liquidity,list_of_assets});
           newPools.push(poolInfo);
         }   
       } 

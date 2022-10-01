@@ -17,7 +17,7 @@ const AddLiquidityPanel = () => {
     const [errorZero, setErrorZero] = useState(true);
     const [usdPrice, setUsdPrice] = useState('0');
     let initialAmounts = [];
-    pool.poolAssets.forEach((item, index) => {
+    pool.pool_assets.forEach((item, index) => {
         initialAmounts.push({
             index: index,
             amount: 0,
@@ -33,7 +33,7 @@ const AddLiquidityPanel = () => {
     
     const prettyBalanceList = [];
     tokenBalances.forEach((item) => {
-        pool.poolAssets.forEach((pool) => {
+        pool.pool_assets.forEach((pool) => {
             if (item.denom === pool.token.denom) {
                 prettyBalanceList.push(item);
             }
@@ -78,7 +78,7 @@ const AddLiquidityPanel = () => {
                     pool.totalShares.amount
                 ).moveDecimalPointLeft(18);
                 const currentPoolDenom = amounts[index].denom;
-                const currentAsset = pool.poolAssets.find(
+                const currentAsset = pool.pool_assets.find(
                     (asset) => asset.token.denom === currentPoolDenom
                 );
                 if (!currentAsset) {
@@ -93,7 +93,7 @@ const AddLiquidityPanel = () => {
                 otherCoinInfo.splice(index, 1);
 
             for (const otherConfig of otherConfigs) {
-                const otherPoolAsset = pool.poolAssets.find(
+                const otherPoolAsset = pool.pool_assets.find(
                     (asset) => asset.token.denom === otherConfig.denom
                 );
                 if (!otherPoolAsset) {
@@ -131,7 +131,7 @@ const AddLiquidityPanel = () => {
             let balance = new CoinPretty({ coinDecimals: 6 }, new Dec(balanceAmount));
             balance._options.hideDenom = true;
             balance = balance.toString();
-            if (prettyBalanceList.length < pool.poolAssets.length || +balance < +amount) {
+            if (prettyBalanceList.length < pool.pool_assets.length || +balance < +amount) {
                 setError('Insufficient amount');
             }else{
                 setError(false)

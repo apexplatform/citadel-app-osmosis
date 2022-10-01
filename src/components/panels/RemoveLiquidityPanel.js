@@ -67,7 +67,7 @@ const RemoveLiquidityPanel = () => {
                 />
                 <InfoCardBlock>
                     <h2 className='info-card-header-h2'>You will receive</h2>
-                    {pool.poolAssets.map((token, i) => (
+                    {pool.pool_assets.map((token, i) => (
                         <InfoCardItem key={i} text={pool.poolInfo[i].symbol}>
                             <p className='amount-p'>{poolAmounts[i]?.maxDecimals(4).toString() || '0'} 
                             <span> {pool.poolInfo[i].symbol}</span></p>

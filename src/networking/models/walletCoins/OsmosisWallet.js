@@ -61,14 +61,14 @@ export default class OsmosisWallet extends Wallet {
   
       const routes = poolInfo.map((item) => {
         return {
-          poolId: item.id.toString(),
-          tokenOutDenom: item.to.denom,
+          pool_id: item.id.toString(),
+          token_out_denom: item.to.denom,
         };
       });
       const routesOut = poolInfo.map((item) => {
         return {
-          poolId: item.id.toString(),
-          tokenInDenom: item.from.denom,
+          pool_id: item.id.toString(),
+          token_in_denom: item.from.denom,
         };
       });
       let route = "";
@@ -104,20 +104,20 @@ export default class OsmosisWallet extends Wallet {
       const valueIn = {
         sender: this.address,
         routes: routes,
-        tokenIn: {
+        token_in: {
           denom: poolInfo[0]?.from.denom,
           amount: dec_amount.toString(),
         },
-        tokenOutMinAmount: tokenOutMinAmount.toString(),
+        token_out_min_amount: tokenOutMinAmount.toString(),
       };
       const valueOut = {
         sender: this.address,
         routes: routesOut,
-        tokenOut: {
+        token_out: {
           denom: poolInfo[poolInfo.length-1]?.to.denom,
           amount: dec_to_amount.toString(),
         },
-        tokenInMaxAmount: tokenInMaxAmount.toString(),
+        token_in_max_amount: tokenInMaxAmount.toString(),
       };
       const body = {
         gas: "750000",
@@ -143,8 +143,8 @@ export default class OsmosisWallet extends Wallet {
   generateCreatePoolTransaction(selectedTokens, swapFee) {
     const { auth_token } = store.getState().user;
     const poolParams = {
-      swapFee: new Dec(swapFee).quo(DecUtils.getPrecisionDec(2)).toString(),
-      exitFee: new Dec(0).toString(),
+      swap_fee: new Dec(swapFee).quo(DecUtils.getPrecisionDec(2)).toString(),
+      exit_fee: new Dec(0).toString(),
     };
     const poolAssets = [];
     for (const asset of selectedTokens) {
@@ -190,8 +190,8 @@ export default class OsmosisWallet extends Wallet {
           type: "osmosis/gamm/create-balancer-pool",
           value: {
             sender: this.address,
-            poolParams: poolParams,
-            poolAssets: poolAssets,
+            pool_params: poolParams,
+            pool_assets: poolAssets,
             future_pool_governor: "24h",
           },
         },
@@ -261,8 +261,8 @@ export default class OsmosisWallet extends Wallet {
         type: "osmosis/superfluid-delegate",
         value: {
           sender: this.address,
-          lockId: id,
-          valAddr: validator.address
+          lock_id: id,
+          val_addr: validator.address
         }
       };
     });
@@ -295,7 +295,7 @@ export default class OsmosisWallet extends Wallet {
     const maxSlippageDec = new Dec(Math.floor(slippageTolerance)).quo(
       DecUtils.getPrecisionDec(2)
     );
-    const tokenOutMins = pool.poolAssets.map((item, i) => {
+    const tokenOutMins = pool.pool_assets.map((item, i) => {
       let amount = amounts[i]
         .toDec()
         .mul(new Dec(1).sub(maxSlippageDec))
@@ -334,9 +334,9 @@ export default class OsmosisWallet extends Wallet {
           type: "osmosis/gamm/exit-pool",
           value: {
             sender: this.address,
-            poolId: pool.id,
-            tokenOutMins,
-            shareInAmount: shareInAmount.toString(),
+            pool_id: pool.id,
+            token_out_mins: tokenOutMins,
+            share_in_amount: shareInAmount.toString(),
           },
         },
       ],
@@ -530,12 +530,12 @@ export default class OsmosisWallet extends Wallet {
           type: "osmosis/gamm/join-pool",
           value: {
             sender: this.address,
-            poolId: pool.id,
-            shareOutAmount: new Dec(shareOutAmount.toDec().toString())
+            pool_id: pool.id,
+            share_out_amount: new Dec(shareOutAmount.toDec().toString())
               .mul(DecUtils.getPrecisionDec(18))
               .truncate()
               .toString(),
-            tokenInMaxs,
+            token_in_maxs: tokenInMaxs,
           },
         },
       ],
@@ -600,9 +600,9 @@ export default class OsmosisWallet extends Wallet {
           type: "osmosis/gamm/join-swap-extern-amount-in",
           value: {
             sender: this.address,
-            poolId: pool.id,
-            tokenIn,
-            shareOutMinAmount: shareOutMinAmount.toString(),
+            pool_id: pool.id,
+            token_in: tokenIn,
+            share_out_min_amount: shareOutMinAmount.toString(),
           },
         },
       ],

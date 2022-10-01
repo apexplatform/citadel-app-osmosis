@@ -213,7 +213,7 @@ export const estimatePoolAPROsmo = (poolId) => {
     const pool = getPoolFromPagination(poolListWithPagination.data.pools, poolId);
     if (pool) {
       const osmoCurrency = getPoolTokenInfo('osmo');
-      const poolAsset = pool.poolAssets.find(
+      const poolAsset = pool.pool_assets.find(
         asset => asset.token.denom === osmoCurrency.coinMinimalDenom
       );
       if (poolAsset && new Dec(pool.totalWeight).gt(new Dec(0)) && apr_staking?.data) {
@@ -276,7 +276,7 @@ const updatePoolInfo = (pool, poolList, lockedCoins) => {
       const actualLockedShareRatio = lockedShareRatio.increasePrecision(2);
       const availableLP = getAvailableLPTokens(poolData);
       let myAmounts = [];
-      foundedPool.poolAssets.forEach((item, i) => {
+      foundedPool.pool_assets.forEach((item, i) => {
         const dec = new CoinPretty(
           poolCoinInfo[i],
           new Dec(item?.token?.amount)
@@ -388,7 +388,7 @@ const generatePoolList = (pools, lockedCoins) => {
       const actualLockedShareRatio = lockedShareRatio.increasePrecision(2);
       const availableLP = getAvailableLPTokens(poolData);
       let myAmounts = [];
-      pool.poolAssets?.forEach((item, i) => {
+      pool.pool_assets?.forEach((item, i) => {
         const dec = new CoinPretty(
           poolCoinInfo[i],
           new Dec(item?.token?.amount)
@@ -667,7 +667,7 @@ export const getAllGammShareRatio = (poolId) => {
   }
   const share = getAllGammShare(poolId);
   const totalShare = new IntPretty(
-    pool.totalShares.amount
+    pool.total_shares.amount
   ).moveDecimalPointLeft(18);
   return new IntPretty(
     share.quo(totalShare).mul(DecUtils.getTenExponentNInPrecisionRange(2))
@@ -683,7 +683,7 @@ export const getLockedGammShareRatio = (pool) => {
   }
   const share = getLockedGammShare(pool.id);
   const totalShare = new IntPretty(
-    pool.totalShares.amount
+    pool.total_shares.amount
   ).moveDecimalPointLeft(18);
   return new IntPretty(
     share.quo(totalShare).mul(DecUtils.getTenExponentNInPrecisionRange(2))
@@ -693,7 +693,7 @@ export const getLockedGammShareRatio = (pool) => {
 
 const getLockedGammShareRatioByDuration = (share,pool) => {
   const totalShare = new IntPretty(
-    pool.totalShares.amount
+    pool.total_shares.amount
   ).moveDecimalPointLeft(18);
   return new IntPretty(
     share.quo(totalShare).mul(DecUtils.getTenExponentNInPrecisionRange(2))
@@ -705,7 +705,7 @@ export const getAvailableLPTokens = (pool) => {
   let poolTotalValueLocked = new PricePretty(fiatCurrency, new Dec(0));
   const share = getAvailableGammShare(pool.id);
   const totalShare = new IntPretty(
-    pool.totalShares.amount
+    pool.total_shares.amount
   ).moveDecimalPointLeft(18);
   poolTotalValueLocked = new PricePretty(
     fiatCurrency,
@@ -797,16 +797,16 @@ const getLockedCoinWithDuration = (pool, duration) => {
 
 export function estimateJoinSwapExternAmountIn(tokenIn) {
   const { pool } = store.getState().pool;
-  const poolAsset = pool.poolAssets.find(
+  const poolAsset = pool.pool_assets.find(
     (item) => item.token.denom === tokenIn.denom
   );
   const shareOutAmount = calcPoolOutGivenSingleIn(
     new Dec(poolAsset.token.amount),
     new Dec(poolAsset.weight),
-    new Dec(pool.totalShares.amount),
-    new Dec(pool.totalWeight),
+    new Dec(pool.total_shares.amount),
+    new Dec(pool.total_weight),
     new Dec(tokenIn.amount),
-    new Dec(pool.poolParams.swapFee)
+    new Dec(pool.pool_params.swap_fee)
   ).truncate();
   return shareOutAmount;
 }
@@ -816,7 +816,7 @@ export function estimateExitPool(shareInAmount, pool) {
   try {
     const tokenOuts = [];
 
-    const totalShare = pool.totalShares.amount;
+    const totalShare = pool.total_shares.amount;
     shareInAmount = new Dec(shareInAmount)
       .mul(DecUtils.getTenExponentNInPrecisionRange(18))
       .truncate();
@@ -825,7 +825,7 @@ export function estimateExitPool(shareInAmount, pool) {
       throw new Error("share ratio is zero or negative");
     }
 
-    for (const poolAsset of pool.poolAssets) {
+    for (const poolAsset of pool.pool_assets) {
       const tokenOutAmount = shareRatio
         .mul(new Dec(poolAsset.token.amount))
         .truncate();
