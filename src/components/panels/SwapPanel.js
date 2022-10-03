@@ -65,7 +65,7 @@ const SwapPanel = () => {
         }
         let currentToken = val === "INPUT" ? tokenIn : tokenOut
         if(currentToken.code === 'OSMO' && formattedAmounts[val] > 0.1){
-            formattedAmounts[val] = formattedAmounts[val] - 0.1
+            formattedAmounts[val] = new BigNumber(formattedAmounts[val]).minus(new BigNumber('0.1')).toNumber()
         }
         dispatch(swapActions.setAmount(formattedAmounts[val],val === "INPUT" ? true : false));
         dispatch(swapActions.getSwapInfo(formattedAmounts[val],val === "INPUT" ? true : false));
