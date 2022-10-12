@@ -5,7 +5,8 @@ import dayjs from "dayjs";
 import { calcPoolOutGivenSingleIn } from "./utils/math";
 import { store } from "../../store/store";
 import { fiatCurrency, mintCurrency, poolInfoList } from './constans'
-import { poolListResponse, poolListWithPagination } from './swapRouter/poolLists'
+import { poolListResponse, poolListWithPagination } from './swapRouter/poolLists';
+import { formatPoolName } from '../../components/helpers/addressFormatter';
 let duration = require("dayjs/plugin/duration");
 dayjs.extend(duration);
 let incentivizedPoolIds = [];
@@ -26,7 +27,7 @@ let minimumRiskFactor = null;
 let allAssets = null
 let apr_staking = null
 
-export const getPoolTokenInfo = (code, symbol = "") => {
+export const getPoolTokenInfo = (code, symbol = "", pool) => {
   let result = {
     coinDenom: symbol,
     coinMinimalDenom: null,
@@ -44,6 +45,9 @@ export const getPoolTokenInfo = (code, symbol = "") => {
       result = pool;
     }
   });
+  if(pool){
+    result.symbol = pool.symbol.length > 0 ? pool.symbol : pool.denom.includes('gamm/pool/') ? pool.denom.replace('gamm/pool/', 'GAMM-') : formatPoolName(pool.denom,8) 
+  }
   return result;
 };
 
@@ -348,7 +352,7 @@ const generatePoolList = (pools, lockedCoins) => {
  
     const poolData = { ...pool, poolInfo: poolListResponse.data?.[pool.id] };
     const poolCoinInfo = poolData.poolInfo.map((item) => {
-      return getPoolTokenInfo(item.coingecko_id, item.symbol);
+      return getPoolTokenInfo(item.coingecko_id, item.symbol, item);
     });
     const apr = incentivizedPoolIds.includes(pool.id)
       ? computeAPY(poolData, durations[durations.length - 1]).toString()

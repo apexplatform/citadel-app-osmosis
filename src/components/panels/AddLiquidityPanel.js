@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { poolActions } from '../../store/actions';
 import { CoinPretty, Dec, IntPretty } from "@keplr-wallet/unit";
 import { amountFormatter, prettyNumber } from '../helpers/numberFormatter';
-import { formatPoolName } from '../helpers/addressFormatter';
 import ROUTES from '../../routes';
 
 const AddLiquidityPanel = () => {
@@ -19,7 +18,7 @@ const AddLiquidityPanel = () => {
     const [usdPrice, setUsdPrice] = useState('0');
     let initialAmounts = [];
     pool.pool_assets.forEach((item, index) => {
-        let code = pool.poolInfo[index].symbol.length > 0 ? pool.poolInfo[index].symbol : pool.poolInfo[index].denom.includes('gamm/pool/') ? pool.poolInfo[index].denom.replace('gamm/pool/', 'GAMM-') : formatPoolName(pool.poolInfo[index].denom,8) 
+        let code = pool.poolCoinInfo[index].symbol
         initialAmounts.push({
             index: index,
             amount: 0,

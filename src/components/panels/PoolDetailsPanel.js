@@ -9,6 +9,8 @@ import { CoinPretty, Dec } from '@keplr-wallet/unit';
 import { panelActions, poolActions } from '../../store/actions';
 import { getGammInfo, calculateOsmoEquivalent } from '../../networking/osmosisMethods/poolMethods'
 import ROUTES from '../../routes';
+
+
 const PoolDetailsPanel = (props) => {
     const { pool, superfluidDelegations } = useSelector(state => state.pool)
     const { stakeNodes } = useSelector(state => state.wallet)
@@ -47,7 +49,7 @@ const PoolDetailsPanel = (props) => {
     
     const back = () => navigate(ROUTES.POOLS)
     let headerTitle = "Pool #" + pool.id + " ";
-    pool.poolInfo?.forEach((item, i) => {
+    pool.poolCoinInfo?.forEach((item, i) => {
         if (i === pool.poolInfo.length - 1) {
           headerTitle += item.symbol;
         } else {
@@ -123,16 +125,16 @@ const PoolDetailsPanel = (props) => {
                 <InfoCardBlock>
                     <InfoCardItem text={'Liquidity pool'} symbol={'$'}><span className='purple-text'>{pool.poolTVL?.toString().replace("$", "") || '-'}</span></InfoCardItem>
                     <InfoCardItem text={'Swap fee'} symbol={'%'}><span className='pink-text'> {+pool.pool_params?.swap_fee > 0 ? BigNumber(+pool.pool_params?.swap_fee * 100).toFixed() : 0}{" "}</span></InfoCardItem>
-                    <InfoCardItem text={"Pool catalyst"}><p>{pool.pool_assets?.map((item, i) =>
-                        i === pool.pool_assets.length - 1 ? (
-                        <span className="pool-purple-text" key={i}>
+                    <InfoCardItem text={"Pool catalyst"}><p>{pool.pool_assets?.map((item, index) =>
+                        index === pool.pool_assets.length - 1 ? (
+                        <span className="pool-purple-text" key={index}>
                             {parseInt((+item.weight * 100) / +pool.total_weight)}{" "}
-                            <span> % {pool.poolInfo[i]?.symbol} </span>{" "}
+                            <span> % { pool.poolCoinInfo[index].symbol } </span>{" "}
                         </span>
                         ) : (
-                        <span className="pool-purple-text" key={i}>
+                        <span className="pool-purple-text" key={index}>
                             {parseInt((+item.weight * 100) / +pool.total_weight)}{" "}
-                            <span> % {pool.poolInfo[i]?.symbol} /</span>{" "}
+                            <span> % { pool.poolCoinInfo[index].symbol } /</span>{" "}
                         </span>
                         )
                     )}</p>

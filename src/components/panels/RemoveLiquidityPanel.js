@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { poolActions } from '../../store/actions';
 import { estimateExitPool } from "../../networking/osmosisMethods/poolMethods";
 import { amountFormatter, prettyNumber } from '../helpers/numberFormatter';
-import { formatPoolName } from '../helpers/addressFormatter';
 import ROUTES from '../../routes';
 
 const RemoveLiquidityPanel = () => {
@@ -68,10 +67,10 @@ const RemoveLiquidityPanel = () => {
                 />
                 <InfoCardBlock>
                     <h2 className='info-card-header-h2'>You will receive</h2>
-                    {pool.poolInfo.map((token, i) => (
-                        <InfoCardItem key={i} text={token.symbol.length > 0 ? token.symbol : token.denom.includes('gamm/pool/') ? token.denom.replace('gamm/pool/', 'GAMM-') : formatPoolName(token.denom,8)}>
+                    {pool.poolCoinInfo.map((token, i) => (
+                        <InfoCardItem key={i} text={token.symbol}>
                             <p className='amount-p'>{poolAmounts[i]?.maxDecimals(4).toString() || '0'} 
-                            <span> { token.symbol.length > 0 ? token.symbol : token.denom.includes('gamm/pool/') ? token.denom.replace('gamm/pool/', 'GAMM-') : formatPoolName(token.denom,8) }</span></p>
+                            <span> { token.symbol }</span></p>
                         </InfoCardItem>
                     ))}
                 </InfoCardBlock>

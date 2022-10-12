@@ -9,7 +9,6 @@ import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { panelActions, poolActions } from '../../store/actions';
 import { prettyNumber } from '../helpers/numberFormatter';
-import { formatPoolName } from '../helpers/addressFormatter'
 import ROUTES from '../../routes';
 const PoolsPanel = () => {
     const config = new Config()
@@ -78,12 +77,12 @@ const PoolsPanel = () => {
       navigate(ROUTES.POOL_DETAILS)
       poolActions.setIsSuperfluidLock(false)
     }
-    console.log(allPoolsList)
+  
     const getPoolName = (pool) => {
-      let name = pool.poolInfo.map((token,i) => (
+      let name = pool.poolCoinInfo.map((token,i) => (
           <span key={i}>
-              {token.symbol.length > 0 ? token.symbol?.toUpperCase() : token.denom.includes('gamm/pool/') ? token.denom.replace('gamm/pool/', 'GAMM-') : formatPoolName(token.denom)} 
-              {pool.poolInfo.length - 1 !== i && <span className="pool-symbol"> / </span>}
+              {token.symbol} 
+              {pool.poolCoinInfo.length - 1 !== i && <span className="pool-symbol"> / </span>}
           </span>
       ))
       return name
