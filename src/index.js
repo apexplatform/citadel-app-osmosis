@@ -28,7 +28,7 @@ root.render(<Provider store={store}><App/></Provider>);
 const splashContainer = document.getElementById('splash');
 const splashRoot = createRoot(splashContainer);
 splashRoot.render(<Splash config={ {
-    name: "Osmosis",
+    title: "Osmosis",
     fullName: 'Osmosis Swap',
     description: "Try decentralized peer-to-peer blockchain that people can use to create liquidity and trade IBC enabled tokens.",
     background_color: "#170A52",
