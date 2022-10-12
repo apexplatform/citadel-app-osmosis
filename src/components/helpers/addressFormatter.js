@@ -9,3 +9,13 @@ export const formatAddress = (address) => {
     return address;
   };
   
+export const formatPoolName = (address,size=18) => {
+  if (address?.length > 20) {
+    return (
+      address.toUpperCase().slice(0, size) +
+      '...' 
+    );
+  }
+  return address?.toUpperCase();
+};
+  

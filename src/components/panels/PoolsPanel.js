@@ -8,7 +8,8 @@ import BigNumber from "bignumber.js";
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { panelActions, poolActions } from '../../store/actions';
-import { prettyNumber } from '../helpers/numberFormatter'
+import { prettyNumber } from '../helpers/numberFormatter';
+import { formatPoolName } from '../helpers/addressFormatter'
 import ROUTES from '../../routes';
 const PoolsPanel = () => {
     const config = new Config()
@@ -27,7 +28,7 @@ const PoolsPanel = () => {
     );
     const findPool = (pool, name) => {
         let str =
-          "pool#" + pool.id + pool.poolInfo[0]?.symbol + pool.poolInfo[1]?.symbol;
+          "pool#" + pool.id + (pool.poolInfo[0]?.symbol || pool.poolInfo[0]?.denom) + (pool.poolInfo[1]?.symbol ||  pool.poolInfo[1]?.denom);
         if (str.toLowerCase().includes(name.toLowerCase())) {
           return true;
         }
@@ -77,6 +78,16 @@ const PoolsPanel = () => {
       navigate(ROUTES.POOL_DETAILS)
       poolActions.setIsSuperfluidLock(false)
     }
+    console.log(allPoolsList)
+    const getPoolName = (pool) => {
+      let name = pool.poolInfo.map((token,i) => (
+          <span key={i}>
+              {token.symbol.length > 0 ? token.symbol?.toUpperCase() : token.denom.includes('gamm/pool/') ? token.denom.replace('gamm/pool/', 'GAMM-') : formatPoolName(token.denom)} 
+              {pool.poolInfo.length - 1 !== i && <span className="pool-symbol"> / </span>}
+          </span>
+      ))
+      return name
+    }
     return (
         <div className='panel'>
             <Content>
@@ -88,6 +99,7 @@ const PoolsPanel = () => {
                                 <PoolItem  
                                     key={i}
                                     id={pool.id}
+                                    name={getPoolName(pool)}
                                     onClick={() => openPool(pool)}
                                     apr={+pool.apr/100}
                                     poolAssets={pool.poolInfo}
@@ -111,6 +123,7 @@ const PoolsPanel = () => {
                                     key={i}
                                     id={pool.id}
                                     onClick={() => openPool(pool)}
+                                    name={getPoolName(pool)}
                                     apr={+pool.apr/100}
                                     poolAssets={pool.poolInfo}
                                     isSuperfluidPool={pool.isSuperfluidPool}
@@ -134,6 +147,7 @@ const PoolsPanel = () => {
                                     onClick={() => openPool(pool)}
                                     id={pool.id}
                                     apr={+pool.apr/100}
+                                    name={getPoolName(pool)}
                                     poolAssets={pool.poolInfo}
                                     isSuperfluidPool={pool.isSuperfluidPool}
                                     superFluidAPR={prettyNumber(+pool.superFluidAPR,2)}

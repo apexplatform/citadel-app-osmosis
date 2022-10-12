@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { poolActions } from '../../store/actions';
 import { estimateExitPool } from "../../networking/osmosisMethods/poolMethods";
 import { amountFormatter, prettyNumber } from '../helpers/numberFormatter';
+import { formatPoolName } from '../helpers/addressFormatter';
 import ROUTES from '../../routes';
 
 const RemoveLiquidityPanel = () => {
@@ -67,10 +68,10 @@ const RemoveLiquidityPanel = () => {
                 />
                 <InfoCardBlock>
                     <h2 className='info-card-header-h2'>You will receive</h2>
-                    {pool.pool_assets.map((token, i) => (
-                        <InfoCardItem key={i} text={pool.poolInfo[i].symbol}>
+                    {pool.poolInfo.map((token, i) => (
+                        <InfoCardItem key={i} text={token.symbol.length > 0 ? token.symbol : token.denom.includes('gamm/pool/') ? token.denom.replace('gamm/pool/', 'GAMM-') : formatPoolName(token.denom,8)}>
                             <p className='amount-p'>{poolAmounts[i]?.maxDecimals(4).toString() || '0'} 
-                            <span> {pool.poolInfo[i].symbol}</span></p>
+                            <span> { token.symbol.length > 0 ? token.symbol : token.denom.includes('gamm/pool/') ? token.denom.replace('gamm/pool/', 'GAMM-') : formatPoolName(token.denom,8) }</span></p>
                         </InfoCardItem>
                     ))}
                 </InfoCardBlock>
@@ -83,7 +84,7 @@ const RemoveLiquidityPanel = () => {
                     <p>Insufficient amount</p>
                 </div>}
                 <div className='center'>
-                    <Button disabled={error} onClick={() => prepareExitPool()} hoverBgColor='#5639E0' style={{marginTop: '16px'}} textColor='#FFFFFF' bgColor='#7C63F5'>Remove</Button>
+                    <Button disabled={error || amount === 0} onClick={() => prepareExitPool()} hoverBgColor='#5639E0' style={{marginTop: '16px'}} textColor='#FFFFFF' bgColor='#7C63F5'>Remove</Button>
                 </div>
             </Content>
         </div>

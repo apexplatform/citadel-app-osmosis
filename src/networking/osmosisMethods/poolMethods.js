@@ -32,7 +32,7 @@ export const getPoolTokenInfo = (code, symbol = "") => {
     coinMinimalDenom: null,
     coinDecimals: 6,
     coinGeckoId: code,
-    coinImageUrl: "img/icons/unsupported.svg",
+    coinImageUrl: "img/tokens/unsupported.svg",
   };
   poolInfoList.forEach((pool) => {
     if (

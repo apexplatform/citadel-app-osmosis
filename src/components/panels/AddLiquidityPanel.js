@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { poolActions } from '../../store/actions';
 import { CoinPretty, Dec, IntPretty } from "@keplr-wallet/unit";
 import { amountFormatter, prettyNumber } from '../helpers/numberFormatter';
+import { formatPoolName } from '../helpers/addressFormatter';
 import ROUTES from '../../routes';
 
 const AddLiquidityPanel = () => {
@@ -18,16 +19,17 @@ const AddLiquidityPanel = () => {
     const [usdPrice, setUsdPrice] = useState('0');
     let initialAmounts = [];
     pool.pool_assets.forEach((item, index) => {
+        let code = pool.poolInfo[index].symbol.length > 0 ? pool.poolInfo[index].symbol : pool.poolInfo[index].denom.includes('gamm/pool/') ? pool.poolInfo[index].denom.replace('gamm/pool/', 'GAMM-') : formatPoolName(pool.poolInfo[index].denom,8) 
         initialAmounts.push({
             index: index,
             amount: 0,
             denom: item.token.denom,
             decimals: pool.poolCoinInfo[index].coinDecimals,
-            code: pool.poolCoinInfo[index].coinDenom,
-            net: pool.poolCoinInfo[index].coinDenom,
-            network: pool.poolCoinInfo[index].coinDenom,
+            code,
+            net: code,
+            network: code,
             balance: tokens.find(elem => elem.code === pool.poolCoinInfo[index].coinDenom)?.balance || 0,
-            logoImg: tokens.find(elem => elem.code === pool.poolCoinInfo[index].coinDenom)?.logoURI && <img src={tokens.find(elem => elem.code === pool.poolCoinInfo[index].coinDenom)?.logoURI} alt='icon' />
+            logoImg: <img src={tokens.find(elem => elem.code === pool.poolCoinInfo[index].coinDenom)?.logoURI || 'img/tokens/unsupported.svg'} alt='icon' />
         });
     });
     
@@ -69,13 +71,13 @@ const AddLiquidityPanel = () => {
             if (singleLp) {
                 setSLPAmount(amount)
                 setAmount(temp);
-                setUsdPrice(price * +temp[index].amount);
+                setUsdPrice(price * +temp[index]?.amount);
                 checkErrors(temp[index])
             } else {
                 setUsdPrice(price * +amount);
                 const tokenInAmount = new IntPretty(new Dec(amount));
                 const totalShare = new IntPretty(
-                    pool.totalShares.amount
+                    pool.total_shares.amount
                 ).moveDecimalPointLeft(18);
                 const currentPoolDenom = amounts[index].denom;
                 const currentAsset = pool.pool_assets.find(

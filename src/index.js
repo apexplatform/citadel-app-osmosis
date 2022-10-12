@@ -8,6 +8,8 @@ import { createRoot } from 'react-dom/client';
 import * as Sentry from '@sentry/react';
 import { BrowserTracing } from '@sentry/tracing';
 import { Config } from './components/config/config';
+import osmosis from './components/assets/osmosis.svg';
+import osmosisLogo from './components/assets/osmosisLogo.svg';
 
 const enabled = window.location.href.search('/localhost') === -1 &&
     window.location.href.search('/192.168.') === -1;
@@ -25,7 +27,22 @@ root.render(<Provider store={store}><App/></Provider>);
 
 const splashContainer = document.getElementById('splash');
 const splashRoot = createRoot(splashContainer);
-splashRoot.render(<Splash appName="Osmosis"/>);
+splashRoot.render(<Splash config={ {
+    name: "Osmosis",
+    fullName: 'Osmosis Swap',
+    description: "Try decentralized peer-to-peer blockchain that people can use to create liquidity and trade IBC enabled tokens.",
+    background_color: "#170A52",
+    background: osmosis,
+    circle_1: '#7C63F5',
+    circle_2: '#3A2D7D',
+    circle_3: 'rgba(99, 84, 180, 0.2)',
+    circle_4: 'rgba(255, 255, 255, 0.1)',
+    textColor: '#FFFFFF',
+    mobileTextColor: '#FFFFFF',
+    iconColor: '',
+    mobileIconColor: '',
+    logo: osmosisLogo
+}}/>);
 
 const r = document.querySelector(':root');
 const config = new Config();
