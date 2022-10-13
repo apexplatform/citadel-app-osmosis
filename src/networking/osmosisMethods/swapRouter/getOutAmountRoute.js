@@ -11,6 +11,7 @@ export const getOutAmountRoute = async(fromToken, toToken, amount) => {
     }
     const MAX_HOPS = 2
     const bigpools = swapPools?.filter(pool => pool.totalWeight.gt(new Dec(1000)));
+    console.log(bigpools);
     const rf = new RouteFinder();
     let bestRoute = new OutRoute(amount);
 	for (let i = 1; i <= MAX_HOPS; i++) {

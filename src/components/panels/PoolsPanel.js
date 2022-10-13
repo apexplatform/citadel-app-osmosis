@@ -27,7 +27,7 @@ const PoolsPanel = () => {
     );
     const findPool = (pool, name) => {
         let str =
-          "pool#" + pool.id + (pool.poolInfo[0]?.symbol || pool.poolInfo[0]?.denom) + (pool.poolInfo[1]?.symbol ||  pool.poolInfo[1]?.denom);
+          "pool#" + pool.id + (pool.poolCoinInfo[0]?.symbol || pool.poolInfo[0]?.denom) + (pool.poolCoinInfo[1]?.symbol ||  pool.poolInfo[1]?.denom);
         if (str.toLowerCase().includes(name.toLowerCase())) {
           return true;
         }
@@ -77,7 +77,6 @@ const PoolsPanel = () => {
       navigate(ROUTES.POOL_DETAILS)
       poolActions.setIsSuperfluidLock(false)
     }
-  
     const getPoolName = (pool) => {
       let name = pool.poolCoinInfo.map((token,i) => (
           <span key={i}>
