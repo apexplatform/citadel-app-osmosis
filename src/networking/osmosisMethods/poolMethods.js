@@ -55,7 +55,7 @@ export const getPoolTokenInfo = (code, symbol = "", pool, id) => {
     } else {
       let item = denoms.find(elem => elem.denom === pool.denom)
       if(item){
-        result.symbol = item.symbol
+        result.symbol = formatPoolName(item.symbol,8)
       } else {
         result.symbol = formatPoolName(pool.denom,8) 
       }

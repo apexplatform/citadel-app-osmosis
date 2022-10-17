@@ -9,8 +9,8 @@ export const formatAddress = (address) => {
     return address;
   };
   
-export const formatPoolName = (address,size=18) => {
-  if (address?.length > 20) {
+export const formatPoolName = (address,size=10) => {
+  if (address?.length > 18) {
     return (
       address.toUpperCase().slice(0, size) +
       '...' 
