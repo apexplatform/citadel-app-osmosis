@@ -254,6 +254,9 @@
     color: #B7F6FF !important;
 }
 
+.selected-card-item {
+    position: relative;
+}
 @media screen and (max-width: 1500px) {
     .pool-liquidity-btns-row{
         width: 100%;
