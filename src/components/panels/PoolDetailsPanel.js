@@ -166,7 +166,7 @@ const PoolDetailsPanel = (props) => {
                         <Button onClick={() => navigate(ROUTES.REMOVE_LIQUIDITY)} textColor='#FFFFFF' bgColor='#0095D6' hoverBgColor='#005376'>Remove Liquidity</Button>
                     </div>
                 </div>
-                {myLiquidity && pool.isIncentivized > 0 && 
+                {myLiquidity > 0 && pool.isIncentivized ?
                     <div onClick={() => {
                             navigate(ROUTES.MANAGE_BOND); 
                             poolActions.setSelectedNode(null);
@@ -180,7 +180,7 @@ const PoolDetailsPanel = (props) => {
                             arrowColor='#1C622F' 
                             data={bondData}
                         />
-                    </div>    
+                    </div>: ""
                 }
                 {!showSuperfluidDelegations && pool.isSuperfluidPool && showSelectValidator &&
                     <NoValidatorCard 
