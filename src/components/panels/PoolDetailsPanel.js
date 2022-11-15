@@ -166,7 +166,7 @@ const PoolDetailsPanel = (props) => {
                         <Button onClick={() => navigate(ROUTES.REMOVE_LIQUIDITY)} textColor='#FFFFFF' bgColor='#0095D6' hoverBgColor='#005376'>Remove Liquidity</Button>
                     </div>
                 </div>
-                {myLiquidity > 0 && 
+                {myLiquidity && pool.isIncentivized > 0 && 
                     <div onClick={() => {
                             navigate(ROUTES.MANAGE_BOND); 
                             poolActions.setSelectedNode(null);
