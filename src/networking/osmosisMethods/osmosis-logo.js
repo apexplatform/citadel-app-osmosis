@@ -23,8 +23,32 @@ export const logos = {
   osmosis_mantle: {
     logoURI: "img/tokens/mntl.webp",
   },
+  "osmosis_axelar-mkr": {
+    logoURI: "img/tokens/maker.webp",
+  },
+  "osmosis_axelar-moonbeam": {
+    logoURI: "img/tokens/moonbeam.png",
+  },
+  "osmosis_stride": {
+    logoURI: "img/tokens/strd.png",
+  },
+  "osmosis_stafi": {
+    logoURI: "img/tokens/fis.png",
+  },
   osmosis_agoric: {
     logoURI: "img/tokens/bld.webp",
+  },
+  osmosis_crescent: {
+    logoURI: "img/tokens/cre.svg",
+  },
+  osmosis_hope: {
+    logoURI: "img/tokens/hope.png",
+  },
+  osmosis_orai: {
+    logoURI: "img/tokens/orai.png",
+  },
+  osmosis_jackal: {
+    logoURI: "img/tokens/jackal.svg",
   },
   osmosis_cryptoorg: {
     logoURI: "img/tokens/cro.png",
