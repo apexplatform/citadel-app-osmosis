@@ -76,7 +76,7 @@ export default class ExchangePool {
 
     getSwapFee(){
         const pi = swapPools.find(p => p.id === this.id);
-        if (pi.id === 0){
+        if (!pi.id){
             return zeroInt;
         }  
         return pi.swapFee;

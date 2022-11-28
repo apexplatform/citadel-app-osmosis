@@ -4,8 +4,8 @@ export default class PoolInfo{
         constructor(opts) {
             this.id = +opts.id;
             this.address = opts.address;
-            this.swapFee = new Dec(opts.pool_params?.swapFee);
-            this.exitFee = new Dec(opts.pool_params?.exitFee);
+            this.swapFee = new Dec(opts.pool_params?.swap_fee);
+            this.exitFee = new Dec(opts.pool_params?.exit_fee);
             this.assets = opts.list_of_assets;
             this.totalWeight = new Dec(opts.total_weight);
         }

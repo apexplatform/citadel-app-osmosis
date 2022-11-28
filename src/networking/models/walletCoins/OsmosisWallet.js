@@ -48,13 +48,13 @@ export default class OsmosisWallet extends Wallet {
     ) {
       const { auth_token } = store.getState().user;
       const maxSlippageDec = new Dec(Math.floor(slippageTolerance)).quo(
-        DecUtils.getPrecisionDec(2)
+        DecUtils.getTenExponentNInPrecisionRange(2)
       );
       const dec_amount = new Dec(fromTokenAmount.toString())
-        .mul(DecUtils.getPrecisionDec(+fromToken.decimals))
+        .mul(DecUtils.getTenExponentNInPrecisionRange(+fromToken.decimals))
         .truncate();
       const dec_to_amount = new Dec(toTokenAmount.toString())
-        .mul(DecUtils.getPrecisionDec(+toToken.decimals))
+        .mul(DecUtils.getTenExponentNInPrecisionRange(+toToken.decimals))
         .truncate();
       const tokenOutMinAmount = this.getMinOutAmount(dec_to_amount,maxSlippageDec);
       const tokenInMaxAmount = this.getMaxInAmount(dec_amount,maxSlippageDec);

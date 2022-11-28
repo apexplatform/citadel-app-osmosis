@@ -41,11 +41,10 @@ export class OutRoute {
     swapFee(){
         if (this.poolRoute == null) return zeroDec;
         let fee = oneDec;
-
         this.poolRoute.forEach(pr => {
             fee = fee.mul(oneDec.sub(pr.getSwapFee()));
         });
-        return round(oneDec.sub(fee), 5);
+        return oneDec.sub(fee).toString();
     }
 }
 

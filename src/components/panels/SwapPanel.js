@@ -134,7 +134,7 @@ const SwapPanel = () => {
                 </div>
             <InfoCardBlock style={{marginTop: '10px'}}>
                 <InfoCardItem text={'Price'} symbol={tokenOut?.code} symbol2={tokenIn?.code}><span className='purple-text'>{rate || '-'}</span></InfoCardItem>
-                <InfoCardItem text={'Swap Fee'} symbol={'%'}><span className='pink-text'> {+swapFee > 0 ? BigNumber(swapFee * 100).toFixed(3) : 0}{" "}</span></InfoCardItem>
+                <InfoCardItem text={'Swap Fee'} symbol={'%'}><span className='pink-text'> {+swapFee > 0 ? BigNumber(swapFee * 100).toFixed(2) : 0}{" "}</span></InfoCardItem>
                 <InfoCardItem text={'Route'} > 
                 <span className="route-row">{routes ? routes?.map((item,i) =>(
             i===0 ?
