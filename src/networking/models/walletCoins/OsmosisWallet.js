@@ -132,11 +132,7 @@ export default class OsmosisWallet extends Wallet {
         ],
         memo: "Swap via Citadel.one app",
         publicKey: this.publicKey,
-        token: auth_token,
-        fee: {
-          denom: "uosmo",
-          amount: "0",
-        },
+        token: auth_token
       };
       return body;
   }
