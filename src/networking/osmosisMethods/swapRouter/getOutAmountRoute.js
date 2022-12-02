@@ -28,6 +28,7 @@ export const getOutAmountRoute = async(fromToken, toToken, amount) => {
             estimateRate: bestRoute.estimateRate(),
             estimateSlippage: bestRoute.estimateSlipage(),
             swapFee: bestRoute.swapFee(),
+            spotPriceBefore: bestRoute.calcSpotPrice(),
             error: false
         }
         return result;

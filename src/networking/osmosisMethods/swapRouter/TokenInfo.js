@@ -10,7 +10,7 @@ export class TokenInfo {
 
 export class Assets
 {
-    constructor(token,weight,amount) {
+    constructor(token,amount,weight) {
         this.weight = weight;
         this.token = token;
         this.amount = amount;

@@ -104,7 +104,6 @@ const getSwapInfo = (amount = 0, isOut = true) => async(dispatch) => {
         res = await getInAmountRoute(tokenIn,tokenOut,amount)
       }
     }
-    console.log(res);
     if (!res.error) {
       dispatch({
         type: types.SET_OUT_AMOUNT,
@@ -133,6 +132,10 @@ const getSwapInfo = (amount = 0, isOut = true) => async(dispatch) => {
       dispatch({
         type: types.SET_TO_USD_PRICE,
         payload: res.poolRoute && res.poolRoute[res.poolRoute?.length - 1]?.to?.usdPrice,
+      });
+      dispatch({
+        type: types.SET_TRADE,
+        payload: res,
       });
     }else if(+amount > 0){
       dispatch(errorActions.checkErrors(res.error))
@@ -179,7 +182,7 @@ const clearSwapInfo = () => {
 
 const getSwapTransaction = (formattedAmounts) => {
     store.dispatch(setSwapDisable(true));
-    const { tokenIn, tokenOut, slippageTolerance, isExactIn, routes } = store.getState().swap;
+    const { tokenIn, tokenOut, slippageTolerance, isExactIn, routes, trade } = store.getState().swap;
     const { activeWallet } = store.getState().wallet;
     const wallet = walletActions.getWalletConstructor(activeWallet);
     const transaction = wallet.generateSwapTransaction(
@@ -190,6 +193,7 @@ const getSwapTransaction = (formattedAmounts) => {
       formattedAmounts["OUTPUT"],
       slippageTolerance,
       routes,
+      trade
     );
     wallet
       .prepareTransfer(transaction)

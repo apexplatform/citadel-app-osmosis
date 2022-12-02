@@ -21,6 +21,7 @@ export default class PoolInfo{
         getRateWithoutFee(inAsset, outAsset){
             return inAsset.weight.quo(outAsset.weight).mul(outAsset.amount.quo(inAsset.amount));
         }
+
         getSlippage(inAsset, outAsset, amountIn, amountOut){
             const fee = oneDec.sub(this.swapFee);
             const amountRatio = amountIn.quo(amountOut)
@@ -36,7 +37,13 @@ export default class PoolInfo{
             const res = outAsset.amount.mul(new Dec(Math.pow(newInputTokenAmount.toString(), weightProportion.toString())).sub(new Dec(Math.pow(inAsset.amount.toString(), weightProportion.toString())))).quo(new Dec(Math.pow(newInputTokenAmount.toString(), weightProportion.toString())));
             return res
         }
-        
+
+        calcSpotPrice(inAsset, outAsset) {
+            const number = inAsset.amount.quo(inAsset.weight);
+            const denom = outAsset.amount.quo(outAsset.weight);
+            const scale = oneDec.quo(oneDec.sub(this.swapFee));
+            return number.quo(denom).mul(scale);
+        } 
      
         inAmountWithSlippage(inAsset, outAsset, amountOut){
             const fee = oneDec.sub(this.swapFee);

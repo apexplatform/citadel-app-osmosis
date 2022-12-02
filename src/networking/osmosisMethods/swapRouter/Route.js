@@ -1,5 +1,5 @@
 import {round} from '../utils/math'
-import { Dec } from "@keplr-wallet/unit";
+import { Dec, DecUtils } from "@keplr-wallet/unit";
 const zeroDec = new Dec(0);
 const oneDec = new Dec(1);
 export class OutRoute {
@@ -14,6 +14,15 @@ export class OutRoute {
             outAmount = pr.estimateOutAmount(outAmount);
         });
         return outAmount; 
+    }
+
+    calcSpotPrice() {
+        if (this.poolRoute == null) return zeroDec;
+        let spotPriceBefore = new Dec(1);
+        this.poolRoute.forEach(pr => {
+            spotPriceBefore = spotPriceBefore.mul(pr.calcSpotPrice()).quo(DecUtils.getTenExponentNInPrecisionRange(pr.from.decimal - pr.to.decimal));
+        });
+        return spotPriceBefore; 
     }
 
     estimateSlipage(){
@@ -80,6 +89,14 @@ export class InRoute {
         return round(slippage,6);
     }
 
+    calcSpotPrice() {
+        if (this.poolRoute == null) return zeroDec;
+        let spotPriceBefore = new Dec(1);
+        this.poolRoute.forEach(pr => {
+            spotPriceBefore = spotPriceBefore.mul(pr.calcSpotPrice()).quo(DecUtils.getTenExponentNInPrecisionRange(pr.from.decimal - pr.to.decimal));
+        });
+        return spotPriceBefore; 
+    }
 
     estimateRate() {
         if (this.poolRoute == null) return 0;

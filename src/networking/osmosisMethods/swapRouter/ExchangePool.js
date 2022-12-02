@@ -21,6 +21,20 @@ export default class ExchangePool {
         }     
     }
 
+    calcSpotPrice()
+    {
+        const pi = swapPools.find(p => p.id === this.id);
+        if (pi.id === 0){
+            return zeroInt;
+        }  
+        const ep = pi.getPoolPath(this.from.denom, this.to.denom);
+        if (ep.isExists){
+            return pi.calcSpotPrice(ep.inAsset, ep.outAsset);
+        } else {
+            return zeroInt;
+        }     
+    }
+
     getOutRate(){
         const pi = swapPools.find(p => p.id === this.id);
         if (pi.id === 0){

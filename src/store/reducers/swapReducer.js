@@ -19,7 +19,8 @@ const initialState = {
     swapInfo: null,
     amount: 0,
     selectedToken: 'INPUT',
-    routes: null
+    routes: null,
+    trade: null
   };
   export default function SwapReducer (state = initialState, action) {
     switch (action.type) {
@@ -28,6 +29,11 @@ const initialState = {
           ...state,
           routes: action.payload,
         };
+      case types.SET_TRADE:
+          return {
+            ...state,
+            trade: action.payload,
+          };
       case types.SET_EXACT_IN:
         return {
           ...state,

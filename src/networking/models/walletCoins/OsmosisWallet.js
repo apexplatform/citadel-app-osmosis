@@ -25,12 +25,17 @@ export default class OsmosisWallet extends Wallet {
         return new Error(data.error?.message);
       }
     }
-    getMinOutAmount(estimateOutAmount, slippage) {
-      return new Dec(estimateOutAmount).mul(new Dec(1).sub(slippage)).truncate();
+
+    getMinOutAmount(spotPriceBefore, tokenIn, priceImpact) {
+      const effectivePrice = spotPriceBefore.mul(priceImpact.add(new Dec(1)));
+      return new Dec(tokenIn).quo(effectivePrice).truncate();
     }
-    getMaxInAmount(estimateInAmount, slippage) {
-      return new Dec(estimateInAmount).mul(new Dec(1).add(slippage)).truncate();
+
+    getMaxInAmount(spotPriceBefore, tokenOut, priceImpact) {
+      const effectivePrice = spotPriceBefore.mul(priceImpact.add(new Dec(1)));
+      return new Dec(tokenOut).mul(effectivePrice).truncate();
     }
+
     getPools() {
       return getPools(this.address);
     }
@@ -45,20 +50,23 @@ export default class OsmosisWallet extends Wallet {
       toTokenAmount,
       slippageTolerance,
       poolInfo,
+      trade
     ) {
       const { auth_token } = store.getState().user;
-      const maxSlippageDec = new Dec(Math.floor(slippageTolerance)).quo(
+      const maxSlippageDec = new Dec(slippageTolerance.toString()).quo(
         DecUtils.getTenExponentNInPrecisionRange(2)
       );
+
       const dec_amount = new Dec(fromTokenAmount.toString())
         .mul(DecUtils.getTenExponentNInPrecisionRange(+fromToken.decimals))
         .truncate();
       const dec_to_amount = new Dec(toTokenAmount.toString())
         .mul(DecUtils.getTenExponentNInPrecisionRange(+toToken.decimals))
         .truncate();
-      const tokenOutMinAmount = this.getMinOutAmount(dec_to_amount,maxSlippageDec);
-      const tokenInMaxAmount = this.getMaxInAmount(dec_amount,maxSlippageDec);
-  
+
+      const tokenOutMinAmount = this.getMinOutAmount(trade.spotPriceBefore, dec_amount, maxSlippageDec)
+      const tokenInMaxAmount = this.getMaxInAmount(trade.spotPriceBefore, dec_to_amount, maxSlippageDec)
+
       const routes = poolInfo.map((item) => {
         return {
           pool_id: item.id.toString(),

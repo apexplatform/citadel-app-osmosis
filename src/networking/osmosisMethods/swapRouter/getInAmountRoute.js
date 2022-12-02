@@ -12,7 +12,7 @@ export const getInAmountRoute = async(fromToken, toToken, amount) => {
     }
 
     const MAX_HOPS = 3
-    const bigpools = swapPools?.filter(pool => pool.totalWeight.gt(new Dec(10000)));
+    const bigpools = swapPools?.filter(pool => pool.totalWeight.gt(new Dec(1000)));
     const rf = new RouteFinder();
     let bestRoute = new InRoute(amount);
 	for (let i = 1; i <= MAX_HOPS; i++) {
@@ -31,6 +31,7 @@ export const getInAmountRoute = async(fromToken, toToken, amount) => {
             estimateRate: bestRoute.estimateRate(),
             estimateSlippage: bestRoute.estimateSlipage(),
             swapFee: bestRoute.swapFee(),
+             spotPriceBefore: bestRoute.calcSpotPrice(),
             error: false
         }
         return result;
