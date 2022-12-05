@@ -496,7 +496,7 @@ export default class OsmosisWallet extends Wallet {
       },
       {
         title: "Token Out",
-        value: `${shareOutAmount.toDec().toString()} GAMM-${pool.id}`,
+        value: `${prettyNumber(shareOutAmount.toDec().toString())} GAMM-${pool.id}`,
         type: "text",
       },
     ];
