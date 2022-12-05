@@ -347,10 +347,6 @@ export default class OsmosisWallet extends Wallet {
       memo: "Exit-pool via Citadel.one app",
       publicKey: this.publicKey,
       token: auth_token,
-      fee: {
-        denom: "uosmo",
-        amount: "0",
-      },
       meta_info,
     };
     return body;
@@ -613,10 +609,6 @@ export default class OsmosisWallet extends Wallet {
       memo: "Join pool via Citadel.one app",
       publicKey: this.publicKey,
       token: auth_token,
-      fee: {
-        denom: "uosmo",
-        amount: "0",
-      },
       meta_info,
     };
     return body;
