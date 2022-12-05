@@ -39,8 +39,8 @@ export default class PoolInfo{
         }
 
         calcSpotPrice(inAsset, outAsset) {
-            const number = inAsset.amount.quo(inAsset.weight);
-            const denom = outAsset.amount.quo(outAsset.weight);
+            const number = new Dec(inAsset.info.token.amount).quo(new Dec(inAsset.info.weight));
+            const denom = new Dec(outAsset.info.token.amount).quo(new Dec(outAsset.info.weight));
             const scale = oneDec.quo(oneDec.sub(this.swapFee));
             return number.quo(denom).mul(scale);
         } 

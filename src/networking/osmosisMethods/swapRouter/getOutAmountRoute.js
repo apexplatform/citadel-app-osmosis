@@ -14,7 +14,7 @@ export const getOutAmountRoute = async(fromToken, toToken, amount) => {
     const rf = new RouteFinder();
     let bestRoute = new OutRoute(amount);
 	for (let i = 1; i <= MAX_HOPS; i++) {
-        const currentRoute = rf.getBestOutRoute(bigpools, denomIn, denomOut, amount, { maxHops: i, maxNumResults: 1 })[0] ?? null;
+        const currentRoute = rf?.getBestOutRoute(bigpools, denomIn, denomOut, amount, { maxHops: i, maxNumResults: 1 })[0] ?? null;
         if(currentRoute){
             if ((bestRoute?.estimateOutAmount()).lt(currentRoute?.estimateOutAmount())) {
                 bestRoute = currentRoute

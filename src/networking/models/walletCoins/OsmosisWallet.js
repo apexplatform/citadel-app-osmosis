@@ -5,6 +5,7 @@ import * as Sentry from "@sentry/react";
 import { utils } from '@citadeldao/apps-sdk';
 import { DecUtils, Dec, IntPretty } from "@keplr-wallet/unit";
 import BigNumber from "bignumber.js";
+import { prettyNumber } from '../../../components/helpers/numberFormatter';
 import { getPools, getPoolUpdate, getDenomByCode, estimateJoinSwapExternAmountIn } from "../../osmosisMethods/poolMethods";
 const requestManager = new utils.RequestManager()
 const walletRequest = getRequest("wallet");
@@ -90,12 +91,12 @@ export default class OsmosisWallet extends Wallet {
       let meta_info = [
         {
           title: `Swap from ${!isExact ? "(estimated)" : ""}`,
-          value: `${BigNumber(fromTokenAmount).toFixed()} ${fromToken.code}`,
+          value: `${prettyNumber(BigNumber(fromTokenAmount).toString())} ${fromToken.code}`,
           type: "text",
         },
         {
           title: `Swap to ${isExact ? "(estimated)" : ""}`,
-          value: `${BigNumber(toTokenAmount).toFixed()} ${toToken.code}`,
+          value: `${prettyNumber(BigNumber(toTokenAmount).toString())} ${toToken.code}`,
           type: "text",
         },
         {
@@ -222,7 +223,7 @@ export default class OsmosisWallet extends Wallet {
       },
       {
         title: `Token In`,
-        value: `${shareAmount} GAMM-${pool.id}`,
+        value: `${prettyNumber(shareAmount)} GAMM-${pool.id}`,
         type: "text",
       },
     ];
@@ -306,7 +307,7 @@ export default class OsmosisWallet extends Wallet {
       },
       {
         title: `Token In`,
-        value: `${shareAmount} GAMM-${pool.id}`,
+        value: `${prettyNumber(shareAmount)} GAMM-${pool.id}`,
         type: "text",
       },
       {
@@ -352,7 +353,7 @@ export default class OsmosisWallet extends Wallet {
       },
       {
         title: `Token In`,
-        value: `${shareAmount} GAMM-${pool.id}`,
+        value: `${prettyNumber(shareAmount)} GAMM-${pool.id}`,
         type: "text",
       },
     ];
@@ -556,12 +557,12 @@ export default class OsmosisWallet extends Wallet {
       },
       {
         title: `Token In`,
-        value: `${amounts.amount + " " + symbol}`,
+        value: `${prettyNumber(amounts.amount) + " " + symbol}`,
         type: "text",
       },
       {
         title: "Token Out",
-        value: `${outAmount.toDec().toString()} GAMM-${pool.id}`,
+        value: `${prettyNumber(outAmount.toDec().toString())} GAMM-${pool.id}`,
         type: "text",
       },
     ];

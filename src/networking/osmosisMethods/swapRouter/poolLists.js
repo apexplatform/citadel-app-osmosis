@@ -58,8 +58,9 @@ const generatePoolList = (pools,poolList) => {
           if(decimal){
             list_of_assets.push(new Assets(
               new TokenInfo(asset.denom,asset.symbol,asset.price,decimal), 
-              new Dec(pool.pool_assets[i].token.amount),
-              new Dec(pool.pool_assets[i].weight)
+              new Dec(pool.pool_assets[i].weight).quo(new Dec(pool.total_weight)), 
+              new Dec(pool.pool_assets[i].token.amount).quo(new Dec(Math.pow(10, decimal))),
+              pool.pool_assets[i]
               ));
           }  
         })
