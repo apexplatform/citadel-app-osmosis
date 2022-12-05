@@ -203,10 +203,6 @@ export default class OsmosisWallet extends Wallet {
       memo: "Create pool via Citadel.one app",
       publicKey: this.publicKey,
       token: auth_token,
-      fee: {
-        denom: "uosmo",
-        amount: "0",
-      },
       meta_info,
     };
     return body;
@@ -250,10 +246,6 @@ export default class OsmosisWallet extends Wallet {
       memo: "Lock tokens via Citadel.one app",
       publicKey: this.publicKey,
       token: auth_token,
-      fee: {
-        denom: "uosmo",
-        amount: "0",
-      },
       meta_info,
     };
     return body;
@@ -283,10 +275,6 @@ export default class OsmosisWallet extends Wallet {
       memo: "Superfluid Delegate via Citadel.one app",
       publicKey: this.publicKey,
       token: auth_token,
-      fee: {
-        denom: "uosmo",
-        amount: "0",
-      },
       meta_info,
     };
     return body;
@@ -388,10 +376,6 @@ export default class OsmosisWallet extends Wallet {
       memo: "Lock and delegate via Citadel.one app",
       publicKey: this.publicKey,
       token: auth_token,
-      fee: {
-        denom: "uosmo",
-        amount: "0",
-      },
       meta_info,
     };
     return body;
@@ -440,10 +424,6 @@ export default class OsmosisWallet extends Wallet {
       memo: "Unlock tokens via Citadel.one app",
       publicKey: this.publicKey,
       token: auth_token,
-      fee: {
-        denom: "uosmo",
-        amount: "0",
-      },
       meta_info,
     };
     return body;
@@ -472,10 +452,6 @@ export default class OsmosisWallet extends Wallet {
       memo: "Unlock tokens via Citadel.one app",
       publicKey: this.publicKey,
       token: auth_token,
-      fee: {
-        denom: "uosmo",
-        amount: "0",
-      },
       meta_info,
     };
     return body;
@@ -542,10 +518,6 @@ export default class OsmosisWallet extends Wallet {
       memo: "Join pool via Citadel.one app",
       publicKey: this.publicKey,
       token: auth_token,
-      fee: {
-        denom: "uosmo",
-        amount: "0",
-      },
       meta_info,
     };
     return body;
