@@ -1,5 +1,5 @@
 import {round} from '../utils/math'
-import { Dec, DecUtils } from "@keplr-wallet/unit";
+import { Dec } from "@keplr-wallet/unit";
 const zeroDec = new Dec(0);
 const oneDec = new Dec(1);
 export class OutRoute {
@@ -20,7 +20,7 @@ export class OutRoute {
         if (this.poolRoute == null) return zeroDec;
         let spotPriceBefore = new Dec(1);
         this.poolRoute.forEach(pr => {
-            spotPriceBefore = spotPriceBefore.mul(pr.calcSpotPrice()).quo(DecUtils.getTenExponentNInPrecisionRange(pr.from.decimal - pr.to.decimal));
+            spotPriceBefore = spotPriceBefore.mul(pr.calcSpotPrice())
         });
         return spotPriceBefore; 
     }
@@ -93,7 +93,7 @@ export class InRoute {
         if (this.poolRoute == null) return zeroDec;
         let spotPriceBefore = new Dec(1);
         this.poolRoute.forEach(pr => {
-            spotPriceBefore = spotPriceBefore.mul(pr.calcSpotPrice()).quo(DecUtils.getTenExponentNInPrecisionRange(pr.from.decimal - pr.to.decimal));
+            spotPriceBefore = spotPriceBefore.mul(pr.calcSpotPrice())
         });
         return spotPriceBefore; 
     }
