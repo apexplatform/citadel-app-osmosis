@@ -173,7 +173,7 @@ export const getPools = async (address) => {
       );
       incentivizedPoolIds.forEach((id) => {
         allPools?.forEach((pool) => {
-          if (id === pool.id) {
+          if (+id === +pool.id) {
             pool.isIncentivized = true;
             incentivizedPools.push(pool);
           }
@@ -246,13 +246,13 @@ export const estimatePoolAPROsmo = (poolId) => {
 const updatePoolInfo = (pool, poolList, lockedCoins) => {
   let poolUpdated = {};
   let foundedPool = poolList.find((item) => item.id === pool.id);
-  if (foundedPool) {
+  if (foundedPool && poolListResponse.data?.[foundedPool.id]) {
     const poolData = {
       ...foundedPool,
       poolInfo: poolListResponse.data?.[foundedPool.id],
     };
    
-    const poolCoinInfo = poolData.poolInfo.map((item) => {
+    const poolCoinInfo = poolData.poolInfo?.map((item) => {
       return getPoolTokenInfo(item.coingecko_id, item.symbol, item, pool.id);
     });
     const apr = incentivizedPoolIds.includes(foundedPool.id)
@@ -362,111 +362,113 @@ const updatePoolInfo = (pool, poolList, lockedCoins) => {
 const generatePoolList = (pools, lockedCoins) => {
   let newPools = [];
   pools?.forEach((pool) => {
- 
-    const poolData = { ...pool, poolInfo: poolListResponse.data?.[pool.id] };
-    const poolCoinInfo = poolData.poolInfo.map((item) => {
-      return getPoolTokenInfo(item.coingecko_id, item.symbol, item, pool.id);
-    });
-    const apr = incentivizedPoolIds.includes(pool.id)
-      ? computeAPY(poolData, durations[durations.length - 1]).toString()
-      : "";
-    const poolTVL = new PricePretty(
-      fiatCurrency,
-      new Dec(Math.round(poolListResponse.data?.[pool.id][0]?.liquidity))
-    );
-    let lockDurations = [];
-    const lockableDurations = durations.slice().sort((v1, v2) => {
-      return v1.asMilliseconds() > v2.asMilliseconds() ? 1 : -1;
-    });
-    if (incentivizedPoolIds.includes(pool.id)) {
-      lockableDurations.forEach((lockableDuration) => {
-        let apr = computeAPY(poolData, lockableDuration).toString();
-        let duration = lockableDuration.asDays();
-        let lockup = getLockedCoinWithDuration(poolData, lockableDuration);
-        lockup.amount._options.hideDenom = true;
-        const lockedShareRatio = getLockedGammShareRatioByDuration(lockup.amount, pool);
-        let usdAmount = poolTVL.mul(lockedShareRatio.increasePrecision(2)).toString()
-        lockDurations.push({ apr, duration, lockup, lockableDuration, usdAmount });
+    pool.id = +pool.id
+    if(poolListResponse?.data[pool.id]){
+      const poolData = { ...pool, poolInfo: poolListResponse?.data[pool.id] };
+      const poolCoinInfo = poolData.poolInfo?.map((item) => {
+        return getPoolTokenInfo(item.coingecko_id, item.symbol, item, pool.id);
       });
-    }
-    const isSuperfluidPool = checkSuperfluidPool(pool.id)
-    let superFluidAPR = new Dec(0)
-    if(isSuperfluidPool){
-      superFluidAPR = estimatePoolAPROsmo(pool.id)
-    }
-    if (lockedCoins.includes(pool.id)) {
-      const shareRatio = getAllGammShareRatio(pool.id);
-      const actualShareRatio = shareRatio.increasePrecision(2);
-      const lockedShareRatio = getLockedGammShareRatio(pool);
-      const gammShare = getAvailableGammShare(pool.id);
-      const allGammShare = getAllGammShare(pool.id);
-      allGammShare._options.hideDenom = true;
-      gammShare._options.hideDenom = true;
-      const actualLockedShareRatio = lockedShareRatio.increasePrecision(2);
-      const availableLP = getAvailableLPTokens(poolData);
-      let myAmounts = [];
-      pool.pool_assets?.forEach((item, i) => {
-        const dec = new CoinPretty(
-          poolCoinInfo[i],
-          new Dec(item?.token?.amount)
-        );
-        const amount = dec.mul(actualShareRatio).trim(true).shrink(true);
-        amount._options.hideDenom = true;
-        myAmounts.push(amount.toString());
+      const apr = incentivizedPoolIds.includes(pool.id)
+        ? computeAPY(poolData, durations[durations.length - 1]).toString()
+        : "";
+      const poolTVL = new PricePretty(
+        fiatCurrency,
+        new Dec(Math.round(poolListResponse.data?.[pool.id][0]?.liquidity))
+      );
+      let lockDurations = [];
+      const lockableDurations = durations.slice().sort((v1, v2) => {
+        return v1.asMilliseconds() > v2.asMilliseconds() ? 1 : -1;
       });
-      let unlockingDatas = [];
-      for (const lockableDuration of lockableDurations) {
-        const unlockings = getUnlockingCoinWithDuration(
-          getGammInfo(pool.id),
-          lockableDuration
-        );
-        unlockingDatas = unlockingDatas.concat(
-          unlockings.map((unlocking) => {
-            return {
-              ...unlocking,
-              ...{
-                duration: lockableDuration,
-              },
-            };
-          })
-        );
+      if (incentivizedPoolIds.includes(pool.id)) {
+        lockableDurations.forEach((lockableDuration) => {
+          let apr = computeAPY(poolData, lockableDuration).toString();
+          let duration = lockableDuration.asDays();
+          let lockup = getLockedCoinWithDuration(poolData, lockableDuration);
+          lockup.amount._options.hideDenom = true;
+          const lockedShareRatio = getLockedGammShareRatioByDuration(lockup.amount, pool);
+          let usdAmount = poolTVL.mul(lockedShareRatio.increasePrecision(2)).toString()
+          lockDurations.push({ apr, duration, lockup, lockableDuration, usdAmount });
+        });
       }
-      newPools.push({
-        ...poolData,
-        allGammShare,
-        unlockingDatas,
-        gammShare: gammShare,
-        poolCoinInfo,
-        poolTVL: poolTVL,
-        availableLP,
-        lockDurations,
-        superFluidAPR,
-        actualShareRatio,
-        isSuperfluidPool,
-        myLiquidity: poolTVL.mul(actualShareRatio).toString(),
-        myLiquidity1: poolTVL.mul(actualShareRatio),
-        myAmounts,
-        myLockedAmount: incentivizedPoolIds.includes(pool.id)
-          ? poolTVL.mul(actualLockedShareRatio).toString()
-          : undefined,
-        apr,
-      });
-    } else {
-      newPools.push({
-        ...poolData,
-        allGammShare: null,
-        unlockingDatas: null,
-        gammShare: null,
-        poolCoinInfo,
-        poolTVL: poolTVL,
-        lockDurations,
-        superFluidAPR,
-        availableLP: "$0",
-        myLiquidity: 0,
-        isSuperfluidPool,
-        myLockedAmount: 0,
-        apr,
-      });
+      const isSuperfluidPool = checkSuperfluidPool(pool.id)
+      let superFluidAPR = new Dec(0)
+      if(isSuperfluidPool){
+        superFluidAPR = estimatePoolAPROsmo(pool.id)
+      }
+      if (lockedCoins.includes(pool.id)) {
+        const shareRatio = getAllGammShareRatio(pool.id);
+        const actualShareRatio = shareRatio.increasePrecision(2);
+        const lockedShareRatio = getLockedGammShareRatio(pool);
+        const gammShare = getAvailableGammShare(pool.id);
+        const allGammShare = getAllGammShare(pool.id);
+        allGammShare._options.hideDenom = true;
+        gammShare._options.hideDenom = true;
+        const actualLockedShareRatio = lockedShareRatio.increasePrecision(2);
+        const availableLP = getAvailableLPTokens(poolData);
+        let myAmounts = [];
+        pool.pool_assets?.forEach((item, i) => {
+          const dec = new CoinPretty(
+            poolCoinInfo[i],
+            new Dec(item?.token?.amount)
+          );
+          const amount = dec.mul(actualShareRatio).trim(true).shrink(true);
+          amount._options.hideDenom = true;
+          myAmounts.push(amount.toString());
+        });
+        let unlockingDatas = [];
+        for (const lockableDuration of lockableDurations) {
+          const unlockings = getUnlockingCoinWithDuration(
+            getGammInfo(pool.id),
+            lockableDuration
+          );
+          unlockingDatas = unlockingDatas.concat(
+            unlockings.map((unlocking) => {
+              return {
+                ...unlocking,
+                ...{
+                  duration: lockableDuration,
+                },
+              };
+            })
+          );
+        }
+        newPools.push({
+          ...poolData,
+          allGammShare,
+          unlockingDatas,
+          gammShare: gammShare,
+          poolCoinInfo,
+          poolTVL: poolTVL,
+          availableLP,
+          lockDurations,
+          superFluidAPR,
+          actualShareRatio,
+          isSuperfluidPool,
+          myLiquidity: poolTVL.mul(actualShareRatio).toString(),
+          myLiquidity1: poolTVL.mul(actualShareRatio),
+          myAmounts,
+          myLockedAmount: incentivizedPoolIds.includes(pool.id)
+            ? poolTVL.mul(actualLockedShareRatio).toString()
+            : undefined,
+          apr,
+        });
+      } else {
+        newPools.push({
+          ...poolData,
+          allGammShare: null,
+          unlockingDatas: null,
+          gammShare: null,
+          poolCoinInfo,
+          poolTVL: poolTVL,
+          lockDurations,
+          superFluidAPR,
+          availableLP: "$0",
+          myLiquidity: 0,
+          isSuperfluidPool,
+          myLockedAmount: 0,
+          apr,
+        });
+      }
     }
   });
   return newPools;
