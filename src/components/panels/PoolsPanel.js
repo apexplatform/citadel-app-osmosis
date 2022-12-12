@@ -102,7 +102,7 @@ const PoolsPanel = () => {
                                     apr={+pool.apr/100}
                                     poolAssets={pool.poolInfo}
                                     isSuperfluidPool={pool.isSuperfluidPool}
-                                    superFluidAPR={prettyNumber(+pool.superFluidAPR,2)}
+                                    superFluidAPR={prettyNumber(+pool.superFluidAPR,0)}
                                     network={'osmosis'}
                                     style={{marginBottom: "16px"}}
                                     poolInfo>
@@ -125,7 +125,7 @@ const PoolsPanel = () => {
                                     apr={+pool.apr/100}
                                     poolAssets={pool.poolInfo}
                                     isSuperfluidPool={pool.isSuperfluidPool}
-                                    superFluidAPR={prettyNumber(+pool.superFluidAPR,2)}
+                                    superFluidAPR={prettyNumber(+pool.superFluidAPR,0)}
                                     network={'osmosis'}
                                     style={{marginBottom: "16px"}}
                                     poolInfo>
@@ -148,7 +148,7 @@ const PoolsPanel = () => {
                                     name={getPoolName(pool)}
                                     poolAssets={pool.poolInfo}
                                     isSuperfluidPool={pool.isSuperfluidPool}
-                                    superFluidAPR={prettyNumber(+pool.superFluidAPR,2)}
+                                    superFluidAPR={prettyNumber(+pool.superFluidAPR,0)}
                                     network={'osmosis'}
                                     style={{marginBottom: "16px"}}
                                     poolInfo>

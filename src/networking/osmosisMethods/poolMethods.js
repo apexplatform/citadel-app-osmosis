@@ -162,7 +162,7 @@ export const getPools = async (address) => {
     incentivizedPools = [];
     incentivizedPoolsResponse.data?.incentivized_pools?.forEach((item) => {
       if (!incentivizedPoolIds.includes(item.pool_id)) {
-        incentivizedPoolIds.push(item.pool_id);
+        incentivizedPoolIds.push(+item.pool_id);
       }
     });
     const lockedCoins = await getOwnPools(address);
@@ -171,14 +171,6 @@ export const getPools = async (address) => {
         poolListWithPagination?.data?.pools,
         lockedCoins
       );
-      incentivizedPoolIds.forEach((id) => {
-        allPools?.forEach((pool) => {
-          if (+id === +pool.id) {
-            pool.isIncentivized = true;
-            incentivizedPools.push(pool);
-          }
-        });
-      });
     }else{
       return { status: false, data: {}}
     }
@@ -233,8 +225,8 @@ export const estimatePoolAPROsmo = (poolId) => {
       const poolAsset = pool.pool_assets.find(
         asset => asset.token.denom === osmoCurrency.coinMinimalDenom
       );
-      if (poolAsset && new Dec(pool.totalWeight).gt(new Dec(0)) && apr_staking?.data) {
-        const ratio = new Dec(poolAsset.weight).quo(new Dec(pool.totalWeight));
+      if (poolAsset && new Dec(pool.total_weight).gt(new Dec(0)) && apr_staking?.data) {
+        const ratio = new Dec(poolAsset.weight).quo(new Dec(pool.total_weight));
         const minimumRiskFactorDec = new Dec(minimumRiskFactor.data.params.minimum_risk_factor);
         return ratio.mul(new Dec(1).sub(minimumRiskFactorDec)).mul(new Dec(apr_staking?.data)).toString();
       }
@@ -245,7 +237,7 @@ export const estimatePoolAPROsmo = (poolId) => {
 
 const updatePoolInfo = (pool, poolList, lockedCoins) => {
   let poolUpdated = {};
-  let foundedPool = poolList.find((item) => item.id === pool.id);
+  let foundedPool = poolList.find((item) => +item.id === +pool.id);
   if (foundedPool && poolListResponse.data?.[foundedPool.id]) {
     const poolData = {
       ...foundedPool,
@@ -361,6 +353,7 @@ const updatePoolInfo = (pool, poolList, lockedCoins) => {
 
 const generatePoolList = (pools, lockedCoins) => {
   let newPools = [];
+  let poolInfo = {}
   pools?.forEach((pool) => {
     pool.id = +pool.id
     if(poolListResponse?.data[pool.id]){
@@ -432,9 +425,10 @@ const generatePoolList = (pools, lockedCoins) => {
             })
           );
         }
-        newPools.push({
+        poolInfo = {
           ...poolData,
           allGammShare,
+          isIncentivized: true,
           unlockingDatas,
           gammShare: gammShare,
           poolCoinInfo,
@@ -451,10 +445,11 @@ const generatePoolList = (pools, lockedCoins) => {
             ? poolTVL.mul(actualLockedShareRatio).toString()
             : undefined,
           apr,
-        });
+        }
       } else {
-        newPools.push({
+        poolInfo = {
           ...poolData,
+          isIncentivized: false,
           allGammShare: null,
           unlockingDatas: null,
           gammShare: null,
@@ -467,8 +462,12 @@ const generatePoolList = (pools, lockedCoins) => {
           isSuperfluidPool,
           myLockedAmount: 0,
           apr,
-        });
+        }
       }
+      if(incentivizedPoolIds.includes(pool.id)){
+        incentivizedPools.push(poolInfo);
+      }
+      newPools.push(poolInfo);
     }
   });
   return newPools;
@@ -539,7 +538,7 @@ const computeAPYForSpecificDuration = (pool, duration) => {
           //стоимость инсентивированного пула
           const potWeight = getWeight(gaugeId);
           //цена осмосиса в пуле
-          mintPrice = pool.id === "1" ? getPrice(pool) : mintPrice;
+          mintPrice = pool.id === 1 ? getPrice(pool) : mintPrice;
 
           //вычисление общей стоимости залоченных в инсентивайзд пуле денег
           const poolTVL = new PricePretty(
@@ -607,7 +606,7 @@ const getIncentivizedGaugeId = (poolId, duration) => {
   const incentivized = incentivizedPoolsResponse?.data?.incentivized_pools.find(
     (data) => {
       return (
-        data.pool_id === poolId &&
+        +data.pool_id === +poolId &&
         dayjs
           .duration(parseInt(data.lockable_duration.replace("s", "")) * 1000)
           .asMilliseconds() === duration.asMilliseconds()
@@ -661,7 +660,7 @@ export const getOwnPools = async (bech32Address) => {
     lockedResponse.data?.coins
   )) {
     if (bal.denom.startsWith("gamm/pool/")) {
-      result.push(bal.denom.replace("gamm/pool/", ""));
+      result.push(+bal.denom.replace("gamm/pool/", ""));
     }
   }
   result = [...new Set(result)];
@@ -741,7 +740,7 @@ export const getLockedGammShare = (poolId) => {
   lockedResponse.data?.coins?.forEach((pool) => {
     if (pool.denom.startsWith("gamm/pool/")) {
       let id = pool.denom.replace("gamm/pool/", "");
-      if (id === poolId) {
+      if (+id === +poolId) {
         locked = new CoinPretty(getGammInfo(poolId), new Dec(pool.amount));
       }
     }
@@ -758,7 +757,7 @@ export const getAvailableGammShare = (poolId) => {
   balancesResponse.data?.result?.forEach((pool) => {
     if (pool.denom.startsWith("gamm/pool/")) {
       let id = pool.denom.replace("gamm/pool/", "");
-      if (id === poolId) {
+      if (+id === +poolId) {
         available = new CoinPretty(getGammInfo(poolId), new Dec(pool.amount));
       }
     }
