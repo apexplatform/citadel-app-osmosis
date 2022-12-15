@@ -39,7 +39,7 @@ const SelectAddressPanel = () => {
                 <Header border title="Select an address" style={{margin: '8px 0 16px 0'}} onClick={() => back()} back={true}/>
                 <Input type='search' style={{marginBottom: '10px'}} onChange={searchWallet} placeholder='Start typing..'/>
                 {walletList?.map((elem,i) =>(
-                  <AddressBlock onClick={() => setActiveWallet(elem)} active={activeWallet?.address === elem?.address} style={{marginBottom: '10px'}} data={{...elem, balance: prettyNumber(elem?.balance?.mainBalance)}} key={i} usdPrice={usdPrice > 0 ? prettyNumber(elem.balance?.mainBalance * usdPrice,2) : ''}/>  
+                  <AddressBlock onClick={() => setActiveWallet(elem)} active={activeWallet?.address === elem?.address} style={{marginBottom: '10px'}} data={{...elem, balance: prettyNumber(elem?.balance?.mainBalance)}} key={i} usdPrice={usdPrice > 0 ? prettyNumber(elem.balance?.mainBalance * usdPrice,2) + '' : ''}/>  
                 ))}
             </Content>
             <Tabbar config={config}  bottomInset={bottomInset}/>

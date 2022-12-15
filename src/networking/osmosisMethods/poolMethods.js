@@ -15,6 +15,9 @@ let incentivizedPoolIds = [];
 let durations = null;
 let incentivizedPoolsResponse = null;
 let epochResponse = null;
+const mintDenom = "uosmo";
+const epochIdentifier = "day";
+let epoch = null
 let distrResponse = null;
 let epochProvisions = null;
 let incentivizedPools = [];
@@ -133,6 +136,9 @@ export const loadPoolData = async() => {
   );
   epochResponse = await axios.get(
     "https://lcd-osmosis.keplr.app/osmosis/epochs/v1beta1/epochs"
+  );
+  epoch = epochResponse?.data?.epochs.find(
+    (elem) => elem.identifier === epochIdentifier
   );
   epochProvisions = await axios.get(
     "https://lcd-osmosis.keplr.app/osmosis/mint/v1beta1/epoch_provisions"
@@ -523,14 +529,9 @@ const computeAPYForSpecificDuration = (pool, duration) => {
   const gaugeId = getIncentivizedGaugeId(pool.id, duration);
   if (gaugeId) {
     if (pool) {
-      const mintDenom = "uosmo";
-      const epochIdentifier = "day";
       if (mintDenom && epochIdentifier) {
         //получаем текущую эпоху
-        const epoch = epochResponse?.data?.epochs.find(
-          (elem) => elem.identifier === epochIdentifier
-        );
-        if (mintCurrency && mintCurrency.coinGeckoId && epoch.duration) {
+        if (mintCurrency && mintCurrency.coinGeckoId && epoch?.duration) {
           //(кажется) это общая стоимость всех инсентивированных пулов
           const totalWeight = new Int(
             distrResponse.data?.distr_info.total_weight

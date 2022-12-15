@@ -58,7 +58,6 @@ export class WalletList {
             if (wallets.length > 0) {
                 wallets.forEach(async (item) => {
                     const wallet = walletActions.getWalletConstructor(item);
-
                     if (wallet) {
                         let response = await wallet.getWalletBalance();
                         if (response.ok) {

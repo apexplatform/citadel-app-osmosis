@@ -88,7 +88,7 @@ export class SocketManager {
 			this.socket.on('mempool-remove-tx-app',async (data) => {
 				console.log('mempool-remove-tx-app', data)
 				const { transactionResponse } = store.getState().wallet
-				if(transactionResponse && transactionResponse.meta_info){
+				if(data.memo && transactionResponse.meta_info){
 					if(!transactionResponse.meta_info[0]?.title.includes('Swap')){
 						let interval = null;
 						let tryAgain = true;

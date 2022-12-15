@@ -63,7 +63,7 @@ export default class Wallet {
 
     async getWalletBalance() {
         const { auth_token } = store.getState().user;
-
+        const requestManager = new utils.RequestManager();
         try {
             const data = await requestManager.send(walletRequest.getWalletBalance({
                 network: this.net,

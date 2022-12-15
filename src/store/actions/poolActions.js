@@ -90,9 +90,9 @@ const loadPoolList = (count = 0) => async(dispatch) => {
           });
           panelActions.setLoader(false)
         }else{
-          // if(count<=3){
-          //   setTimeout(() => dispatch(loadPoolList(count++)) , 5000)
-          // }  
+          if(count<=3){
+            setTimeout(() => dispatch(loadPoolList(count++)) , 5000)
+          }  
         }
      }
     return false;

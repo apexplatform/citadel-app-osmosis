@@ -41,6 +41,7 @@ export const getAllPools = async () => {
       const lastSuccessUpdateTime = new Date();
       return { swapPools: swapPools, lastSuccessUpdateTime };
     } catch(e) {
+      console.log(e,'--e');
       setTimeout(async() => await getAllPools(), 5000)
       return { swapPools: swapPools }
     }
