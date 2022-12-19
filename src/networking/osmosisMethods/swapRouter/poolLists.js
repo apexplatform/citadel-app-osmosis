@@ -84,14 +84,14 @@ const generatePoolList = (pools,poolList) => {
 
 export const getDenomByCode = (code) => {
   try{
-    let keys = Object.keys(poolListResponse?.data);
+    let keys = Object.keys(poolListResponse);
     let denom = "";
     for (let i = 0; i < keys.length; i++) {
-      if (poolListResponse?.data[keys[i]][0].symbol === code) {
-        denom = poolListResponse?.data[keys[i]][0].denom;
+      if (poolListResponse[keys[i]][0].symbol === code) {
+        denom = poolListResponse[keys[i]][0].denom;
         break;
-      } else if (poolListResponse?.data[keys[i]][1].symbol === code) {
-        denom = poolListResponse?.data[keys[i]][1].denom;
+      } else if (poolListResponse[keys[i]][1].symbol === code) {
+        denom = poolListResponse[keys[i]][1].denom;
         break;
       }
     }
