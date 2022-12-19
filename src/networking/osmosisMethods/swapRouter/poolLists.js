@@ -42,7 +42,7 @@ export const getAllPools = async (attempt = 0) => {
     } catch(e) {
       attempt++
       if(attempt <= 2){
-        setTimeout(async() => await getAllPools(attempt), 2000)
+        setTimeout(async() => await getAllPools(attempt), 3000)
       }else{
         store.dispatch(errorActions.checkErrors({message: "We cannot access pool information for the optimal routing at the moment. Restart the app and if the issue persists, try again later."}));
       }

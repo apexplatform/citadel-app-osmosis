@@ -93,7 +93,7 @@ const loadPoolList = (count = 0) => async(dispatch) => {
         }else{
           count++
           if(count<=2){
-            setTimeout(() => dispatch(loadPoolList(count)) , 2000)
+            setTimeout(() => dispatch(loadPoolList(count)) , 3000)
           } else{
             store.dispatch(errorActions.checkErrors({message: "Pool list couldn't be loaded at the moment. Restart the app and if the issue persists, try again later."}));
           }

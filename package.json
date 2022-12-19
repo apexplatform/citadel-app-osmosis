@@ -4,7 +4,7 @@
   "private": true,
   "homepage": "./",
   "dependencies": {
-    "@citadeldao/apps-sdk": "^0.0.242",
+    "@citadeldao/apps-sdk": "^0.0.243",
     "@citadeldao/apps-ui-kit": "^0.414.0",
     "@keplr-wallet/stores": "^0.11.10",
     "@keplr-wallet/unit": "^0.10.14",
