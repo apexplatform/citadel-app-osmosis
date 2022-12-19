@@ -1,15 +1,16 @@
-import axios from "axios";
 import PoolInfo from './PoolInfo';
 import { store } from "../../../store/store";
 import { Assets, TokenInfo } from './TokenInfo'
 import { Dec } from "@keplr-wallet/unit";
+import { getResponse } from '../utils/rm';
+import { errorActions } from '../../../store/actions'
 export let poolListResponse = null
 export let poolListWithPagination = null
 export let swapPools = null
 
 export const getTokenDecimal = (symbol,denom) => {
   const { networks } = store.getState().wallet;
-  let decimal = null
+  let decimal = 6
   if(denom.includes('gamm')){
     return 18
   }
@@ -28,21 +29,23 @@ export const getTokenDecimal = (symbol,denom) => {
   return decimal
 }
 
-export const getAllPools = async () => {
+export const getAllPools = async (attempt = 0) => {
     try {
-      poolListResponse = await axios.get(
+      poolListResponse = await getResponse(
         "https://api-osmosis.imperator.co/pools/v2/all?low_liquidity=true"
       );
-   
-      poolListWithPagination = await axios.get(
+      poolListWithPagination = await getResponse(
         "https://lcd-osmosis.keplr.app/osmosis/gamm/v1beta1/pools?pagination.limit=1000"
       );
-      swapPools = generatePoolList(poolListWithPagination.data?.pools,poolListResponse.data);
-      const lastSuccessUpdateTime = new Date();
-      return { swapPools: swapPools, lastSuccessUpdateTime };
+      swapPools = generatePoolList(poolListWithPagination?.pools,poolListResponse);
+      return { swapPools };
     } catch(e) {
-      console.log(e,'--e');
-      setTimeout(async() => await getAllPools(), 5000)
+      attempt++
+      if(attempt <= 2){
+        setTimeout(async() => await getAllPools(attempt), 2000)
+      }else{
+        store.dispatch(errorActions.checkErrors({message: "We cannot access pool information for the optimal routing at the moment. Restart the app and if the issue persists, try again later."}));
+      }
       return { swapPools: swapPools }
     }
   };

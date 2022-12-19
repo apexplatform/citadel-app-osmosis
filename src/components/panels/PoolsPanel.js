@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { Content, Tabbar, Input, Tablist, Tab, PoolItemInfo, Loader } from '@citadeldao/apps-ui-kit/dist/main';
 import PoolItem from '@citadeldao/apps-ui-kit/dist/components/uiKit/PoolItem'
 import { Config } from '../config/config';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { sortPoolList, sortAllPoolList, getMyPoolList } from "../helpers/index";
 import BigNumber from "bignumber.js";
 import { useLocation } from 'react-router-dom';
@@ -63,6 +63,7 @@ const PoolsPanel = () => {
       };
     const location = useLocation()
     const navigate = useNavigate()
+    const dispatch = useDispatch();
     useEffect(() => {
       setAllPools(allPools ? sortAllPoolList(allPools) : null);
       setMyPools(allPools ? getMyPoolList(allPools) : null);
@@ -70,6 +71,9 @@ const PoolsPanel = () => {
         incentivizedPools ? sortPoolList(incentivizedPools) : null
       );
       panelActions.setPreviousPanel(location.pathname)
+      if(!allPools.length){
+        dispatch(poolActions.loadPoolList())
+      }
       // eslint-disable-next-line
     }, [incentivizedPools, allPools]);
     const openPool = (pool) => {

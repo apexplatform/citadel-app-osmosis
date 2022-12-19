@@ -42,13 +42,17 @@ const MainView = () => {
     const { borderRadius } = useSelector(state => state.panels)
     const { activeWallet } = useSelector(state => state.wallet);
     const [showSuccess, setShowSuccess] = useState(errors);
+
     useEffect(() => {
         setShowSuccess(errors);
-        if(!errors) {
-            dispatch(poolActions.loadPoolList())
-        }
         // eslint-disable-next-line 
-    }, [errors,activeWallet]);
+    }, [errors]);
+
+    useEffect(() => {
+        dispatch(poolActions.loadPoolList())
+        // eslint-disable-next-line 
+    }, [activeWallet]);
+
     const clearErrors = () => {
         setShowSuccess(false);
         dispatch(errorActions.clearErrors());

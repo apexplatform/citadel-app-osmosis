@@ -6,7 +6,8 @@ import { loadPoolData } from '../../networking/osmosisMethods/poolMethods'
 const getPoolData = () => {
   try{
     loadPoolData()
-  }catch{}
+  }catch{
+  }
 }
 
 const setAmount = (amount) => (dispatch) => {
@@ -90,9 +91,12 @@ const loadPoolList = (count = 0) => async(dispatch) => {
           });
           panelActions.setLoader(false)
         }else{
-          if(count<=3){
-            setTimeout(() => dispatch(loadPoolList(count++)) , 5000)
-          }  
+          count++
+          if(count<=2){
+            setTimeout(() => dispatch(loadPoolList(count)) , 2000)
+          } else{
+            store.dispatch(errorActions.checkErrors({message: "Pool list couldn't be loaded at the moment. Restart the app and if the issue persists, try again later."}));
+          }
         }
      }
     return false;

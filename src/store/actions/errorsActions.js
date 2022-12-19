@@ -155,7 +155,6 @@ const setConfirmModal = (error) => dispatch => {
 };
 
 const checkErrors = (error) => dispatch => {
-    console.log(error, '--error');
     if (error instanceof ValidationError) {
         let errorText = {
             text: text.ADDRESS_ERROR_TEXT,

@@ -1,4 +1,3 @@
-import axios from "axios";
 import { CoinPretty, Coin, Dec, DecUtils, Int, IntPretty } from "@keplr-wallet/unit";
 import { PricePretty } from "@keplr-wallet/unit/build/price-pretty";
 import dayjs from "dayjs";
@@ -8,6 +7,7 @@ import { fiatCurrency, mintCurrency, poolInfoList } from './constans'
 import { poolListResponse, poolListWithPagination } from './swapRouter/poolLists';
 import { formatPoolName } from '../../components/helpers/addressFormatter';
 import { denoms } from './stores/pools';
+import { getResponse } from './utils/rm';
 
 let duration = require("dayjs/plugin/duration");
 dayjs.extend(duration);
@@ -116,72 +116,71 @@ export const calculateOsmoEquivalent = async(coinPretty,id) => {
 }
 
 export const calculateOsmoEquivalentMultiplier = async(currency,id) => {
-  const minimumRiskFactorDec = new Dec(minimumRiskFactor.data.params.minimum_risk_factor);
-  const assetMultiplier = await axios.get("https://lcd-osmosis.keplr.app/osmosis/superfluid/v1beta1/asset_multiplier?denom=gamm/pool/"+id);
-  const assetMultiplierDec = new Dec(assetMultiplier.data.osmo_equivalent_multiplier.multiplier)
+  const minimumRiskFactorDec = new Dec(minimumRiskFactor.params.minimum_risk_factor);
+  const assetMultiplier = await getResponse("https://lcd-osmosis.keplr.app/osmosis/superfluid/v1beta1/asset_multiplier?denom=gamm/pool/"+id);
+  const assetMultiplierDec = new Dec(assetMultiplier.osmo_equivalent_multiplier.multiplier)
   const osmoCurrency = getPoolTokenInfo('osmo');
   const multipication = DecUtils.getTenExponentN(currency.coinDecimals - osmoCurrency.coinDecimals);
   return assetMultiplierDec.mul(new Dec(1).sub(minimumRiskFactorDec)).mul(multipication);
 }
 
 export const loadPoolData = async() => {
-  incentivizedPoolsResponse = await axios.get(
+  incentivizedPoolsResponse = await getResponse(
     "https://lcd-osmosis.keplr.app/osmosis/pool-incentives/v1beta1/incentivized_pools"
   );
-  minimumRiskFactor = await axios.get(
+  minimumRiskFactor = await getResponse(
     "https://lcd-osmosis.keplr.app/osmosis/superfluid/v1beta1/params"
   );
-  apr_staking = await axios.get(
+  apr_staking = await getResponse(
     "https://api-osmosis.imperator.co/apr/v2/staking"
   );
-  epochResponse = await axios.get(
+  epochResponse = await getResponse(
     "https://lcd-osmosis.keplr.app/osmosis/epochs/v1beta1/epochs"
   );
-  epoch = epochResponse?.data?.epochs.find(
+  epoch = epochResponse?.epochs.find(
     (elem) => elem.identifier === epochIdentifier
   );
-  epochProvisions = await axios.get(
+  epochProvisions = await getResponse(
     "https://lcd-osmosis.keplr.app/osmosis/mint/v1beta1/epoch_provisions"
   );
 }
 
 export const getPools = async (address) => {
   try {  
-    distrResponse = await axios.get(
+    distrResponse = await getResponse(
       "https://lcd-osmosis.keplr.app/osmosis/pool-incentives/v1beta1/distr_info"
     );
-    paramsResponse = await axios.get(
+    paramsResponse = await getResponse(
       "https://lcd-osmosis.keplr.app/osmosis/mint/v1beta1/params"
     );
-    locksResponse = await axios.get(
+    locksResponse = await getResponse(
       "https://lcd-osmosis.keplr.app/osmosis/lockup/v1beta1/account_locked_longer_duration/" +
         address
     );
-    superfluidDelegations = await axios.get(
+    superfluidDelegations = await getResponse(
       "https://lcd-osmosis.keplr.app/osmosis/superfluid/v1beta1/superfluid_delegations/"+address
     );
-    allAssets = await axios.get(
+    allAssets = await getResponse(
       "https://lcd-osmosis.keplr.app/osmosis/superfluid/v1beta1/all_assets"
     );
     durations = await lockableDurations();
     incentivizedPoolIds = [];
     incentivizedPools = [];
-    incentivizedPoolsResponse.data?.incentivized_pools?.forEach((item) => {
+    incentivizedPoolsResponse?.incentivized_pools?.forEach((item) => {
       if (!incentivizedPoolIds.includes(item.pool_id)) {
         incentivizedPoolIds.push(+item.pool_id);
       }
     });
     const lockedCoins = await getOwnPools(address);
-    if(poolListWithPagination?.data){
+    if(poolListWithPagination){
       allPools = generatePoolList(
-        poolListWithPagination?.data?.pools,
+        poolListWithPagination?.pools,
         lockedCoins
       );
     }else{
       return { status: false, data: {}}
     }
-    
-    return { status: true, data: { incentivizedPools: incentivizedPools, mintPrice, allPools, balancesResponse, superfluidDelegations: superfluidDelegations.data }};
+    return { status: true, data: { incentivizedPools: incentivizedPools, mintPrice, allPools, balancesResponse, superfluidDelegations }};
   } catch(e) {
     console.log(e)
     return { status: false, data: {}}
@@ -189,11 +188,11 @@ export const getPools = async (address) => {
 };
 
 export const checkSuperfluidPool = (poolId) => {
-  if (!allAssets.data) {
+  if (!allAssets) {
     return false;
   }
 
-  for (const asset of allAssets.data.assets) {
+  for (const asset of allAssets.assets) {
     if (asset.asset_type === 'SuperfluidAssetTypeLPShare' && asset.denom === `gamm/pool/${poolId}`) {
       return true;
     }
@@ -204,17 +203,17 @@ export const checkSuperfluidPool = (poolId) => {
 
 export const getPoolUpdate = async (address, pool) => {
   try {
-    let poolListWithPagination = await axios.get(
+    let poolListWithPagination = await getResponse(
       "https://lcd-osmosis.keplr.app/osmosis/gamm/v1beta1/pools?pagination.limit=750"
     );
-    locksResponse = await axios.get(
+    locksResponse = await getResponse(
       "https://lcd-osmosis.keplr.app/osmosis/lockup/v1beta1/account_locked_longer_duration/" +
         address
     );
     const lockedCoins = await getOwnPools(address);
     const poolUpdated = updatePoolInfo(
       pool,
-      poolListWithPagination.data?.pools,
+      poolListWithPagination?.pools,
       lockedCoins
     );
     if (incentivizedPoolIds.includes(pool.id)) {
@@ -225,16 +224,16 @@ export const getPoolUpdate = async (address, pool) => {
 };
 
 export const estimatePoolAPROsmo = (poolId) => {
-    const pool = getPoolFromPagination(poolListWithPagination.data.pools, poolId);
+    const pool = getPoolFromPagination(poolListWithPagination.pools, poolId);
     if (pool) {
       const osmoCurrency = getPoolTokenInfo('osmo');
       const poolAsset = pool.pool_assets.find(
         asset => asset.token.denom === osmoCurrency.coinMinimalDenom
       );
-      if (poolAsset && new Dec(pool.total_weight).gt(new Dec(0)) && apr_staking?.data) {
+      if (poolAsset && new Dec(pool.total_weight).gt(new Dec(0)) && apr_staking) {
         const ratio = new Dec(poolAsset.weight).quo(new Dec(pool.total_weight));
-        const minimumRiskFactorDec = new Dec(minimumRiskFactor.data.params.minimum_risk_factor);
-        return ratio.mul(new Dec(1).sub(minimumRiskFactorDec)).mul(new Dec(apr_staking?.data)).toString();
+        const minimumRiskFactorDec = new Dec(minimumRiskFactor.params.minimum_risk_factor);
+        return ratio.mul(new Dec(1).sub(minimumRiskFactorDec)).mul(new Dec(apr_staking)).toString();
       }
     }
     return 0;
@@ -244,10 +243,10 @@ export const estimatePoolAPROsmo = (poolId) => {
 const updatePoolInfo = (pool, poolList, lockedCoins) => {
   let poolUpdated = {};
   let foundedPool = poolList.find((item) => +item.id === +pool.id);
-  if (foundedPool && poolListResponse.data?.[foundedPool.id]) {
+  if (foundedPool && poolListResponse[foundedPool.id]) {
     const poolData = {
       ...foundedPool,
-      poolInfo: poolListResponse.data?.[foundedPool.id],
+      poolInfo: poolListResponse[foundedPool.id],
     };
    
     const poolCoinInfo = poolData.poolInfo?.map((item) => {
@@ -258,7 +257,7 @@ const updatePoolInfo = (pool, poolList, lockedCoins) => {
       : "";
     const poolTVL = new PricePretty(
       fiatCurrency,
-      new Dec(Math.round(poolListResponse.data?.[pool.id][0]?.liquidity))
+      new Dec(Math.round(poolListResponse[pool.id][0]?.liquidity))
     );
     let lockDurations = [];
     const lockableDurations = durations.slice().sort((v1, v2) => {
@@ -362,8 +361,8 @@ const generatePoolList = (pools, lockedCoins) => {
   let poolInfo = {}
   pools?.forEach((pool) => {
     pool.id = +pool.id
-    if(poolListResponse?.data[pool.id]){
-      const poolData = { ...pool, poolInfo: poolListResponse?.data[pool.id] };
+    if(poolListResponse[pool.id]){
+      const poolData = { ...pool, poolInfo: poolListResponse[pool.id] };
       const poolCoinInfo = poolData.poolInfo?.map((item) => {
         return getPoolTokenInfo(item.coingecko_id, item.symbol, item, pool.id);
       });
@@ -372,7 +371,7 @@ const generatePoolList = (pools, lockedCoins) => {
         : "";
       const poolTVL = new PricePretty(
         fiatCurrency,
-        new Dec(Math.round(poolListResponse.data?.[pool.id][0]?.liquidity))
+        new Dec(Math.round(poolListResponse?.[pool.id][0]?.liquidity))
       );
       let lockDurations = [];
       const lockableDurations = durations.slice().sort((v1, v2) => {
@@ -481,13 +480,13 @@ const generatePoolList = (pools, lockedCoins) => {
 
 
 export const lockableDurations = async () => {
-  const response = await axios.get(
+  const response = await getResponse(
     "https://lcd-osmosis.keplr.app/osmosis/pool-incentives/v1beta1/lockable_durations"
   );
   if (!response) {
     return [];
   }
-  return response.data.lockable_durations
+  return response.lockable_durations
     .map((durationStr) => {
       return dayjs.duration(parseInt(durationStr.replace("s", "")) * 1000);
     })
@@ -534,7 +533,7 @@ const computeAPYForSpecificDuration = (pool, duration) => {
         if (mintCurrency && mintCurrency.coinGeckoId && epoch?.duration) {
           //(кажется) это общая стоимость всех инсентивированных пулов
           const totalWeight = new Int(
-            distrResponse.data?.distr_info.total_weight
+            distrResponse?.distr_info.total_weight
           );
           //стоимость инсентивированного пула
           const potWeight = getWeight(gaugeId);
@@ -558,7 +557,7 @@ const computeAPYForSpecificDuration = (pool, duration) => {
 
             const epochProvision = new CoinPretty(
               mintCurrency,
-              new Dec(epochProvisions?.data.epoch_provisions)
+              new Dec(epochProvisions?.epoch_provisions)
             );
             if (epochProvision) {
               // считаем число эпох в году
@@ -574,7 +573,7 @@ const computeAPYForSpecificDuration = (pool, duration) => {
               // умножаем на пропорцию нового инсентивированного осмо, которая при дется на данный пул
               const yearProvisionToPots = yearProvision.mul(
                 new Dec(
-                  paramsResponse?.data?.params?.distribution_proportions.pool_incentives
+                  paramsResponse?.params?.distribution_proportions.pool_incentives
                 )
               );
               //умножаем на долю, которая приходится на стоимость текущего пула от всех-всех инсентивированных пулов
@@ -604,7 +603,7 @@ const getIncentivizedGaugeId = (poolId, duration) => {
   if (!incentivizedPoolsResponse) {
     return;
   }
-  const incentivized = incentivizedPoolsResponse?.data?.incentivized_pools.find(
+  const incentivized = incentivizedPoolsResponse?.incentivized_pools.find(
     (data) => {
       return (
         +data.pool_id === +poolId &&
@@ -626,7 +625,7 @@ const getWeight = (gaugeId) => {
     return new Int(0);
   }
 
-  const record = distrResponse?.data?.distr_info.records.find(
+  const record = distrResponse?.distr_info.records.find(
     (record) => record.gauge_id === gaugeId
   );
   if (!record) {
@@ -648,17 +647,17 @@ const getPrice = (assets) => {
 
 
 export const getOwnPools = async (bech32Address) => {
-  balancesResponse = await axios.get(
+  balancesResponse = await getResponse(
     "https://lcd-osmosis.keplr.app/bank/balances/" + bech32Address
   );
-  lockedResponse = await axios.get(
+  lockedResponse = await getResponse(
     "https://lcd-osmosis.keplr.app/osmosis/lockup/v1beta1/account_locked_coins/" +
       bech32Address
   );
   let result = [];
 
-  for (const bal of balancesResponse?.data?.result?.concat(
-    lockedResponse.data?.coins
+  for (const bal of balancesResponse?.result?.concat(
+    lockedResponse?.coins
   )) {
     if (bal.denom.startsWith("gamm/pool/")) {
       result.push(+bal.denom.replace("gamm/pool/", ""));
@@ -680,7 +679,7 @@ export const getAllGammShare = (poolId) => {
 
 
 export const getAllGammShareRatio = (poolId) => {
-  const pool = getPoolFromPagination(poolListWithPagination.data.pools, poolId);
+  const pool = getPoolFromPagination(poolListWithPagination.pools, poolId);
   if (!pool) {
     return new IntPretty(new Int(0)).ready(false);
   }
@@ -772,14 +771,14 @@ export const getAvailableGammShare = (poolId) => {
 
 const getLockedCoinWithDuration = (pool, duration) => {
   const currency = getGammInfo(pool.id);
-  if (!locksResponse.data) {
+  if (!locksResponse) {
     return {
       amount: new CoinPretty(currency, new Dec(0)),
       lockIds: [],
     };
   }
 
-  const matchedLocks = locksResponse.data.locks
+  const matchedLocks = locksResponse.locks
     .filter((lock) => {
       return (
         Math.abs(
@@ -889,7 +888,7 @@ export const getMaxBalance = (index, pool, prettyBalanceList, amounts) => {
 
 
 const getUnlockingCoinWithDuration = (currency, duration) => {
-  const matchedLocks = locksResponse.data.locks
+  const matchedLocks = locksResponse.locks
     .filter((lock) => {
       return (
         Math.abs(

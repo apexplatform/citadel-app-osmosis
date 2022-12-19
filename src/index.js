@@ -16,7 +16,7 @@ const enabled = window.location.href.search('/localhost') === -1 &&
 
 Sentry.init({
     dsn: enabled ?
-        'https://5c05e134a0f74a7b985c06ad96e81e73@o510489.ingest.sentry.io/6477719'
+        'https://2d3121618e2d4dcd8f109194256d7970@o510489.ingest.sentry.io/6094855'
         : null,
     integrations: [new BrowserTracing()],
     tracesSampleRate: 1.0,
