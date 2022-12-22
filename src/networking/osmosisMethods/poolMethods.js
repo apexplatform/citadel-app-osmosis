@@ -279,7 +279,7 @@ const updatePoolInfo = (pool, poolList, lockedCoins) => {
     if(isSuperfluidPool){
       superFluidAPR = estimatePoolAPROsmo(pool.id)
     }
-    if (lockedCoins.includes(foundedPool.id)) {
+    if (lockedCoins.includes(+foundedPool.id)) {
       const shareRatio = getAllGammShareRatio(foundedPool.id);
       const actualShareRatio = shareRatio.increasePrecision(2);
       const lockedShareRatio = getLockedGammShareRatio(foundedPool);
@@ -393,7 +393,7 @@ const generatePoolList = (pools, lockedCoins) => {
       if(isSuperfluidPool){
         superFluidAPR = estimatePoolAPROsmo(pool.id)
       }
-      if (lockedCoins.includes(pool.id)) {
+      if (lockedCoins.includes(+pool.id)) {
         const shareRatio = getAllGammShareRatio(pool.id);
         const actualShareRatio = shareRatio.increasePrecision(2);
         const lockedShareRatio = getLockedGammShareRatio(pool);
@@ -754,7 +754,7 @@ export const getLockedGammShare = (poolId) => {
 
 export const getAvailableGammShare = (poolId) => {
   let available = null;
-  balancesResponse.data?.result?.forEach((pool) => {
+  balancesResponse?.result?.forEach((pool) => {
     if (pool.denom.startsWith("gamm/pool/")) {
       let id = pool.denom.replace("gamm/pool/", "");
       if (+id === +poolId) {

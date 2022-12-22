@@ -33,8 +33,8 @@ const AddLiquidityPanel = () => {
     });
     
     const prettyBalanceList = [];
-    tokenBalances.forEach((item) => {
-        pool.pool_assets.forEach((pool) => {
+    tokenBalances?.forEach((item) => {
+        pool.pool_assets?.forEach((pool) => {
             if (item.denom === pool.token.denom) {
                 prettyBalanceList.push(item);
             }
@@ -124,7 +124,7 @@ const AddLiquidityPanel = () => {
                 });
             }
             let balanceAmount = 0;
-            tokenBalances.forEach((item) => {
+            tokenBalances?.forEach((item) => {
                 if (item.denom === amounts[index].denom) {
                     balanceAmount = item.amount;
                 }

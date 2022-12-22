@@ -83,7 +83,7 @@ const loadPoolList = (count = 0) => async(dispatch) => {
           }
           dispatch({
             type: types.SET_TOKEN_BALANCES,
-            payload: balancesResponse?.data?.result,
+            payload: balancesResponse?.result,
           });
           dispatch({
             type: types.SET_SUPERFLUID_DELEGATIONS,
@@ -182,7 +182,7 @@ const updatePoolList = async() => {
       });
       store.dispatch({
         type: types.SET_TOKEN_BALANCES,
-        payload: balancesResponse?.data?.result,
+        payload: balancesResponse?.result,
       });
       return false;
     } else {
