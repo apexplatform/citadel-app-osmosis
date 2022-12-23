@@ -347,7 +347,7 @@ const updatePoolInfo = (pool, poolList, lockedCoins) => {
         availableLP: "$0",
         superFluidAPR, 
         myLiquidity: 0,
-        myLockedAmount: 0,
+        myLockedAmount: "$0",
         apr,
       };
     }
@@ -465,7 +465,7 @@ const generatePoolList = (pools, lockedCoins) => {
           availableLP: "$0",
           myLiquidity: 0,
           isSuperfluidPool,
-          myLockedAmount: 0,
+          myLockedAmount: "$0",
           apr,
         }
       }
@@ -737,7 +737,7 @@ export const getAvailableLPTokens = (pool) => {
 
 export const getLockedGammShare = (poolId) => {
   let locked = null;
-  lockedResponse.data?.coins?.forEach((pool) => {
+  lockedResponse?.coins?.forEach((pool) => {
     if (pool.denom.startsWith("gamm/pool/")) {
       let id = pool.denom.replace("gamm/pool/", "");
       if (+id === +poolId) {

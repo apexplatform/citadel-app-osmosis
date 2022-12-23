@@ -17,7 +17,7 @@ const Assets = () => {
     const navigate = useNavigate()
     let bondedBalance = 0;
     incentivizedPools?.forEach((elem) => {
-      if (elem.myLockedAmount !== 0) {
+      if (elem.myLockedAmount !== "$0") {
         bondedBalance += +elem.myLockedAmount
           .toString()
           .replace("$", "")

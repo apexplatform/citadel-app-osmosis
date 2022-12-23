@@ -6,7 +6,7 @@ import { getResponse } from '../utils/rm';
 import { errorActions } from '../../../store/actions'
 export let poolListResponse = null
 export let poolListWithPagination = null
-export let swapPools = null
+export let swapPools = []
 
 export const getTokenDecimal = (symbol,denom) => {
   const { networks } = store.getState().wallet;
@@ -55,21 +55,21 @@ const generatePoolList = (pools,poolList) => {
   try{
     let newPools = [];
     pools.forEach((pool) => {
-      if(poolList[pool.id]){
-        let list_of_assets = []
-        poolList[pool.id]?.forEach((asset,i) => {
+      if(poolList[+pool.id].length && pool?.pool_assets){
+        let list_of_assets = [] 
+        poolList[+pool.id]?.forEach((asset,i) => {
           let decimal = getTokenDecimal(asset.symbol,asset.denom)
           if(decimal){
             list_of_assets.push(new Assets(
-              new TokenInfo(asset.denom,asset.symbol,asset.price,decimal), 
-              new Dec(pool.pool_assets[i].weight).quo(new Dec(pool.total_weight)), 
-              new Dec(pool.pool_assets[i].token.amount).quo(new Dec(Math.pow(10, decimal))),
-              pool.pool_assets[i]
+              new TokenInfo(asset?.denom,asset?.symbol,asset?.price,decimal), 
+              new Dec(pool?.pool_assets[i]?.weight).quo(new Dec(pool?.total_weight)), 
+              new Dec(pool?.pool_assets[i]?.token?.amount).quo(new Dec(Math.pow(10, decimal))),
+              pool?.pool_assets[i]
               ));
           }  
         })
-        if(list_of_assets.length === poolList[pool.id].length){
-          const poolInfo = new PoolInfo({ ...pool, total_weight: poolList[pool.id][0]?.liquidity,list_of_assets});
+        if(list_of_assets.length === poolList[+pool.id].length){
+          const poolInfo = new PoolInfo({ ...pool, total_weight: poolList[+pool.id][0]?.liquidity,list_of_assets});
           newPools.push(poolInfo);
         }   
       } 
@@ -77,6 +77,7 @@ const generatePoolList = (pools,poolList) => {
     return newPools;
   }
   catch(e){
+    console.log(e);
     return swapPools
   }
 };

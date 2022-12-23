@@ -142,6 +142,7 @@ const getSwapInfo = (amount = 0, isOut = true) => async(dispatch) => {
     }
     dispatch(checkSwapStatus(amount, res.error));
   } catch (err) {
+    console.log(err);
     dispatch(checkSwapStatus(amount));
   }
 }
