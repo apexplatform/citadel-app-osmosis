@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Content, Header, Icon, ValidatorCard, NoValidatorCard, SelectedCard, Button, CoinIcon, SelectToken, NotificationCard} from '@citadeldao/apps-ui-kit/dist/main';
+import { Content, Header, Icon, FormGroupBalance, ValidatorCard, NoValidatorCard, SelectedCard, Button, CoinIcon, InputSelect, NotificationCard} from '@citadeldao/apps-ui-kit/dist/main';
 import { useSelector } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { poolActions, panelActions } from '../../store/actions';
@@ -24,12 +24,10 @@ const BondPanel = () => {
     const [shareInAmount, setAmount] = useState(amount);
     const updateAmount = (val, isMax = false) => {
         val = amountFormatter(val)
-        setAmount(val)
-        poolActions.setAmount(val)
+        let amount = isMax ? myLiquidity : val;
+        setAmount(amount);
+        poolActions.setAmount(amount)
         if (+myLiquidity > 0) {
-          let amount = isMax ? myLiquidity : val;
-          setAmount(amount);
-          poolActions.setAmount(amount)
           setError(+myLiquidity < +val);
         } else {
           setError(true);
@@ -48,7 +46,8 @@ const BondPanel = () => {
     const data = {
         network: 'osmosis',
         balance: myLiquidity,
-        code: 'GAMM/' + pool.id
+        code: 'GAMM/' + pool.id,
+        logoURI: 'https://apps.3ahtim54r.ru/ca-osmosis-swap/img/tokens/osmosis.svg'
     }
     return (
         <div className='panel'>
@@ -76,18 +75,29 @@ const BondPanel = () => {
                      />
                     ))}
                 </div>
-                <SelectToken 
-                    max={true}   
-                    token={true} 
-                    balance={true}  
-                    title='Amount to bond'
-                    style={{margin: '16px 0'}} 
-                    value={shareInAmount} 
-                    checkAmount={updateAmount} 
-                    onMaxClick={() => updateAmount(shareInAmount, true)}
-                    selectedOption={data} 
-                    field='from'
-                />
+                <div className="bond-input">
+                    <FormGroupBalance 
+                        placement="end" 
+                        balance={data?.balance} 
+                        text="Balance" 
+                        currency={data?.code}
+                    />
+                    <InputSelect
+                        input={{
+                            value: shareInAmount,
+                            label: 'Amount',
+                            name: 'OUTPUT',
+                            onChange: (value) => updateAmount(value),
+                            action: { text: 'MAX', onClick: () => updateAmount(myLiquidity, true) }
+                        }}
+                        select={{
+                            value: data?.code,
+                            options: [{...data, icon: data.logoURI, value: data.code, label: data.code}],
+                            label: 'Amount to bond',
+                        }}
+                        currencyKey = 'code'
+                    />
+                </div> 
                 {!selectedValidator?.address && pool.isSuperfluidPool && !isSuperfluidLock && activeOption?.duration === 14 && 
                     <NoValidatorCard 
                         style={{margin: '16px 0'}} 

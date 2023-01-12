@@ -10,26 +10,26 @@ const cutNumber = (number, digits = 0) =>
 
 const formatValue = (value) => value.toString().trim().replaceAll(',', '');
 
-export const prettyNumber = (value, maxDecimals=6, isZero = false) => {
-    if (!value) {
+export const prettyNumber = (value) => {
+  if (!value) {
       return 0;
-    }
-    value = value.toString().replaceAll(',','')
-    // for string with range (iost APY "4.8-36.13" etc)
-    if (Number.isNaN(+value)) {
-        return value;
-    }
-    const formatedValue = formatValue(value);
-    const prefix = +formatedValue < 0 ? '-' : '';
-    const absoluteValue = Math.abs(formatedValue);
+  }
 
-    // |value| < 1
-    if (absoluteValue && cutNumber(absoluteValue, maxDecimals) === 0) {
-      if(isZero) return 0
-        return '~0';
-    }
+  // for string with range (iost APY "4.8-36.13" etc)
+  if (Number.isNaN(+value)) {
+      return value;
+  }
+  const formatedValue = formatValue(value);
+  const maxDecimals = 6;
+  const prefix = +formatedValue < 0 ? '-' : '';
+  const absoluteValue = Math.abs(formatedValue);
 
-    return `${prefix}${cutNumber(absoluteValue, maxDecimals)}`;
+  // |value| < 1
+  if (absoluteValue && cutNumber(absoluteValue, maxDecimals) === 0) {
+      return '~0';
+  }
+
+  return `${prefix}${cutNumber(absoluteValue, maxDecimals)}`;
 };
 
 export const prettyNumberTooltip = (value) => {

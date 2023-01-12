@@ -71,7 +71,7 @@ const PoolDetailsPanel = (props) => {
             color: '#292929',
             fontWeight: 700,
             align: 'left',
-            width: '21%',
+            width: '180px',
         },
         {
             title: 'a day',
@@ -79,7 +79,7 @@ const PoolDetailsPanel = (props) => {
             color: '#D900AB',
             align: 'left',
             fontWeight: 700,
-            width: '26%',
+            width: '180px',
         },
         {
             title: '7 days',
@@ -87,7 +87,7 @@ const PoolDetailsPanel = (props) => {
             color: '#D900AB',
             fontWeight: 700,
             align: 'left',
-            width: '26%',
+            width: '180px',
         },
         {
             title: '14 days',
@@ -95,7 +95,7 @@ const PoolDetailsPanel = (props) => {
             color: '#D900AB',
             fontWeight: 700,
             align: 'left',
-            width: '26%',
+            width: '180px',
         }
     ]
     const bondings = [
@@ -118,6 +118,7 @@ const PoolDetailsPanel = (props) => {
             days14: <div className='table-cell-row'><p className='table-amount-bold'>{pool?.lockDurations[2]?.usdAmount.replace('$','') }</p><span>$</span></div>,
         }
     ];
+
     return (
         <section className='panel pool-details-panel'>
             <Content>
@@ -202,11 +203,11 @@ const PoolDetailsPanel = (props) => {
                         /> )) 
                     }
                     <br/>
-                {pool.isIncentivized && 
+                {(pool.isIncentivized && pool.lockDurations.length) ?
                     <Table 
                         columns={columns2}
                         data={bondings}
-                    />
+                    /> : ''
                 }
             </Content> 
         </section>

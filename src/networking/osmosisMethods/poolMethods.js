@@ -248,7 +248,7 @@ const updatePoolInfo = (pool, poolList, lockedCoins) => {
       ...foundedPool,
       poolInfo: poolListResponse[foundedPool.id],
     };
-   
+    let isIncentivized = false
     const poolCoinInfo = poolData.poolInfo?.map((item) => {
       return getPoolTokenInfo(item.coingecko_id, item.symbol, item, pool.id);
     });
@@ -264,6 +264,7 @@ const updatePoolInfo = (pool, poolList, lockedCoins) => {
       return v1.asMilliseconds() > v2.asMilliseconds() ? 1 : -1;
     });
     if (incentivizedPoolIds.includes(pool.id)) {
+      isIncentivized = true
       lockableDurations.forEach((lockableDuration, i) => {
         let apr = computeAPY(poolData, lockableDuration).toString();
         let duration = lockableDuration.asDays();
@@ -322,6 +323,7 @@ const updatePoolInfo = (pool, poolList, lockedCoins) => {
         unlockingDatas,
         gammShare: gammShare,
         poolCoinInfo,
+        isIncentivized,
         poolTVL: poolTVL,
         availableLP,
         isSuperfluidPool,
@@ -347,6 +349,7 @@ const updatePoolInfo = (pool, poolList, lockedCoins) => {
         availableLP: "$0",
         superFluidAPR, 
         myLiquidity: 0,
+        isIncentivized,
         myLockedAmount: "$0",
         apr,
       };
@@ -361,6 +364,7 @@ const generatePoolList = (pools, lockedCoins) => {
   let poolInfo = {}
   pools?.forEach((pool) => {
     pool.id = +pool.id
+    let isIncentivized = false
     if(poolListResponse[pool.id]){
       const poolData = { ...pool, poolInfo: poolListResponse[pool.id] };
       const poolCoinInfo = poolData.poolInfo?.map((item) => {
@@ -378,6 +382,7 @@ const generatePoolList = (pools, lockedCoins) => {
         return v1.asMilliseconds() > v2.asMilliseconds() ? 1 : -1;
       });
       if (incentivizedPoolIds.includes(pool.id)) {
+        isIncentivized = true
         lockableDurations.forEach((lockableDuration) => {
           let apr = computeAPY(poolData, lockableDuration).toString();
           let duration = lockableDuration.asDays();
@@ -433,7 +438,7 @@ const generatePoolList = (pools, lockedCoins) => {
         poolInfo = {
           ...poolData,
           allGammShare,
-          isIncentivized: true,
+          isIncentivized,
           unlockingDatas,
           gammShare: gammShare,
           poolCoinInfo,
@@ -454,7 +459,7 @@ const generatePoolList = (pools, lockedCoins) => {
       } else {
         poolInfo = {
           ...poolData,
-          isIncentivized: false,
+          isIncentivized,
           allGammShare: null,
           unlockingDatas: null,
           gammShare: null,

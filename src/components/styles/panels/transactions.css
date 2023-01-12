@@ -15,6 +15,7 @@
 
 .transactions-details-block .transaction-ticker{
     color: black;
+    margin-left: 4px;
 }
 
 .transactions-details-fee{
@@ -59,4 +60,28 @@
     text-align: center;
     width: 70%;
     font-size: 15px;
+}
+
+.transactions-link {
+    text-decoration: none;
+    color: #0091A6;
+}
+
+.mobile-link {
+    display: none;
+}
+.center .pagination {
+    margin-top: 20px;
+    margin-bottom: 12px;
+}
+
+
+@media screen and (max-width: 520px) {
+    .mobile-link {
+        display: block;
+    }
+
+    .web-link {
+        display: none;
+    }
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { GuidesCard } from '@citadeldao/apps-ui-kit/dist/main'
+import { Accordion } from '@citadeldao/apps-ui-kit/dist/main'
 import text from '../../text.json'
 import '../styles/uiKit/guides.css'
 import { ReactComponent as Guide1 } from '../guides/guide1.svg'
@@ -16,7 +16,7 @@ const GuidesPanel = () => {
                 <h3 className='heading-text-h3'>Guides & Questions</h3>
                 <p className='description-text'>Learn more about Osmosis</p>
             </div>
-            <GuidesCard text='IBC Deposit/Withdrawal'>
+            <Accordion title='IBC Deposit/Withdrawal' type="guide">
                 <h4>{text.GUIDES_HEADER_1}</h4>
                 <p>{text.GUIDES_DESCRIPTION_1}</p>
                 <Guide1 className='quide-img'/>
@@ -35,7 +35,7 @@ const GuidesPanel = () => {
                 <h4>{text.GUIDES_HEADER_6}</h4>
                 <p>{text.GUIDES_DESCRIPTION_6}</p>
                 <Guide6 className='quide-img'/>
-            </GuidesCard>
+            </Accordion>
         </div>
     )
 }

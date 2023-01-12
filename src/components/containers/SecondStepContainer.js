@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useSelector } from 'react-redux';
-import { SelectToken, Icon, Button} from '@citadeldao/apps-ui-kit/dist/main';
+import { InputSelect, Icon, Button, FormGroupBalance} from '@citadeldao/apps-ui-kit/dist/main';
 import { poolActions } from '../../store/actions';
 import text from "../../text.json";
 import { prettyNumber } from "../helpers/numberFormatter";
@@ -39,29 +39,36 @@ const SecondStepContainer = (props) => {
         setTokens(temp);
       };
     const setMaxValue = (code) => {
-        let currentToken = tokens.find(elem => elem.code === code)
-        setAmount(currentToken.token.balance, code)
+      let currentToken = tokens.find(elem => elem.code === code)
+      setAmount(currentToken.token.balance, code)
     }
     return(
         <div>
             {
-                tokens.map((item,i) => (
-                    <SelectToken     
-                    max={true} 
-                    key={i}
-                    procent={item.percent}
-                    balance={true} 
-                    token={true} 
-                    action={false}
-                    name={item.code}
-                    style={{marginBottom: '10px'}}
-                    data={{...item.token, balance: prettyNumber(item.token.balance, 6)}} 
-                    value={item.amount} 
-                    checkAmount={setAmount} 
-                    onMaxClick={() => setMaxValue(item.code)}
-                    selectedOption={{...item.token, balance: prettyNumber(item.token.balance, 6)}}
-                    field='to'
-                    />
+              tokens.map((item,i) => (
+                <div style={{marginBottom: '16px'}} key={i}>
+                  <InputSelect
+                    input={{
+                      label: "Amount",
+                      currency: item.code,
+                      value: item.amount,
+                      onChange: (value) => setAmount(value),
+                      action: { text: 'MAX', onClick: () => setMaxValue(item?.code) }
+                    }}
+                    select={{
+                        value: item?.code,
+                        options: [{...item, icon: item.logoURI, value: item.code, label: item.code + " (" + item.percent + "%)"}],
+                        label: 'Pool shares #' + (i+1),
+                    }}
+                    currencyKey = 'code'
+                  />
+                  <FormGroupBalance 
+                    placement="end" 
+                    balance={prettyNumber(item?.token?.balance)+''} 
+                    text="Balance" 
+                    currency={item?.code}
+                  />
+                </div>
                 ))
             }
             {error &&

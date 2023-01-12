@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Content, Tabbar, FeeInput } from '@citadeldao/apps-ui-kit/dist/main';
+import { Content, Tabbar } from '@citadeldao/apps-ui-kit/dist/main';
 import { Config } from '../config/config';
 import StepsBlock from '../uikit/StepsBlock';
 import { useLocation } from 'react-router-dom';
@@ -23,8 +23,15 @@ const AddPoolPanel = () => {
         <div className='panel'>
             <Content>
                 <StepsBlock  activeOption={activeOption} setActiveOption={setActiveOption} />
-                <div className='base-input'>
-                    <FeeInput readOnly={true} data={{network: 'OSMO'}} inputTitle='Pool Creation fee' description='Transferred to the Osmosis community pool' value={100}/>
+                <div className='input osmo-pool-fee'>
+                    <div>
+                        <h3>Pool Creation fee</h3>
+                        <p>Transferred to the Osmosis community pool</p>
+                    </div>
+                    <div className='row'>
+                        <h4>100</h4>
+                        <span>OSMO</span>
+                    </div>
                 </div>
                 {activeOption === 1 && (
                     <FirstStepContainer setActiveOption={setActiveOption} />

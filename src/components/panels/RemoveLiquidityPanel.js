@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Content, Header, Icon, AmountInput, Button, InfoCardBlock, InfoCardItem } from '@citadeldao/apps-ui-kit/dist/main';
+import { Content, Header, Icon, Input, FormGroupBalance, Button, InfoCardBlock, InfoCardItem } from '@citadeldao/apps-ui-kit/dist/main';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { poolActions } from '../../store/actions';
@@ -55,16 +55,21 @@ const RemoveLiquidityPanel = () => {
         <div className='panel'>
             <Content>
                 <Header border title="Remove liquidity" style={{margin: '8px 0 16px 0'}} onClick={() => back()} back={true}/>
-                <AmountInput  
-                    inputTitle={inputTitle} 
-                    action={true} 
-                    data={data} 
+                <Input  
+                    type="amount"
+                    label={inputTitle} 
                     style={{marginBottom: '16px'}}
-                    actionTxt='MAX' 
                     value={amount} 
-                    checkAmount={updateAmount}
-                    onMaxClick={() => updateAmount(data.myLiquidity)}
+                    currency={data.network}
+                    onChange={updateAmount}
+                    action={{onClick:() => updateAmount(data.myLiquidity),text: 'MAX'}}
                 />
+                <FormGroupBalance  
+                        placement="end"
+                        balance={data.myLiquidity+''} 
+                        text="Balance" 
+                        currency={data?.network}
+                    />
                 <InfoCardBlock>
                     <h2 className='info-card-header-h2'>You will receive</h2>
                     {pool.poolCoinInfo.map((token, i) => (

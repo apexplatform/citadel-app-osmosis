@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ClearSelectInput, Icon, Button} from '@citadeldao/apps-ui-kit/dist/main';
+import { Icon, Button, InputSelect } from '@citadeldao/apps-ui-kit/dist/main';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import ROUTES from '../../routes'
@@ -67,14 +67,21 @@ const FirstStepContainer = (props) => {
         <div>
             {tokensList?.map((elem,i) =>(
                 <div className='base-input' key={i}>
-                    <ClearSelectInput 
-                        label={'Pool shares #' + (i+1)}
-                        value={elem.percent}
-                        setValue={setPercent} 
-                        token={elem}
-                        index={i}
-                        onClick={() => setSelectedOption(elem.code)}
-                        removeElem={removeToken}
+                     <InputSelect
+                        input={{
+                            value: elem.percent,
+                            currency: "%",
+                            clearable: true,
+                            onClear: () => removeToken(i),
+                            onChange: (value) => setPercent(value, elem.code),
+                        }}
+                        select={{
+                            value: elem?.code,
+                            options: [{...elem, icon: elem.logoURI, value: elem.code, label: elem.code}],
+                            label: 'Pool shares #' + (i+1),
+                            onClick: () => setSelectedOption(elem.code)
+                        }}
+                        currencyKey = 'code'
                     />
                 </div>
             ))}

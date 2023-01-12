@@ -1,5 +1,5 @@
 import React, {useState,useEffect} from 'react';
-import { Content, Icon, Tabbar, EditAmount, SelectToken, InfoCardBlock, InfoCardItem, IconButton } from '@citadeldao/apps-ui-kit/dist/main';
+import { Content, Icon, Tabbar, EditAmount, FormGroup, FormGroupBalance, InputSelect, InfoCardBlock, InfoCardItem, IconButton } from '@citadeldao/apps-ui-kit/dist/main';
 import { Config } from '../config/config';
 import { useSelector, useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
@@ -17,7 +17,6 @@ const SwapPanel = () => {
     const navigate = useNavigate()
     const { activeWallet } = useSelector((state) => state.wallet)
     const { bottomInset } = useSelector(state => state.panels)
-    const [balanceView, setBalanceView] = useState('View Balance')
     const { independentField, swapPools, routes, swapFee, slippageTolerance,  slippage, outAmout, fromUSD, rate, isExactIn, toUSD, amount, tokenIn, tokenOut } = useSelector(state => state.swap)
     const { tokens } = useSelector(state => state.wallet)
     const [slippageToleranceValue, setSlippage] = useState(slippageTolerance)
@@ -90,47 +89,61 @@ const SwapPanel = () => {
         setSlippage(val)
         dispatch(swapActions.setSlippageTolerance(val))
     }
+
     return (
         <div className='panel'>
             <Content>
-                <div className='swap-inputs'>
-                    <SelectToken 
-                        max={true} 
-                        usdPrice={prettyNumber(fromUSD * formattedAmounts["INPUT"],2)} 
-                        balance={true} 
-                        token={true} 
-                        data={tokens} 
-                        style={{margin: '10px 0 32px'}}
-                        action={true}
-                        field='from'
-                        name='INPUT'
-                        title="From token"
-                        checkValue={() => {}}
-                        onMaxClick={() => setMaxValue('INPUT')}
-                        checkAmount={checkAmount}
-                        value={formattedAmounts["INPUT"]} 
-                        selectedOption={{...tokenIn, balance: prettyNumber(tokenIn?.balance)}} 
-                        balanceView={balanceView} setBalanceView={setBalanceView} 
-                        onClick={() => setSelectedOption('INPUT')}
+            <div className='swap-inputs'>
+                    <FormGroup>
+                        <FormGroupBalance  
+                            usdPrice={fromUSD*tokenIn?.balance}
+                            balance={prettyNumber(tokenIn?.balance)+''} 
+                            text="Balance" 
+                            currency={tokenIn?.code}
                         />
+                        <InputSelect
+                            input={{
+                                value: formattedAmounts["INPUT"],
+                                label: 'Amount',
+                                name: 'INPUT',
+                                onChange: (v) => checkAmount(v, 'INPUT'),
+                                action: { text: 'MAX', onClick: () => setMaxValue('INPUT') }
+                            }}
+                            select={{
+                                value: tokenIn?.code,
+                                options: [{...tokenIn, icon: window.location.origin + '/' + tokenIn?.logoURI, value: tokenIn?.code, label: tokenIn?.code}],
+                                label: 'Token from',
+                                onClick: () => setSelectedOption('INPUT'),
+                            }}
+                            currencyKey = 'code'
+                        />
+                    </FormGroup>
+                        <br/>
                     <IconButton onClick={reverseTokens} type="hexagon" icon='arrows-towards'  className='swap-center-btn' width={60} height={60} bgColor="#C6D1FF" iconColor="#173296" borderColor="#869FFF"/>
-                    <SelectToken 
-                            balance={true} 
-                            usdPrice={prettyNumber(toUSD * formattedAmounts["OUTPUT"],2)}
-                            token={true} 
-                            data={tokens} 
-                            action={true}
-                            field='to'
-                            name='OUTPUT'
-                            title="To token"
-                            checkValue={() => {}}
-                            onMaxClick={() => setMaxValue('OUTPUT')}
-                            checkAmount={checkAmount}
-                            value={formattedAmounts["OUTPUT"]}
-                            selectedOption={{...tokenOut, balance: prettyNumber(tokenOut?.balance)}} 
-                            balanceView={balanceView} setBalanceView={setBalanceView} 
-                            onClick={() => setSelectedOption('OUTPUT')}
+                    <FormGroup>
+                        <InputSelect
+                            input={{
+                                value: formattedAmounts["OUTPUT"],
+                                label: 'Amount',
+                                name: 'OUTPUT',
+                                onChange: (v) => checkAmount(v, 'OUTPUT'),
+                                action: { text: 'MAX', onClick: () => setMaxValue('OUTPUT') }
+                            }}
+                            select={{
+                                value: tokenOut?.code,
+                                options: [{...tokenOut, icon: window.location.origin + '/' + tokenOut?.logoURI, value: tokenOut?.code, label: tokenOut?.code}],
+                                label: 'To token',
+                                onClick: () => setSelectedOption('OUTPUT'),
+                            }}
+                            currencyKey = 'code'
                         />
+                        <FormGroupBalance  
+                            usdPrice={toUSD*tokenOut?.balance}
+                            balance={prettyNumber(tokenOut?.balance)+''} 
+                            text="Balance" 
+                            currency={tokenOut?.code}
+                        />
+                    </FormGroup>
                 </div>
             <InfoCardBlock style={{marginTop: '10px'}}>
                 <InfoCardItem text={'Price'} symbol={tokenOut?.code} symbol2={tokenIn?.code}><span className='purple-text'>{rate || '-'}</span></InfoCardItem>

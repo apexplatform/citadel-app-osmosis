@@ -24,7 +24,7 @@ const ManageBondPanel = () => {
             color: '#292929',
             fontWeight: 700,
             align: 'left',
-            width: '21%',
+            width: '180px',
         },
         {
             title: 'a day',
@@ -32,7 +32,7 @@ const ManageBondPanel = () => {
             color: '#D900AB',
             align: 'left',
             fontWeight: 700,
-            width: '26%',
+            width: '180px',
         },
         {
             title: '7 days',
@@ -40,7 +40,7 @@ const ManageBondPanel = () => {
             color: '#D900AB',
             fontWeight: 700,
             align: 'left',
-            width: '26%',
+            width: '180px',
         },
         {
             title: '14 days',
@@ -48,7 +48,7 @@ const ManageBondPanel = () => {
             color: '#D900AB',
             fontWeight: 700,
             align: 'left',
-            width: '26%',
+            width: '180px',
         }
     ]
     const bondings = [

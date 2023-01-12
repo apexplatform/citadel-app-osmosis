@@ -6,6 +6,9 @@ const getTransactions = (data) => {
         {
           params: {
             token: data.auth_token,
+            version: 'v2',
+            limit: 10,
+            offset: data.offset
           },
         },
     );

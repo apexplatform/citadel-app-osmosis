@@ -28,10 +28,10 @@ const loadUserConfig = async () => {
         let result = await requestManager.send(userRequest.getUserConfig(auth_token));
         store.dispatch({
             type: types.SET_USER_CONFIG,
-            payload: result.data && JSON.parse(result.data),
+            payload: result.data 
         });
-        return result.data && JSON.parse(result.data);
-    } catch {
+        return result.data 
+    } catch(e) {
         return null;
     }
 };

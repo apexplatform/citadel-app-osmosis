@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Content, Header, SelectInput, Icon, AmountInput, Checkbox, Button } from '@citadeldao/apps-ui-kit/dist/main';
+import { Content, Header, FormGroupBalance, InputSelect, Icon, Input, Checkbox, Button } from '@citadeldao/apps-ui-kit/dist/main';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { poolActions } from '../../store/actions';
 import { CoinPretty, Dec, IntPretty } from "@keplr-wallet/unit";
-import { amountFormatter, prettyNumber } from '../helpers/numberFormatter';
+import { amountFormatter } from '../helpers/numberFormatter';
 import ROUTES from '../../routes';
 
 const AddLiquidityPanel = () => {
@@ -15,7 +15,6 @@ const AddLiquidityPanel = () => {
     const back = () => navigate(previousPanel || '/')
     const [error, setError] = useState(false);
     const [errorZero, setErrorZero] = useState(true);
-    const [usdPrice, setUsdPrice] = useState('0');
     let initialAmounts = [];
     pool.pool_assets.forEach((item, index) => {
         let code = pool.poolCoinInfo[index].symbol
@@ -28,7 +27,7 @@ const AddLiquidityPanel = () => {
             net: code,
             network: code,
             balance: tokens.find(elem => elem.code === pool.poolCoinInfo[index].coinDenom)?.balance || 0,
-            logoImg: <img src={tokens.find(elem => elem.code === pool.poolCoinInfo[index].coinDenom)?.logoURI || 'img/tokens/unsupported.svg'} alt='icon' />
+            logoURI: tokens.find(elem => elem.code === pool.poolCoinInfo[index].coinDenom)?.logoURI 
         });
     });
     
@@ -55,13 +54,8 @@ const AddLiquidityPanel = () => {
           logo: item.coinImageUrl,
         });
       });
-    const updateAmount = (amount, symbol, index ,isMax = false) => {
+    const updateAmount = (amount, index , isMax = false) => {
         amount = amountFormatter(amount)
-        let price = 0;
-        let poolInfo = pool.poolInfo;
-        if (poolInfo) {
-            price = (poolInfo[index === 0 ? 1 : 0].price * poolInfo[index === 0 ? 1 : 0]?.amount) / poolInfo[index]?.amount;
-        }
         let temp = amounts;
         temp[index].amount = amount;
         setError(false);
@@ -70,10 +64,8 @@ const AddLiquidityPanel = () => {
             if (singleLp) {
                 setSLPAmount(amount)
                 setAmount(temp);
-                setUsdPrice(price * +temp[index]?.amount);
                 checkErrors(temp[index])
             } else {
-                setUsdPrice(price * +amount);
                 const tokenInAmount = new IntPretty(new Dec(amount));
                 const totalShare = new IntPretty(
                     pool.total_shares.amount
@@ -165,50 +157,59 @@ const AddLiquidityPanel = () => {
         }
     };
     
-    const selectToken = (token) => {
+    const selectToken = (code) => {
+        let token = amounts.find(elem => elem.code === code)
         setIndex(token.index)
         setToken(token)
         checkErrors(token)
     }
-
     return (
         <div className='panel'>
             <Content>
                 <Header border title="Add liquidity" style={{margin: '8px 0 16px 0'}} onClick={() => back()} back={true}/>
                 {!singleLp &&
                 amounts.map((token, index) => (
-                    <AmountInput 
-                        index={token.index} 
-                        style={{marginBottom : '14px'}} 
-                        key={index} 
-                        inputTitle={token.network + ' amount'} 
-                        balance={true}  
-                        action={true} 
-                        data={token} 
-                        actionTxt='MAX' 
-                        value={token.amount} 
-                        checkAmount={updateAmount}
-                        onMaxClick={() => updateAmount(token.balance, token.network, index, true)}
-                    />
+                    <div key={index}>
+                    <Input  
+                        type='amount'
+                        label={token.network + ' amount'}
+                        style={{marginBottom: '14px'}}
+                        value={token.amount}
+                        currency={token.network}
+                        onChange={updateAmount}
+                        action={{onClick:() => updateAmount(token.balance, index, true),text: 'MAX'}}
+                    /> 
+                    <FormGroupBalance  
+                        balance={token?.balance || '0'} 
+                        text="Balance" 
+                        currency={token?.network}
+                        placement="end"
+                    /></div>
                 ))}
                 { singleLp &&
-                    <SelectInput 
-                        max={true}   
-                        token={true} 
-                        balance={true}  
-                        data={amounts} 
-                        usdPrice={true}
-                        index={index}
-                        logoImg={token.logoImg}
-                        style={{marginBottom : '14px'}} 
-                        value={amount} 
-                        setValue={(value) => updateAmount(value, token.network, index)} 
-                        selectedOption={{...token, usdPrice: prettyNumber(usdPrice,2)}} 
-                        setSelectedOption={selectToken} 
-                        onMaxClick={() => updateAmount(token.balance, token.network, index, true)}
-                    />
+                    <><InputSelect
+                        input={{
+                            value: amount,
+                            label: 'Amount',
+                            onChange: (value) => updateAmount(value, index),
+                            action: { text: 'MAX', onClick: () => updateAmount(token.balance, index, true) }
+                        }}
+                        select={{
+                            value: amounts[0]?.network,
+                            options: amounts.map(elem => ({...elem,icon: elem.logoURI, label: elem.network, value: elem.network})),
+                            label: 'Token',
+                            onChange: selectToken,
+                        }}
+                        currencyKey = 'network'
+                    />   
+                    <FormGroupBalance  
+                        placement="end"
+                        balance={token.balance+''} 
+                        text="Balance" 
+                        currency={token?.network}
+                    /></>
                 }
-                <Checkbox textColor='#3C5B7E' value={singleLp} onChange={() =>  setSingleLp(!singleLp)}>Single Asset LP</Checkbox>
+                <Checkbox textColor='#3C5B7E' value={singleLp} onChange={() =>  {updateAmount(amount,0);setSingleLp(!singleLp)}}>Single Asset LP</Checkbox>
                 {error && 
                 <div className='row' id='amount-error'>
                     <div className='amount-error__circle'>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useSelector } from 'react-redux';
-import { SelectToken, Icon, Checkbox, Button, AmountInput } from '@citadeldao/apps-ui-kit/dist/main';
+import { InputSelect, Icon, Checkbox, Button, Input, FormGroupBalance } from '@citadeldao/apps-ui-kit/dist/main';
 import { poolActions } from '../../store/actions';
 import text from "../../text.json";
 import { prettyNumber } from "../helpers/numberFormatter";
@@ -73,27 +73,44 @@ const ThirdStepContainer = (props) => {
     return(
         <div className="steps-container">
             {
-                tokens.map((item,i) => (
-                    <SelectToken     
-                    max={true} 
-                    key={i}
-                    procent={item.percent}
-                    balance={true} 
-                    token={true} 
-                    action={false}
-                    name={item.code}
-                    style={{marginBottom: '10px'}}
-                    data={item.token} 
-                    value={item.amount} 
-                    checkAmount={setAmount} 
-                    onMaxClick={() => setMaxValue(item.code)}
-                    selectedOption={{...item.token, balance: prettyNumber(item.token.balance, 6)}}
-                    field='to'
-                    />
-                ))
+              tokens.map((item,i) => (
+                <div style={{marginBottom: '16px'}} key={i}>
+                <InputSelect
+                  input={{
+                    label: "Amount",
+                    currency: item.code,
+                    value: item.amount,
+                    onChange: (value) => setAmount(value),
+                    action: { text: 'MAX', onClick: () => setMaxValue(item?.code) }
+                  }}
+                  select={{
+                      value: item?.code,
+                      options: [{...item, icon: item.logoURI, value: item.code, label: item.code + " (" + item.percent + "%)"}],
+                      label: 'Pool shares #' + (i+1),
+                  }}
+                  currencyKey = 'code'
+                />
+                <FormGroupBalance 
+                  placement="end" 
+                  balance={prettyNumber(item?.token?.balance)+''} 
+                  text="Balance" 
+                  currency={item?.code}
+                />
+              </div>
+              ))
             }
-            <AmountInput inputTitle='Swap fee' data={{network: '%'}} value={fee} checkAmount={checkFee}/>
-            <Checkbox textColor='#3C5B7E' value={isChecked} onChange={() => checkError()}>I understand  that creating a new pool will cost 100 OSMO</Checkbox>
+            <Input  
+              type="amount"
+              currency="%"
+              label='Swap fee' 
+              value={fee} 
+              onChange={checkFee}
+            />
+            <br/>
+            <Checkbox  
+              value={isChecked} 
+              onChange={() => checkError()} 
+            >I understand  that creating a new pool will cost 100 OSMO</Checkbox>
             {error &&
             <div className='row' id='amount-error'>
                 <div className='amount-error__circle'>
