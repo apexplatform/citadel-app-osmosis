@@ -111,7 +111,7 @@ const SwapPanel = () => {
                             }}
                             select={{
                                 value: tokenIn?.code,
-                                options: [{...tokenIn, icon: window.location.origin + '/' + tokenIn?.logoURI, value: tokenIn?.code, label: tokenIn?.code}],
+                                options: [{...tokenIn, icon: window.location.origin + window.location.pathname + tokenIn?.logoURI, value: tokenIn?.code, label: tokenIn?.code}],
                                 label: 'Token from',
                                 onClick: () => setSelectedOption('INPUT'),
                             }}
@@ -131,7 +131,7 @@ const SwapPanel = () => {
                             }}
                             select={{
                                 value: tokenOut?.code,
-                                options: [{...tokenOut, icon: window.location.origin + '/' + tokenOut?.logoURI, value: tokenOut?.code, label: tokenOut?.code}],
+                                options: [{...tokenOut, icon: window.location.origin + window.location.pathname + tokenOut?.logoURI, value: tokenOut?.code, label: tokenOut?.code}],
                                 label: 'To token',
                                 onClick: () => setSelectedOption('OUTPUT'),
                             }}
