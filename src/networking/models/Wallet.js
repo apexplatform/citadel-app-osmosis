@@ -44,7 +44,7 @@ export default class Wallet {
             auth_token,
             address: this.address,
             net: this.net,
-            offset: page-1
+            offset: (page-1) * 10
         };
     
         try {

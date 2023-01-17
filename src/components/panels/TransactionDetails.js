@@ -1,28 +1,28 @@
 import ROUTES from "../../routes";
 import { useEffect } from 'react'
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { Header, Content, Icon, InfoCardBlock, InfoCardItem } from "@citadeldao/apps-ui-kit/dist/main";
 import text from "../../text.json";
 import { Config } from '../config/config';
 import moment from "moment";
 import '../styles/panels/transactions.css';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { prettyNumber } from '../helpers/numberFormatter';
+import { formatNumber } from '../helpers/numberFormatter';
 import { formatAddress } from '../helpers/addressFormatter';
 import { panelActions } from '../../store/actions';
 
 const TransactionDetails = () => {
   const config = new Config()
   const location = useLocation()
-  const dispatch = useDispatch();
   const { activeWallet } = useSelector(state => state.wallet)
   const data = useSelector(state => state.transaction.openedTransaction)
   const navigate = useNavigate()
   const back = () => navigate(ROUTES.TRANSACTIONS)
   useEffect(()=>{
-    dispatch(panelActions.setCurrentPanel(location.pathname))
+    panelActions.setCurrentPanel(location.pathname)
     // eslint-disable-next-line
   },[])
+
   return (
     <div className="panel">
       <Content>
@@ -30,7 +30,7 @@ const TransactionDetails = () => {
         <InfoCardBlock className='transactions-details-block'>
           <InfoCardItem text='Amount'>
             <span className="transactions-amount">
-              {prettyNumber(data.amount?.text)}
+              {formatNumber(data.amount?.text)}
               <span className="transaction-ticker">{data.amount?.symbol}</span>
             </span>
           </InfoCardItem>
@@ -58,12 +58,20 @@ const TransactionDetails = () => {
           </InfoCardItem>
 
           {data?.meta_info && data?.meta_info?.map((item, i) => 
-            {return item?.title !== 'Amount' ? <InfoCardItem text={item?.title} key={i}>
+            {return item?.title !== 'Amount' && item.value ? <InfoCardItem text={item?.title} key={i}>
               <div className="row">
                 {item.type === 'text' && <span>{item?.value?.text || item?.value} </span> }
+                {item.type === 'amount_collection' && item.value.map((token,i) => (
+                  <span className="transactions-amount">
+                     { formatNumber(token?.text)}
+                    <span className="transaction-ticker">{formatAddress(token?.symbol)}
+                    {i !== item.value.length - 1 && ' / ' } 
+                    </span>
+                  </span>
+                ))}
                 {item.type === 'amount' &&  
                 <span className="transactions-amount">
-                  {prettyNumber(item.value?.text)}
+                  {formatNumber(item.value?.text)}
                   <span className="transaction-ticker">{item.value?.symbol}</span>
                 </span>}
                 {item.type === 'text_collection' &&  

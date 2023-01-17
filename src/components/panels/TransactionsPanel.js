@@ -28,7 +28,7 @@ const TransactionsPanel = () => {
     },[activeWallet])
 
     const setOpenedTransaction = (data) => {
-        dispatch(transactionActions.setOpenedTransaction(data))
+        transactionActions.setOpenedTransaction(data)
         navigate(ROUTES.TRANSACTION_DETAILS)
     }
 

@@ -2,10 +2,12 @@ import { types } from './types';
 import { walletActions, errorActions } from '.';
 import { store } from '../store';
 
-const setOpenedTransaction = (flag) => ({
-    type: types.SET_OPENED_TRANSACTION,
-    payload: flag,
-});
+const setOpenedTransaction = (flag) => {
+    store.dispatch({
+        type: types.SET_OPENED_TRANSACTION,
+        payload: flag,
+    });
+};
 
 const loadTransactions = (page = 1) => async (dispatch) => {
     dispatch({
